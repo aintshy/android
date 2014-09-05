@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <application android:label="aintshy" >
-        <activity android:name=".StartActivity" android:label="aintshy" >
+        <activity android:name=".LoginActivity" android:label="aintshy" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
