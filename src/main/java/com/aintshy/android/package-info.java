@@ -18,34 +18,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.widget.TextView;
 
 /**
- * Start activity.
+ * Android app.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class StartActivity extends Activity {
-
-    @Override
-    public void onCreate(final Bundle state) {
-        super.onCreate(state);
-        this.setContentView(R.layout.start);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        final TextView text = TextView.class.cast(
-            this.findViewById(R.id.text_view)
-        );
-        text.setText("Hello world!");
-    }
-
-}
+package com.aintshy.android;
