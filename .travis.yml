@@ -1,0 +1,14 @@
+language: java
+cache:
+  directories:
+    - $HOME/.m2
+env:
+  global:
+    - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g"
+    - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g"
+branches:
+  only:
+    - master
+script:
+  - mvn clean install -Pqulice
+
