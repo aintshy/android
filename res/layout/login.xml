@@ -7,6 +7,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Please, enter your email and password and we let you in. If you've never been here before, give us your email and any password, we'll register you right away."
+        android:id="@+id/textView" android:paddingBottom="30dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Email"
         android:id="@+id/email_label"/>
     <EditText

@@ -7,6 +7,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="This is the last step. We need to know                 a little bit about you, in order to match                 you with others. Please, try to be accurate :)"
+        android:id="@+id/textView" android:paddingBottom="30dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Name"
         android:id="@+id/name_label"/>
     <EditText
