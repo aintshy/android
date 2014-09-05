@@ -24,18 +24,18 @@ import android.app.Activity;
 import android.os.Bundle;
 
 /**
- * Login activity.
+ * Details activity.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class LoginActivity extends Activity {
+public final class DetailsActivity extends Activity {
 
     @Override
     public void onCreate(final Bundle state) {
         super.onCreate(state);
-        this.setContentView(R.layout.login);
+        this.setContentView(R.layout.details);
     }
 
     @Override

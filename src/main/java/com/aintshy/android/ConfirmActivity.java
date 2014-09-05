@@ -24,13 +24,13 @@ import android.app.Activity;
 import android.os.Bundle;
 
 /**
- * Login activity.
+ * Confirm activity.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class LoginActivity extends Activity {
+public final class ConfirmActivity extends Activity {
 
     @Override
     public void onCreate(final Bundle state) {

@@ -22,15 +22,18 @@ package com.aintshy.android;
 
 import android.app.Activity;
 import android.os.Bundle;
+import com.aintshy.android.api.Hub;
+import com.aintshy.android.api.Talk;
+import com.aintshy.android.rest.RtAuth;
 
 /**
- * Login activity.
+ * Talk activity.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class LoginActivity extends Activity {
+public final class TalkActivity extends Activity {
 
     @Override
     public void onCreate(final Bundle state) {
@@ -41,6 +44,9 @@ public final class LoginActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
+        final Hub hub = new RtAuth().auth("");
+        final Talk talk = hub.next();
+        talk.respondent();
     }
 
 }
