@@ -36,11 +36,17 @@ public final class RtEntrance implements Entrance {
 
     @Override
     public Hub auth(final String email, final String password) throws IOException {
-        return new RtHub(new JdkRequest("http://i.aintshy.com"));
+        return this.auth("token");
     }
 
     @Override
     public Hub auth(final String token) throws IOException {
         return new RtHub(new JdkRequest("http://i.aintshy.com"));
+//        return new RtHub(
+//            new JdkRequest("http://i.aintshy.com")
+//                .header("Cookie", String.format("Rexsl-Auth=%s", token))
+//                .header("Accept", "application/xml")
+//                .header("User-Agent", "Android app")
+//        );
     }
 }

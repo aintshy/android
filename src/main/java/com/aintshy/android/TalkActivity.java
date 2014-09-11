@@ -56,10 +56,10 @@ public final class TalkActivity extends Activity implements NextTalk.Consumer {
         super.onCreate(state);
         try {
             this.nexter = new NextTalk(
-                new RtEntrance().auth("test")
+                new RtEntrance().auth("4FHQBF9I-4D5F58JN-7KO2KJQL-0LFKS0HU-7C0GSK3F-99A18IJF-003L0L8V-0K4G2TOA-A1F3GEH7-8G9JOKIM-2174U0PU-4T30461G-E0Q4O91J-3CDLQ7OK-DO======")
             );
         } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
+             throw new IllegalStateException(ex);
         }
         this.nexter.subscribe(this);
         this.setContentView(R.layout.talk);

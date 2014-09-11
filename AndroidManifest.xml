@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:a="http://schemas.android.com/apk/res/android"
     package="com.aintshy.android"
-    android:versionCode="1"
-    android:versionName="1.0" >
-
-    <application android:label="aintshy" android:icon="@drawable/ico">
-        <activity android:name=".TalkActivity" android:label="aintshy" >
+    a:versionCode="1"
+    a:versionName="1.0" >
+    <uses-sdk a:minSdkVersion="5" a:targetSdkVersion="20" />
+    <application a:label="aintshy" a:icon="@drawable/ico" a:allowBackup="false">
+        <activity a:name=".TalkActivity" a:label="aintshy" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action a:name="android.intent.action.MAIN" />
+                <category a:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

@@ -24,6 +24,7 @@ import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Profile;
 import com.aintshy.android.api.Talk;
 import com.jcabi.http.Request;
+import java.io.IOException;
 import java.util.Collections;
 
 /**
@@ -54,8 +55,10 @@ final class RtHub implements Hub {
     }
 
     @Override
-    public Iterable<Talk> next() {
-        return Collections.<Talk>singleton(new RtTalk(this.request));
+    public Iterable<Talk> next() throws IOException {
+        return Collections.<Talk>singleton(
+            new RtTalk(this.request)
+        );
     }
 
     @Override
@@ -64,7 +67,7 @@ final class RtHub implements Hub {
     }
 
     @Override
-    public Iterable<Talk> history() {
+    public Iterable<Talk> history() throws IOException {
         return Collections.<Talk>singleton(new RtTalk(this.request));
     }
 

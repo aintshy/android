@@ -22,6 +22,7 @@ package com.aintshy.android.svc;
 
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
+import java.io.IOException;
 
 /**
  * Fetch next talk from hub.
@@ -51,7 +52,11 @@ public final class NextTalk {
      */
     public void subscribe(NextTalk.Consumer consumer) {
         // to do
-        consumer.seeNextTalk(this.hub.next().iterator().next());
+        try {
+            consumer.seeNextTalk(this.hub.next().iterator().next());
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
