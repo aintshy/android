@@ -42,6 +42,12 @@ public interface Profile extends Human {
     void confirm(String code);
 
     /**
+     * Profile is complete?
+     * @return TRUE if it's complete
+     */
+    boolean complete();
+
+    /**
      * Update profile.
      * @param name Name
      * @param age Age

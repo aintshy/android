@@ -22,9 +22,11 @@ package com.aintshy.android;
 
 import android.app.Activity;
 import android.os.Bundle;
-import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
-import com.aintshy.android.rest.RtAuth;
+import com.aintshy.android.svc.NextTalk;
+import com.jcabi.aspects.Tv;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Talk activity.
@@ -33,20 +35,51 @@ import com.aintshy.android.rest.RtAuth;
  * @version $Id$
  * @since 0.1
  */
-public final class TalkActivity extends Activity {
+public final class TalkActivity extends Activity implements NextTalk.Consumer {
+
+    /**
+     * Next talk provider.
+     */
+    private final transient NextTalk nexter = new NextTalk();
+
+    /**
+     * Next talks to show.
+     */
+    private final transient List<Talk> talks = new ArrayList<Talk>(Tv.TWENTY);
 
     @Override
     public void onCreate(final Bundle state) {
         super.onCreate(state);
-        this.setContentView(R.layout.login);
+        this.nexter.subscribe(this);
+        this.setContentView(R.layout.talk);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        final Hub hub = new RtAuth().auth("");
-        final Talk talk = hub.next();
-        talk.respondent();
+        this.show();
+    }
+
+    @Override
+    public int talksNeeded() {
+        return Tv.TWENTY - this.talks.size();
+    }
+
+    @Override
+    public void seeNextTalk(final Talk talk) {
+        this.talks.add(talk);
+    }
+
+    /**
+     * Show current talk.
+     */
+    private void show() {
+        if (this.talks.isEmpty()) {
+            // show spinning wheel
+        } else {
+            final Talk talk = this.talks.get(0);
+            // draw this talk
+        }
     }
 
 }

@@ -18,33 +18,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.api;
+package com.aintshy.android.rest;
+
+import com.aintshy.android.api.Human;
+import com.aintshy.android.api.Message;
+import com.aintshy.android.api.Talk;
+import com.jcabi.http.Request;
 
 /**
- * Talk.
+ * RESTful Talk.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public interface Talk {
+final class RtTalk implements Talk {
 
     /**
-     * Who is talking to me.
-     * @return My respondent
+     * HTTP request to the server.
      */
-    Human talker();
+    private final transient Request request;
 
     /**
-     * Messages (in reverse chronological order).
-     * @return All messages in the talk
+     * Ctor.
+     * @param req Request to the front page
      */
-    Iterable<Message> messages();
+    RtTalk(final Request req) {
+        this.request = req;
+    }
 
-    /**
-     * Post a message.
-     * @param text Text to post
-     */
-    void post(String text);
+    @Override
+    public Human talker() {
+        throw new UnsupportedOperationException("#talker()");
+    }
 
+    @Override
+    public Iterable<Message> messages() {
+        throw new UnsupportedOperationException("#messages()");
+    }
+
+    @Override
+    public void post(final String text) {
+        throw new UnsupportedOperationException("#post()");
+    }
 }

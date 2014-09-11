@@ -20,31 +20,32 @@
  */
 package com.aintshy.android.api;
 
+import java.io.IOException;
+
 /**
- * Talk.
+ * Entrance to the system.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public interface Talk {
+public interface Entrance {
 
     /**
-     * Who is talking to me.
-     * @return My respondent
+     * Authenticate with email and password.
+     * @param email Email
+     * @param password Password
+     * @return Hub
+     * @throws IOException If fails
      */
-    Human talker();
+    Hub auth(String email, String password) throws IOException;
 
     /**
-     * Messages (in reverse chronological order).
-     * @return All messages in the talk
+     * Authenticate with an existing token.
+     * @param token Auth token
+     * @return Hub
+     * @throws IOException If fails
      */
-    Iterable<Message> messages();
-
-    /**
-     * Post a message.
-     * @param text Text to post
-     */
-    void post(String text);
+    Hub auth(String token) throws IOException;
 
 }

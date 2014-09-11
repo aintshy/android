@@ -20,31 +20,20 @@
  */
 package com.aintshy.android.api;
 
+import java.io.IOException;
+
 /**
- * Talk.
+ * When authentication fails.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public interface Talk {
+public final class AuthException extends IOException {
 
     /**
-     * Who is talking to me.
-     * @return My respondent
+     * Serialization marker.
      */
-    Human talker();
-
-    /**
-     * Messages (in reverse chronological order).
-     * @return All messages in the talk
-     */
-    Iterable<Message> messages();
-
-    /**
-     * Post a message.
-     * @param text Text to post
-     */
-    void post(String text);
+    private static final long serialVersionUID = -5357940592332201978L;
 
 }

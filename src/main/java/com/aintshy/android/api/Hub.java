@@ -36,15 +36,21 @@ public interface Hub {
     Profile profile();
 
     /**
-     * Get next talk to watch.
-     * @return Talk
+     * Get next talks to watch.
+     * @return Talks
      */
-    Talk next();
+    Iterable<Talk> next();
 
     /**
      * Ask a new question.
      * @param text Question text
      */
     void ask(String text);
+
+    /**
+     * Get history.
+     * @return Talks
+     */
+    Iterable<Talk> history();
 
 }

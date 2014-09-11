@@ -20,20 +20,17 @@
  */
 package com.aintshy.android.rest;
 
-import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Profile;
-import com.aintshy.android.api.Talk;
 import com.jcabi.http.Request;
-import java.util.Collections;
 
 /**
- * RESTful Hub.
+ * RESTful Profile.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-final class RtHub implements Hub {
+final class RtProfile implements Profile {
 
     /**
      * HTTP request to the server.
@@ -44,28 +41,52 @@ final class RtHub implements Hub {
      * Ctor.
      * @param req Request to the front page
      */
-    RtHub(final Request req) {
+    RtProfile(final Request req) {
         this.request = req;
     }
 
     @Override
-    public Profile profile() {
-        return new RtProfile(this.request);
+    public boolean confirmed() {
+        throw new UnsupportedOperationException("#confirmed()");
     }
 
     @Override
-    public Iterable<Talk> next() {
-        return Collections.<Talk>singleton(new RtTalk(this.request));
+    public void confirm(final String code) {
+        throw new UnsupportedOperationException("#confirm()");
     }
 
     @Override
-    public void ask(final String text) {
-        throw new UnsupportedOperationException("#ask()");
+    public boolean complete() {
+        throw new UnsupportedOperationException("#complete()");
     }
 
     @Override
-    public Iterable<Talk> history() {
-        return Collections.<Talk>singleton(new RtTalk(this.request));
+    public void update(final String name, final int age, final char sex, final String lang) {
+        throw new UnsupportedOperationException("#update()");
     }
 
+    @Override
+    public void upload(final byte[] photo) {
+        throw new UnsupportedOperationException("#upload()");
+    }
+
+    @Override
+    public String name() {
+        throw new UnsupportedOperationException("#name()");
+    }
+
+    @Override
+    public int age() {
+        throw new UnsupportedOperationException("#age()");
+    }
+
+    @Override
+    public char sex() {
+        throw new UnsupportedOperationException("#sex()");
+    }
+
+    @Override
+    public byte[] photo() {
+        throw new UnsupportedOperationException("#photo()");
+    }
 }

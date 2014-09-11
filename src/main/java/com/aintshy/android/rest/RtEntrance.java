@@ -18,33 +18,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.api;
+package com.aintshy.android.rest;
+
+import com.aintshy.android.api.Entrance;
+import com.aintshy.android.api.Hub;
+import com.jcabi.http.request.JdkRequest;
+import java.io.IOException;
 
 /**
- * Talk.
+ * RESTful authentication.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public interface Talk {
+public final class RtEntrance implements Entrance {
 
-    /**
-     * Who is talking to me.
-     * @return My respondent
-     */
-    Human talker();
+    @Override
+    public Hub auth(final String email, final String password) throws IOException {
+        return new RtHub(new JdkRequest("http://i.aintshy.com"));
+    }
 
-    /**
-     * Messages (in reverse chronological order).
-     * @return All messages in the talk
-     */
-    Iterable<Message> messages();
-
-    /**
-     * Post a message.
-     * @param text Text to post
-     */
-    void post(String text);
-
+    @Override
+    public Hub auth(final String token) throws IOException {
+        return new RtHub(new JdkRequest("http://i.aintshy.com"));
+    }
 }

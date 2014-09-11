@@ -20,8 +20,6 @@
  */
 package com.aintshy.android.api;
 
-import java.net.URI;
-
 /**
  * Human.
  *
@@ -50,9 +48,9 @@ public interface Human {
     char sex();
 
     /**
-     * Get photo.
+     * Get photo, as PNG image.
      * @return Photo
      */
-    URI photo();
+    byte[] photo();
 
 }

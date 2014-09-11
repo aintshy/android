@@ -20,6 +20,8 @@
  */
 package com.aintshy.android.api;
 
+import java.util.Date;
+
 /**
  * Message.
  *
@@ -33,7 +35,13 @@ public interface Message {
      * Is it my message?
      * @return TRUE if it's mine
      */
-    boolean isMine();
+    boolean mine();
+
+    /**
+     * Date.
+     * @return Date of it
+     */
+    Date date();
 
     /**
      * Text.

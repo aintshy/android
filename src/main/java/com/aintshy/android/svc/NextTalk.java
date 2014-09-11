@@ -18,34 +18,41 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.rest;
+package com.aintshy.android.svc;
 
-import com.aintshy.android.api.Hub;
+import com.aintshy.android.api.Talk;
 
 /**
- * RESTful authentication.
+ * Fetch next talk from hub.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class RtAuth {
+public final class NextTalk {
 
     /**
-     * Authenticate with email and password.
-     * @param email Email
-     * @param password Password
+     * Send me next talks when you have them.
+     * @param consumer The consumer
      */
-    public Hub auth(final String email, final String password) {
-        return new RtHub();
+    public void subscribe(NextTalk.Consumer consumer) {
+        // to do
     }
 
     /**
-     * Authenticate with an existing token.
-     * @param token Auth token
+     * Consumer of talks.
      */
-    public Hub auth(final String token) {
-        return new RtHub();
+    public interface Consumer {
+        /**
+         * How many talks do you still need?
+         * @return Number of talks you still want
+         */
+        int talksNeeded();
+        /**
+         * Next talk to show.
+         * @param talk The talk
+         */
+        void seeNextTalk(Talk talk);
     }
 
 }
