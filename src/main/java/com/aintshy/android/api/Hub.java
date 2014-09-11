@@ -20,8 +20,6 @@
  */
 package com.aintshy.android.api;
 
-import java.io.IOException;
-
 /**
  * Hub.
  *
@@ -41,7 +39,7 @@ public interface Hub {
      * Get next talks to watch.
      * @return Talks
      */
-    Iterable<Talk> next() throws IOException;
+    Iterable<Talk> next();
 
     /**
      * Ask a new question.
@@ -53,6 +51,6 @@ public interface Hub {
      * Get history.
      * @return Talks
      */
-    Iterable<Talk> history() throws IOException;
+    Iterable<Talk> history();
 
 }

@@ -20,8 +20,6 @@
  */
 package com.aintshy.android.api;
 
-import java.io.IOException;
-
 /**
  * Entrance to the system.
  *
@@ -36,16 +34,14 @@ public interface Entrance {
      * @param email Email
      * @param password Password
      * @return Hub
-     * @throws IOException If fails
      */
-    Hub auth(String email, String password) throws IOException;
+    Hub auth(String email, String password);
 
     /**
      * Authenticate with an existing token.
      * @param token Auth token
      * @return Hub
-     * @throws IOException If fails
      */
-    Hub auth(String token) throws IOException;
+    Hub auth(String token);
 
 }

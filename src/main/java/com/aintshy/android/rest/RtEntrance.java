@@ -23,7 +23,6 @@ package com.aintshy.android.rest;
 import com.aintshy.android.api.Entrance;
 import com.aintshy.android.api.Hub;
 import com.jcabi.http.request.JdkRequest;
-import java.io.IOException;
 
 /**
  * RESTful authentication.
@@ -35,12 +34,12 @@ import java.io.IOException;
 public final class RtEntrance implements Entrance {
 
     @Override
-    public Hub auth(final String email, final String password) throws IOException {
+    public Hub auth(final String email, final String password) {
         return this.auth("token");
     }
 
     @Override
-    public Hub auth(final String token) throws IOException {
+    public Hub auth(final String token) {
         return new RtHub(new JdkRequest("http://i.aintshy.com"));
 //        return new RtHub(
 //            new JdkRequest("http://i.aintshy.com")

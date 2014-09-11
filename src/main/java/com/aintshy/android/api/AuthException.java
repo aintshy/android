@@ -20,8 +20,6 @@
  */
 package com.aintshy.android.api;
 
-import java.io.IOException;
-
 /**
  * When authentication fails.
  *
@@ -29,7 +27,7 @@ import java.io.IOException;
  * @version $Id$
  * @since 0.1
  */
-public final class AuthException extends IOException {
+public final class AuthException extends Exception {
 
     /**
      * Serialization marker.

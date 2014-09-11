@@ -25,7 +25,6 @@ import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Talk;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.XmlResponse;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -51,9 +50,8 @@ final class RtTalk implements Talk {
     /**
      * Ctor.
      * @param req Request to the front page
-     * @throws IOException If fails
      */
-    RtTalk(final Request req) throws IOException {
+    RtTalk(final Request req) {
         this.request = req;
         this.page = null;
 //        this.page = req.fetch()

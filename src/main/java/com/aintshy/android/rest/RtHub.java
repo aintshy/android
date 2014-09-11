@@ -55,7 +55,7 @@ final class RtHub implements Hub {
     }
 
     @Override
-    public Iterable<Talk> next() throws IOException {
+    public Iterable<Talk> next() {
         return Collections.<Talk>singleton(
             new RtTalk(this.request)
         );
@@ -67,7 +67,7 @@ final class RtHub implements Hub {
     }
 
     @Override
-    public Iterable<Talk> history() throws IOException {
+    public Iterable<Talk> history() {
         return Collections.<Talk>singleton(new RtTalk(this.request));
     }
 
