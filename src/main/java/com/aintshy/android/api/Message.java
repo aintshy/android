@@ -49,4 +49,34 @@ public interface Message {
      */
     String text();
 
+    /**
+     * Simple.
+     */
+    final class Simple implements Message {
+        private final transient boolean self;
+        private final transient Date when;
+        private final transient String txt;
+
+        public Simple(final boolean mine, final Date date, final String text) {
+            this.self = mine;
+            this.when = date;
+            this.txt = text;
+        }
+
+        @Override
+        public boolean mine() {
+            return this.self;
+        }
+
+        @Override
+        public Date date() {
+            return this.when;
+        }
+
+        @Override
+        public String text() {
+            return this.txt;
+        }
+    }
+
 }

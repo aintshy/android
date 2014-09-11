@@ -20,6 +20,7 @@
  */
 package com.aintshy.android.svc;
 
+import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
 
 /**
@@ -32,11 +33,25 @@ import com.aintshy.android.api.Talk;
 public final class NextTalk {
 
     /**
+     * Hub to work with.
+     */
+    private final transient Hub hub;
+
+    /**
+     * Ctor.
+     * @param hbe Hub
+     */
+    public NextTalk(final Hub hbe) {
+        this.hub = hbe;
+    }
+
+    /**
      * Send me next talks when you have them.
      * @param consumer The consumer
      */
     public void subscribe(NextTalk.Consumer consumer) {
         // to do
+        consumer.seeNextTalk(this.hub.next().iterator().next());
     }
 
     /**

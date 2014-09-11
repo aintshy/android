@@ -22,9 +22,13 @@ package com.aintshy.android;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.ListView;
 import com.aintshy.android.api.Talk;
+import com.aintshy.android.rest.RtEntrance;
 import com.aintshy.android.svc.NextTalk;
 import com.jcabi.aspects.Tv;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +44,7 @@ public final class TalkActivity extends Activity implements NextTalk.Consumer {
     /**
      * Next talk provider.
      */
-    private final transient NextTalk nexter = new NextTalk();
+    private transient NextTalk nexter;
 
     /**
      * Next talks to show.
@@ -50,8 +54,16 @@ public final class TalkActivity extends Activity implements NextTalk.Consumer {
     @Override
     public void onCreate(final Bundle state) {
         super.onCreate(state);
+        try {
+            this.nexter = new NextTalk(
+                new RtEntrance().auth("test")
+            );
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
         this.nexter.subscribe(this);
         this.setContentView(R.layout.talk);
+        Log.i(this.getClass().getName(), "talk activity created");
     }
 
     @Override
@@ -76,9 +88,13 @@ public final class TalkActivity extends Activity implements NextTalk.Consumer {
     private void show() {
         if (this.talks.isEmpty()) {
             // show spinning wheel
+            Log.i(this.getClass().getName(), "nothing to show");
         } else {
             final Talk talk = this.talks.get(0);
-            // draw this talk
+            ListView.class.cast(this.findViewById(R.id.talks)).setAdapter(
+                new TalkListAdapter(this, talk)
+            );
+            Log.i(this.getClass().getName(), "talk rendered");
         }
     }
 

@@ -53,4 +53,42 @@ public interface Human {
      */
     byte[] photo();
 
+    /**
+     * Simple.
+     */
+    final class Simple implements Human {
+        private final transient String label;
+        private final transient int years;
+        private final transient char gender;
+        private final transient byte[] png;
+
+        public Simple(final String name, final int age, final char sex,
+            final byte[] photo) {
+            this.label = name;
+            this.years = age;
+            this.gender = sex;
+            this.png = photo;
+        }
+
+        @Override
+        public String name() {
+            return this.label;
+        }
+
+        @Override
+        public int age() {
+            return this.years;
+        }
+
+        @Override
+        public char sex() {
+            return this.gender;
+        }
+
+        @Override
+        public byte[] photo() {
+            return this.png;
+        }
+    }
+
 }

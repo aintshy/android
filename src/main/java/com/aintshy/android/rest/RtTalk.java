@@ -24,6 +24,8 @@ import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Talk;
 import com.jcabi.http.Request;
+import java.util.Arrays;
+import java.util.Date;
 
 /**
  * RESTful Talk.
@@ -49,12 +51,15 @@ final class RtTalk implements Talk {
 
     @Override
     public Human talker() {
-        throw new UnsupportedOperationException("#talker()");
+        return new Human.Simple("Jeff", 33, 'M', new byte[0]);
     }
 
     @Override
     public Iterable<Message> messages() {
-        throw new UnsupportedOperationException("#messages()");
+        return Arrays.<Message>asList(
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(false, new Date(), "I'm fine!")
+        );
     }
 
     @Override
