@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
+    a:layout_width="fill_parent"
+    a:layout_height="?android:attr/listPreferredItemHeight"
+    a:padding="6dip" a:background="#ffffffff">
+    <ImageView
+        a:layout_width="200dp"
+        a:layout_height="200dp"
+        a:id="@+id/photo"
+        a:layout_alignParentLeft="false"
+        a:contentDescription="photo"/>
+    <TextView
+        a:id="@+id/human"
+        a:layout_width="fill_parent"
+        a:layout_height="40dip"
+        a:text="Jeff 34 M"
+        a:layout_centerHorizontal="true"
+        a:textAlignment="center" a:gravity="center" a:textSize="24dp" a:textColor="#000"/>
+    <EditText
+        a:layout_width="fill_parent"
+        a:layout_height="60dp"
+        a:id="@+id/answer"
+        a:layout_below="@+id/human"
+        a:inputType="text"
+        a:editable="true"
+        a:enabled="true"
+        a:focusable="true"
+        a:maxLines="1"
+        a:singleLine="true"
+        a:layout_centerHorizontal="true" a:height="50dp"/>
+</RelativeLayout>

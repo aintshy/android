@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Talk;
 import com.google.common.collect.Iterables;
 
@@ -74,7 +75,7 @@ final class TalkListAdapter implements ListAdapter {
 
     @Override
     public int getCount() {
-        return Iterables.size(this.talk.messages());
+        return Iterables.size(this.talk.messages()) + 1;
     }
 
     @Override
@@ -97,25 +98,43 @@ final class TalkListAdapter implements ListAdapter {
         final LayoutInflater inflater = LayoutInflater.class.cast(
             this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
         );
-        final View row = inflater.inflate(R.layout.talk_message, grp, false);
-        final TextView text = TextView.class.cast(row.findViewById(R.id.text));
-        text.setText(Iterables.get(this.talk.messages(), idx).text());
+        final View row;
+        if (idx == 0) {
+            row = inflater.inflate(R.layout.talk_head, grp, false);
+            final Human human = this.talk.talker();
+            TextView.class.cast(row.findViewById(R.id.human)).setText(
+                String.format(
+                    "%s %d %c", human.name(), human.age(), human.sex()
+                )
+            );
+        } else {
+            row = inflater.inflate(R.layout.talk_message, grp, false);
+            TextView.class
+                .cast(row.findViewById(R.id.text))
+                .setText(Iterables.get(this.talk.messages(), idx - 1).text());
+        }
         return row;
     }
 
     @Override
     public int getItemViewType(final int position) {
-        return 1;
+        final int type;
+        if (position == 0) {
+            type = 0;
+        } else {
+            type = 1;
+        }
+        return type;
     }
 
     @Override
     public int getViewTypeCount() {
-        return 1;
+        return 2;
     }
 
     @Override
     public boolean isEmpty() {
-        return Iterables.isEmpty(this.talk.messages());
+        return false;
     }
 }
 

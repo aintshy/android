@@ -6,5 +6,5 @@
     <ListView
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
-        a:id="@+id/talks" a:layout_gravity="center_horizontal"/>
+        a:id="@+id/talks" a:layout_gravity="center_horizontal" a:background="#ffffffff"/>
 </LinearLayout>
