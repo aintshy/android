@@ -63,7 +63,6 @@ public final class TalkActivity extends Activity implements NextTalk.Consumer {
         }
         this.nexter.subscribe(this);
         this.setContentView(R.layout.talk);
-        Log.i(this.getClass().getName(), "talk activity created");
     }
 
     @Override

@@ -54,12 +54,12 @@ final class TalkListAdapter implements ListAdapter {
 
     @Override
     public boolean areAllItemsEnabled() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isEnabled(final int position) {
-        return true;
+        return false;
     }
 
     @Override
@@ -98,7 +98,7 @@ final class TalkListAdapter implements ListAdapter {
             this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
         );
         final View row = inflater.inflate(R.layout.talk_message, grp, false);
-        final TextView text = TextView.class.cast(view.findViewById(R.id.text));
+        final TextView text = TextView.class.cast(row.findViewById(R.id.text));
         text.setText(Iterables.get(this.talk.messages(), idx).text());
         return row;
     }

@@ -58,6 +58,27 @@ final class RtTalk implements Talk {
     public Iterable<Message> messages() {
         return Arrays.<Message>asList(
             new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
+            new Message.Simple(true, new Date(), "how are you?"),
             new Message.Simple(false, new Date(), "I'm fine!")
         );
     }
