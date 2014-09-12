@@ -24,7 +24,11 @@ import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Talk;
 import com.jcabi.http.Request;
+import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
+import com.jcabi.xml.XML;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -53,24 +57,26 @@ final class RtTalk implements Talk {
      */
     RtTalk(final Request req) {
         this.request = req;
-        this.page = null;
-//        this.page = req.fetch()
-//            .as(RestResponse.class)
-//            .assertStatus(HttpURLConnection.HTTP_OK)
-//            .as(XmlResponse.class)
-//            .assertXPath("/page/identity");
+        try {
+            this.page = req.fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .assertXPath("/page/identity");
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public Human talker() {
-        return new Human.Simple("Jeff", 33, 'M', new byte[0]);
-//        final XML xml = this.page.xml().nodes("/page").get(0);
-//        return new Human.Simple(
-//            xml.xpath("role/name/text()").get(0),
-//            Integer.parseInt(xml.xpath("role/age/text()").get(0)),
-//            xml.xpath("role/sex/text()").get(0).charAt(0),
-//            new byte[0]
-//        );
+        final XML xml = this.page.xml().nodes("/page").get(0);
+        return new Human.Simple(
+            xml.xpath("role/name/text()").get(0),
+            Integer.parseInt(xml.xpath("role/age/text()").get(0)),
+            xml.xpath("role/sex/text()").get(0).charAt(0),
+            new byte[0]
+        );
     }
 
     @Override

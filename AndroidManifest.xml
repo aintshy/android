@@ -4,7 +4,8 @@
     a:versionCode="1"
     a:versionName="1.0" >
     <uses-sdk a:minSdkVersion="5" a:targetSdkVersion="20" />
-    <application a:label="aintshy" a:icon="@drawable/ico" a:allowBackup="false">
+    <uses-permission a:name="android.permission.INTERNET" />
+    <application a:name=".App" a:label="aintshy" a:icon="@drawable/ico" a:allowBackup="false">
         <activity a:name=".TalkActivity" a:label="aintshy" >
             <intent-filter>
                 <action a:name="android.intent.action.MAIN" />
@@ -12,5 +13,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

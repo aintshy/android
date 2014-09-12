@@ -26,7 +26,7 @@ import android.util.Log;
 import android.widget.ListView;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
-import com.aintshy.android.rest.RtEntrance;
+import com.aintshy.android.fat.FtHub;
 import com.google.common.collect.Iterables;
 
 /**
@@ -42,9 +42,9 @@ public final class TalkActivity extends Activity {
     public void onCreate(final Bundle state) {
         super.onCreate(state);
         this.setContentView(R.layout.talk);
-        final Hub hub = new RtEntrance().hub("");
+        final Hub hub = App.class.cast(this.getApplication()).hub();
         final Iterable<Talk> next = hub.next();
-        if (Iterables.isEmpty(next)) {
+        if (FtHub.LOADING.equals(next)) {
             // show spinning wheel
             Log.i(this.getClass().getName(), "nothing to show");
         } else {

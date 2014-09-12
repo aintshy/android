@@ -18,41 +18,27 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.rest;
-
-import com.aintshy.android.api.Hub;
-import com.jcabi.http.request.JdkRequest;
+package com.aintshy.android.fat;
 
 /**
- * RESTful authentication.
+ * Token accepting entity.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class RtEntrance {
+public interface FtToken {
 
     /**
-     * Authenticate with email and password, and get a token.
-     * @param email Email
-     * @param password Password
-     * @return Token
+     * Authenticated and token is ready.
+     * @param token The token
      */
-    public String auth(final String email, final String password) {
-        return "token";
-    }
+    void authSuccess(String token);
 
     /**
-     * Get hub for the given token.
-     * @param token Auth token
-     * @return Hub
+     * Authentication failed.
+     * @param cause Cause of it
      */
-    public Hub hub(final String token) {
-        return new RtHub(
-            new JdkRequest("http://i.aintshy.com/58")
-                .header("Cookie", String.format("Rexsl-Auth=%s", token))
-                .header("Accept", "application/xml")
-                .header("User-Agent", "Android app")
-        );
-    }
+    void authFailure(String cause);
+
 }

@@ -18,30 +18,37 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.api;
+package com.aintshy.android.fat;
+
+import com.aintshy.android.api.Hub;
+import com.aintshy.android.rest.RtEntrance;
 
 /**
- * Entrance to the system.
+ * Fat entrance.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public interface Entrance {
+public final class FtEntrance {
 
     /**
-     * Authenticate with email and password, and get a token.
+     * Authenticate with email and password.
      * @param email Email
      * @param password Password
-     * @return Token
+     * @param token Token listener
      */
-    String auth(String email, String password);
+    public void auth(final String email, final String password,
+        final FtToken token) {
+        // nothing yet
+    }
 
     /**
      * Get hub for the given token.
      * @param token Auth token
      * @return Hub
      */
-    Hub hub(String token);
-
+    public Hub hub(final String token) {
+        return new FtHub(new RtEntrance().hub(token));
+    }
 }
