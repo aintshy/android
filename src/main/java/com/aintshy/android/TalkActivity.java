@@ -42,7 +42,7 @@ public final class TalkActivity extends Activity {
     public void onCreate(final Bundle state) {
         super.onCreate(state);
         this.setContentView(R.layout.talk);
-        final Hub hub = new RtEntrance().auth("");
+        final Hub hub = new RtEntrance().hub("");
         final Iterable<Talk> next = hub.next();
         if (Iterables.isEmpty(next)) {
             // show spinning wheel

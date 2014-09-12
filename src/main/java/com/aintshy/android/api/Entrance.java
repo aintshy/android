@@ -30,18 +30,18 @@ package com.aintshy.android.api;
 public interface Entrance {
 
     /**
-     * Authenticate with email and password.
+     * Authenticate with email and password, and get a token.
      * @param email Email
      * @param password Password
-     * @return Hub
+     * @return Token
      */
-    Hub auth(String email, String password);
+    String auth(String email, String password);
 
     /**
-     * Authenticate with an existing token.
+     * Get hub for the given token.
      * @param token Auth token
      * @return Hub
      */
-    Hub auth(String token);
+    Hub hub(String token);
 
 }

@@ -2,19 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent" android:background="#fff">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="This is the last step. We need to know                 a little bit about you, in order to match                 you with others. Please, try to be accurate :)"
-        android:id="@+id/textView" android:paddingBottom="30dp"/>
+        android:id="@+id/textView" android:paddingBottom="30dp" android:textColor="#000"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Name"
-        android:id="@+id/name_label"/>
+        android:id="@+id/name_label" android:textColor="#000"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Year of birth"
-        android:id="@+id/year_label"/>
+        android:id="@+id/year_label" android:textColor="#000"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Sex"
-        android:id="@+id/sex_label"/>
+        android:id="@+id/sex_label" android:textColor="#000"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Language"
-        android:id="@+id/lang_label"/>
+        android:id="@+id/lang_label" android:textColor="#000"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

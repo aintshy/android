@@ -22,6 +22,8 @@ package com.aintshy.android;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import com.aintshy.android.rest.RtEntrance;
 
 /**
  * Login activity.
@@ -38,9 +40,8 @@ public final class LoginActivity extends Activity {
         this.setContentView(R.layout.login);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    public void login(final View view) {
+        new RtEntrance().auth("", "");
     }
 
 }

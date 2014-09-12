@@ -111,6 +111,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-http</artifactId>
+            <version>1.8.3</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>

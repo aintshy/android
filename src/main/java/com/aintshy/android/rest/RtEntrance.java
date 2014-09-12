@@ -34,12 +34,12 @@ import com.jcabi.http.request.JdkRequest;
 public final class RtEntrance implements Entrance {
 
     @Override
-    public Hub auth(final String email, final String password) {
-        return this.auth("token");
+    public String auth(final String email, final String password) {
+        return "token";
     }
 
     @Override
-    public Hub auth(final String token) {
+    public Hub hub(final String token) {
         return new RtHub(new JdkRequest("http://i.aintshy.com"));
 //        return new RtHub(
 //            new JdkRequest("http://i.aintshy.com")

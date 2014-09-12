@@ -17,7 +17,7 @@
         a:textAlignment="center" a:gravity="center" a:textSize="24dp" a:textColor="#000"/>
     <EditText
         a:layout_width="fill_parent"
-        a:layout_height="60dp"
+        a:layout_height="wrap_content"
         a:id="@+id/answer"
         a:layout_below="@+id/human"
         a:inputType="text"
