@@ -22,9 +22,11 @@ package com.aintshy.android;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import com.aintshy.android.api.Human;
@@ -102,6 +104,10 @@ final class TalkListAdapter implements ListAdapter {
         if (idx == 0) {
             row = inflater.inflate(R.layout.talk_head, grp, false);
             final Human human = this.talk.talker();
+            final byte[] photo = human.photo();
+            ImageView.class.cast(row.findViewById(R.id.photo)).setImageBitmap(
+                BitmapFactory.decodeByteArray(photo, 0, photo.length)
+            );
             TextView.class.cast(row.findViewById(R.id.human)).setText(
                 String.format(
                     "%s %d %c", human.name(), human.age(), human.sex()

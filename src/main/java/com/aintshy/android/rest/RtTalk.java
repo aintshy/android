@@ -20,6 +20,7 @@
  */
 package com.aintshy.android.rest;
 
+import android.util.Log;
 import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Talk;
@@ -66,16 +67,33 @@ final class RtTalk implements Talk {
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
+        Log.i(
+            RtTalk.class.getName(),
+            String.format(
+                "talk #%s loaded",
+                this.page.xml().xpath("/page/talk/number/text()").get(0)
+            )
+        );
     }
 
     @Override
     public Human talker() {
         final XML xml = this.page.xml().nodes("/page").get(0);
+        final byte[] photo;
+        try {
+            photo = this.page.rel("/page/role/links/link[@rel='photo']/@href")
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .binary();
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
         return new Human.Simple(
             xml.xpath("role/name/text()").get(0),
             Integer.parseInt(xml.xpath("role/age/text()").get(0)),
             xml.xpath("role/sex/text()").get(0).charAt(0),
-            new byte[0]
+            photo
         );
     }
 
@@ -112,4 +130,5 @@ final class RtTalk implements Talk {
     public void post(final String text) {
         throw new UnsupportedOperationException("#post()");
     }
+
 }

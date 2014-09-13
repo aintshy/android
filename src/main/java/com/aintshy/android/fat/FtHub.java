@@ -24,7 +24,6 @@ import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Profile;
 import com.aintshy.android.api.Talk;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,16 +36,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @since 0.1
  */
 public final class FtHub implements Hub {
-
-    /**
-     * Next talk is not ready.
-     */
-    public static final Iterable<Talk> LOADING = new Iterable<Talk>() {
-        @Override
-        public Iterator<Talk> iterator() {
-            throw new UnsupportedOperationException("#iterator()");
-        }
-    };
 
     /**
      * Original hub.
@@ -78,16 +67,18 @@ public final class FtHub implements Hub {
     }
 
     @Override
-    public Iterable<Talk> next() {
-        final Iterable<Talk> list;
+    public FtItems<Talk> next() {
+        final FtItems<Talk> items;
         final Talk talk = this.next.poll();
         if (talk == null) {
             this.fetch();
-            list = FtHub.LOADING;
+            items = new FtItems.Loading<Talk>();
         } else {
-            list = Collections.singletonList(talk);
+            items = new FtItems.Solid<Talk>(
+                Collections.<Talk>singleton(new FtTalk(talk))
+            );
         }
-        return list;
+        return items;
     }
 
     @Override

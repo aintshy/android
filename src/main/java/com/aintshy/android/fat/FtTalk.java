@@ -18,40 +18,55 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
+package com.aintshy.android.fat;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.ListView;
+import com.aintshy.android.api.Human;
+import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Talk;
-import com.aintshy.android.fat.FtItems;
-import com.google.common.collect.Iterables;
 
 /**
- * Talk activity.
+ * Fat talk.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class TalkActivity extends Activity {
+public final class FtTalk implements Talk {
 
-    @Override
-    public void onCreate(final Bundle state) {
-        super.onCreate(state);
-        final Iterable<Talk> next = App.class.cast(this.getApplication()).talks();
-        if (next instanceof FtItems.Loading) {
-            this.setContentView(R.layout.wait);
-        } else if (Iterables.isEmpty(next)) {
-            this.setContentView(R.layout.empty);
-        } else {
-            final Talk talk = Iterables.get(next, 0);
-            ListView.class.cast(this.findViewById(R.id.talks)).setAdapter(
-                new TalkListAdapter(this, talk)
-            );
-            Log.i(this.getClass().getName(), "talk rendered");
-        }
+    /**
+     * Original talk.
+     */
+    private final transient Talk origin;
+
+    /**
+     * Original talker.
+     */
+    private final transient Human human;
+
+    /**
+     * Ctor.
+     * @param tlk Original
+     */
+    FtTalk(final Talk tlk) {
+        this.origin = tlk;
+        this.human = tlk.talker();
     }
 
+    @Override
+    public Human talker() {
+        return new Human.Simple(
+            this.human.name(), this.human.age(), this.human.sex(),
+            this.human.photo()
+        );
+    }
+
+    @Override
+    public Iterable<Message> messages() {
+        return this.origin.messages();
+    }
+
+    @Override
+    public void post(final String text) {
+        this.origin.post(text);
+    }
 }

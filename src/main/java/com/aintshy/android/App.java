@@ -22,7 +22,9 @@ package com.aintshy.android;
 
 import android.app.Application;
 import com.aintshy.android.api.Hub;
+import com.aintshy.android.api.Talk;
 import com.aintshy.android.fat.FtEntrance;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Application.
@@ -36,15 +38,31 @@ public final class App extends Application {
     /**
      * Hub to use.
      */
-    private final transient Hub hbe = new FtEntrance()
+    private final transient Hub hub = new FtEntrance()
         .hub("4CIB1GNA-UJOMU5DG-7KO2KJQL-0LFKS0HU-7C0GSK3F-99A18IJF-003L0L8V-0K4G2TOA-A1F3GEH7-8G9JOKIM-2174U0PU-4T30461G-E0Q4O91J-3CDLQ7OK-50======");
 
     /**
-     * Get hub.
-     * @return Hub
+     * Current talk.
      */
-    public Hub hub() {
-        return this.hbe;
+    private final transient AtomicReference<Iterable<Talk>> current =
+        new AtomicReference<Iterable<Talk>>();
+
+    /**
+     * Get current talk or empty list if nothing is active now.
+     * @return Talks
+     */
+    public Iterable<Talk> talks() {
+        if (this.current.get() == null) {
+            this.current.set(this.hub.next());
+        }
+        return this.current.get();
+    }
+
+    /**
+     * Swipe, to see the next talk.
+     */
+    public void swipe() {
+        this.current.set(null);
     }
 
 }

@@ -18,39 +18,49 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
+package com.aintshy.android.fat;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.ListView;
-import com.aintshy.android.api.Talk;
-import com.aintshy.android.fat.FtItems;
-import com.google.common.collect.Iterables;
+import java.util.Iterator;
 
 /**
- * Talk activity.
+ * Items.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class TalkActivity extends Activity {
+public interface FtItems<T> extends Iterable<T> {
 
-    @Override
-    public void onCreate(final Bundle state) {
-        super.onCreate(state);
-        final Iterable<Talk> next = App.class.cast(this.getApplication()).talks();
-        if (next instanceof FtItems.Loading) {
-            this.setContentView(R.layout.wait);
-        } else if (Iterables.isEmpty(next)) {
-            this.setContentView(R.layout.empty);
-        } else {
-            final Talk talk = Iterables.get(next, 0);
-            ListView.class.cast(this.findViewById(R.id.talks)).setAdapter(
-                new TalkListAdapter(this, talk)
-            );
-            Log.i(this.getClass().getName(), "talk rendered");
+    /**
+     * They are still loading.
+     * @param <T> Type of item
+     */
+    final class Loading<T> implements FtItems<T> {
+        @Override
+        public Iterator<T> iterator() {
+            throw new UnsupportedOperationException("#iterator()");
+        }
+    }
+
+    /**
+     * Solid, with fixed values.
+     * @param <T> Type of item
+     */
+    final class Solid<T> implements FtItems<T> {
+        /**
+         * Values.
+         */
+        private final transient Iterable<T> vals;
+        /**
+         * Ctor.
+         * @param values The values
+         */
+        public Solid(final Iterable<T> values) {
+            this.vals = values;
+        }
+        @Override
+        public Iterator<T> iterator() {
+            return this.vals.iterator();
         }
     }
 
