@@ -46,6 +46,7 @@ public final class TalkActivity extends Activity {
         } else if (Iterables.isEmpty(next)) {
             this.setContentView(R.layout.empty);
         } else {
+            this.setContentView(R.layout.talk);
             final Talk talk = Iterables.get(next, 0);
             ListView.class.cast(this.findViewById(R.id.talks)).setAdapter(
                 new TalkListAdapter(this, talk)

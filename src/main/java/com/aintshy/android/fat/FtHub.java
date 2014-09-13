@@ -74,9 +74,7 @@ public final class FtHub implements Hub {
             this.fetch();
             items = new FtItems.Loading<Talk>();
         } else {
-            items = new FtItems.Solid<Talk>(
-                Collections.<Talk>singleton(new FtTalk(talk))
-            );
+            items = new FtItems.Solid<Talk>(Collections.singleton(talk));
         }
         return items;
     }
@@ -101,7 +99,7 @@ public final class FtHub implements Hub {
                     @Override
                     public void run() {
                         for (final Talk talk : FtHub.this.origin.next()) {
-                            FtHub.this.next.add(talk);
+                            FtHub.this.next.add(new FtTalk(talk));
                         }
                         FtHub.this.fetching.set(false);
                     }

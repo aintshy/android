@@ -27,6 +27,7 @@ import com.aintshy.android.api.Talk;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
+import com.jcabi.http.wire.AutoRedirectingWire;
 import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -82,6 +83,7 @@ final class RtTalk implements Talk {
         final byte[] photo;
         try {
             photo = this.page.rel("/page/role/links/link[@rel='photo']/@href")
+                .through(AutoRedirectingWire.class)
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
@@ -89,8 +91,16 @@ final class RtTalk implements Talk {
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
+        final String name = xml.xpath("role/name/text()").get(0);
+        Log.i(
+            RtTalk.class.getName(),
+            String.format(
+                "photo loaded for %s: %d bytes",
+                name, photo.length
+            )
+        );
         return new Human.Simple(
-            xml.xpath("role/name/text()").get(0),
+            name,
             Integer.parseInt(xml.xpath("role/age/text()").get(0)),
             xml.xpath("role/sex/text()").get(0).charAt(0),
             photo

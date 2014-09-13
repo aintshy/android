@@ -24,6 +24,7 @@ import android.app.Application;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
 import com.aintshy.android.fat.FtEntrance;
+import com.aintshy.android.fat.FtItems;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -52,10 +53,16 @@ public final class App extends Application {
      * @return Talks
      */
     public Iterable<Talk> talks() {
+        final Iterable<Talk> talks;
         if (this.current.get() == null) {
-            this.current.set(this.hub.next());
+            talks = this.hub.next();
+            if (!(talks instanceof FtItems.Loading)) {
+                this.current.set(talks);
+            }
+        } else {
+            talks = this.current.get();
         }
-        return this.current.get();
+        return talks;
     }
 
     /**
