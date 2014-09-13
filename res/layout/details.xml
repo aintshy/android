@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
-        android:id="@+id/name"/>
+        android:id="@+id/name" android:textColor="#000"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
-        android:id="@+id/year"/>
+        android:id="@+id/year" android:textColor="#000"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/sex" android:inputType="text"/>
+        android:id="@+id/sex" android:inputType="text" android:textColor="#000"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/language" android:inputType="text"/>
+        android:id="@+id/language" android:inputType="text" android:textColor="#000"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -31,5 +31,5 @@
         a:maxLines="1"
         a:singleLine="true"
         a:layout_centerHorizontal="true"
-        />
+        a:textColor="#000"/>
 </RelativeLayout>

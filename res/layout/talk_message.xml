@@ -1,10 +1,13 @@
 <RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
     a:layout_width="fill_parent"
-    a:layout_height="?android:attr/listPreferredItemHeight"
-    a:padding="6dip" a:background="#ffffffff">
+    a:layout_height="fill_parent"
+    a:padding="6dip"
+    a:background="#ffffffff">
     <TextView
         a:id="@+id/text"
         a:layout_width="fill_parent"
         a:layout_height="40dip"
-        a:text="Description" a:textSize="24dp" a:textColor="#000"/>
+        a:text="Description"
+        a:textSize="24sp"
+        a:textColor="#000"/>
 </RelativeLayout>

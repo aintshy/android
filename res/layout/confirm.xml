@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:id="@+id/code" android:inputType="number|numberDecimal"/>
+        android:id="@+id/code" android:inputType="number|numberDecimal" android:textColor="#000"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
