@@ -18,27 +18,50 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.fat;
+package com.aintshy.android.fast;
+
+import android.graphics.Bitmap;
+import com.aintshy.android.api.Human;
 
 /**
- * Token accepting entity.
+ * Fast role in a talk.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public interface FtToken {
+final class FtRole implements Human {
 
     /**
-     * Authenticated and token is ready.
-     * @param token The token
+     * Original human.
      */
-    void authSuccess(String token);
+    private final transient Human origin;
 
     /**
-     * Authentication failed.
-     * @param cause Cause of it
+     * Ctor.
+     * @param hmn Origin
      */
-    void authFailure(String cause);
+    FtRole(final Human hmn) {
+        this.origin = hmn;
+    }
 
+    @Override
+    public String name() {
+        throw new UnsupportedOperationException("#name()");
+    }
+
+    @Override
+    public int age() {
+        throw new UnsupportedOperationException("#age()");
+    }
+
+    @Override
+    public char sex() {
+        throw new UnsupportedOperationException("#sex()");
+    }
+
+    @Override
+    public Bitmap photo() {
+        throw new UnsupportedOperationException("#photo()");
+    }
 }

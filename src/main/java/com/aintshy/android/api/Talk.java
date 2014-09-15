@@ -20,6 +20,9 @@
  */
 package com.aintshy.android.api;
 
+import java.util.Collection;
+import java.util.Date;
+
 /**
  * Talk.
  *
@@ -37,14 +40,20 @@ public interface Talk {
 
     /**
      * Messages (in reverse chronological order).
-     * @return All messages in the talk
+     * @return Portion of messages in the talk
      */
-    Iterable<Message> messages();
+    Collection<Message> messages();
 
     /**
      * Post a message.
      * @param text Text to post
      */
     void post(String text);
+
+    /**
+     * Show only messages that are older than this date.
+     * @param date The date
+     */
+    Talk since(Date date);
 
 }

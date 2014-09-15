@@ -18,13 +18,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.fat;
+package com.aintshy.android.fast;
 
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.rest.RtEntrance;
 
 /**
- * Fat entrance.
+ * Fast entrance.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$

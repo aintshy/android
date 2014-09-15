@@ -51,6 +51,6 @@ public interface Hub {
      * Get history.
      * @return Talks
      */
-    Iterable<Talk> history();
+    History history();
 
 }

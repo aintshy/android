@@ -18,55 +18,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.fat;
+package com.aintshy.android.api;
 
-import com.aintshy.android.api.Human;
-import com.aintshy.android.api.Message;
-import com.aintshy.android.api.Talk;
+import java.util.Collection;
+import java.util.Date;
 
 /**
- * Fat talk.
+ * History.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class FtTalk implements Talk {
+public interface History {
 
     /**
-     * Original talk.
+     * Get talks.
+     * @return Talks
      */
-    private final transient Talk origin;
+    Collection<Talk> talks();
 
     /**
-     * Original talker.
+     * Start with a talk that was updated BEFORE this date.
+     * @param date The date
      */
-    private final transient Human human;
+    History since(Date date);
 
-    /**
-     * Ctor.
-     * @param tlk Original
-     */
-    FtTalk(final Talk tlk) {
-        this.origin = tlk;
-        this.human = tlk.talker();
-    }
-
-    @Override
-    public Human talker() {
-        return new Human.Simple(
-            this.human.name(), this.human.age(), this.human.sex(),
-            this.human.photo()
-        );
-    }
-
-    @Override
-    public Iterable<Message> messages() {
-        return this.origin.messages();
-    }
-
-    @Override
-    public void post(final String text) {
-        this.origin.post(text);
-    }
 }

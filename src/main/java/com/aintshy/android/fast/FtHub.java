@@ -18,8 +18,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.fat;
+package com.aintshy.android.fast;
 
+import com.aintshy.android.api.History;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Profile;
 import com.aintshy.android.api.Talk;
@@ -31,13 +32,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Fat hub.
+ * Fast hub.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class FtHub implements Hub {
+final class FtHub implements Hub {
 
     /**
      * Original hub.
@@ -70,35 +71,42 @@ public final class FtHub implements Hub {
 
     @Override
     public Profile profile() {
-        throw new UnsupportedOperationException("#profile()");
+        return new FtProfile(this.origin.profile());
     }
 
     @Override
-    public FtItems<Talk> next() {
-        final FtItems<Talk> items;
+    public Iterable<Talk> next() {
+        final Iterable<Talk> items;
         final Talk talk = this.next.poll();
         if (talk == null) {
             final long age = System.currentTimeMillis() - this.when.get();
             if (age > TimeUnit.MINUTES.toMillis(1L)) {
                 this.fetch();
-                items = new FtItems.Loading<Talk>();
+                items = new NotReady<Talk>();
             } else {
-                items = new FtItems.Solid<Talk>(Collections.<Talk>emptyList());
+                items = Collections.emptyList();
             }
         } else {
-            items = new FtItems.Solid<Talk>(Collections.singleton(talk));
+            items = Collections.singleton(talk);
         }
         return items;
     }
 
     @Override
     public void ask(final String text) {
-        throw new UnsupportedOperationException("#ask()");
+        new Thread(
+            new Runnable() {
+                @Override
+                public void run() {
+                    FtHub.this.origin.ask(text);
+                }
+            }
+        ).start();
     }
 
     @Override
-    public Iterable<Talk> history() {
-        throw new UnsupportedOperationException("#history()");
+    public History history() {
+        return new FtHistory(this.origin.history());
     }
 
     /**

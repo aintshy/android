@@ -20,101 +20,111 @@
  */
 package com.aintshy.android.rest;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import com.aintshy.android.api.Human;
-import com.aintshy.android.api.Message;
-import com.aintshy.android.api.Talk;
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
-import com.jcabi.xml.XML;
+import com.jcabi.http.wire.AutoRedirectingWire;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.Collection;
-import java.util.Date;
 
 /**
- * RESTful Talk.
+ * RESTful role.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-final class RtTalk implements Talk {
+final class RtRole implements Human {
 
     /**
-     * HTTP request to the server.
+     * HTTP request.
      */
     private final transient Request request;
 
     /**
      * Ctor.
-     * @param req Request to the front page
+     * @param req Request
      */
-    RtTalk(final Request req) {
+    RtRole(final Request req) {
         this.request = req;
     }
 
     @Override
-    public Human talker() {
-        return new RtRole(this.request);
+    public String name() {
+        try {
+            return this.request.fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .assertXPath("/page/role/name")
+                .xml()
+                .xpath("/page/role/name/text()")
+                .get(0);
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
-    public Collection<Message> messages() {
-        final Collection<Message> msgs;
+    public int age() {
         try {
-            msgs = Collections2.transform(
+            return Integer.parseInt(
                 this.request.fetch()
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)
                     .as(XmlResponse.class)
-                    .assertXPath("/page/human/urn")
+                    .assertXPath("/page/role/age")
                     .xml()
-                    .nodes("/page/messages/message"),
-                new Function<XML, Message>() {
-                    @Override
-                    public Message apply(final XML xml) {
-                        return new Message.Simple(
-                            true, new Date(), xml.xpath("text/text()").get(0)
-                        );
-                    }
-                }
+                    .xpath("/page/role/age/text()")
+                    .get(0)
             );
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    @Override
+    public char sex() {
+        try {
+            return this.request.fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .assertXPath("/page/role/sex")
+                .xml()
+                .xpath("/page/role/sex/text()")
+                .get(0).charAt(0);
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    @Override
+    public Bitmap photo() {
+        final byte[] photo;
+        try {
+            photo = this.request.fetch()
+                .as(XmlResponse.class)
+                .rel("/page/role/links/link[@rel='photo']/@href")
+                .through(AutoRedirectingWire.class)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .binary();
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         Log.i(
             RtTalk.class.getName(),
-            String.format("%d messages loaded", msgs.size())
+            String.format(
+                "photo loaded for %s: %d bytes",
+                this.name(), photo.length
+            )
         );
-        return msgs;
+        return BitmapFactory.decodeByteArray(photo, 0, photo.length);
     }
-
-    @Override
-    public void post(final String text) {
-        try {
-            this.request.fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .as(XmlResponse.class)
-                .assertXPath("/page/human/name")
-                .rel("/page/links/link[@rel='post']/@href")
-                .method(Request.POST)
-                .body().formParam("text", text).back()
-                .fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    @Override
-    public Talk since(final Date date) {
-        throw new UnsupportedOperationException("#since()");
-    }
-
 }

@@ -18,40 +18,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
+package com.aintshy.android.fast;
 
-import android.app.Activity;
-import android.util.Log;
-import android.widget.ListView;
-import com.aintshy.android.api.Talk;
-import com.aintshy.android.fast.NotReady;
-import com.google.common.collect.Iterables;
+import java.util.AbstractCollection;
+import java.util.Collections;
+import java.util.Iterator;
 
 /**
- * Talk activity.
+ * Collection that is not ready yet.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class TalkActivity extends Activity {
+public final class NotReady<T> extends AbstractCollection<T> {
 
     @Override
-    public void onStart() {
-        super.onStart();
-        final Iterable<Talk> next = App.class.cast(this.getApplication()).talks();
-        if (next instanceof NotReady) {
-            this.setContentView(R.layout.wait);
-        } else if (Iterables.isEmpty(next)) {
-            this.setContentView(R.layout.empty);
-        } else {
-            this.setContentView(R.layout.talk);
-            final Talk talk = Iterables.get(next, 0);
-            ListView.class.cast(this.findViewById(R.id.talks)).setAdapter(
-                new TalkListAdapter(this, talk)
-            );
-            Log.i(this.getClass().getName(), "talk rendered");
-        }
+    public Iterator<T> iterator() {
+        return Collections.<T>emptyList().iterator();
+    }
+
+    @Override
+    public int size() {
+        return 0;
     }
 
 }

@@ -23,7 +23,7 @@ package com.aintshy.android;
 import android.app.Application;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
-import com.aintshy.android.fat.FtEntrance;
+import com.aintshy.android.fast.FtEntrance;
 import com.google.common.collect.Iterables;
 import java.util.concurrent.atomic.AtomicReference;
 

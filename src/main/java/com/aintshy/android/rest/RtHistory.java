@@ -21,8 +21,7 @@
 package com.aintshy.android.rest;
 
 import android.util.Log;
-import com.aintshy.android.api.Human;
-import com.aintshy.android.api.Message;
+import com.aintshy.android.api.History;
 import com.aintshy.android.api.Talk;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
@@ -32,17 +31,18 @@ import com.jcabi.http.response.XmlResponse;
 import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Date;
 
 /**
- * RESTful Talk.
+ * RESTful History.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-final class RtTalk implements Talk {
+final class RtHistory implements History {
 
     /**
      * HTTP request to the server.
@@ -53,67 +53,49 @@ final class RtTalk implements Talk {
      * Ctor.
      * @param req Request to the front page
      */
-    RtTalk(final Request req) {
-        this.request = req;
+    RtHistory(final Request req) {
+        this.request = req.uri().path("/history").back();
     }
 
     @Override
-    public Human talker() {
-        return new RtRole(this.request);
-    }
-
-    @Override
-    public Collection<Message> messages() {
-        final Collection<Message> msgs;
+    public Collection<Talk> talks() {
+        final XmlResponse response;
         try {
-            msgs = Collections2.transform(
-                this.request.fetch()
-                    .as(RestResponse.class)
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .as(XmlResponse.class)
-                    .assertXPath("/page/human/urn")
-                    .xml()
-                    .nodes("/page/messages/message"),
-                new Function<XML, Message>() {
-                    @Override
-                    public Message apply(final XML xml) {
-                        return new Message.Simple(
-                            true, new Date(), xml.xpath("text/text()").get(0)
-                        );
-                    }
-                }
-            );
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-        Log.i(
-            RtTalk.class.getName(),
-            String.format("%d messages loaded", msgs.size())
-        );
-        return msgs;
-    }
-
-    @Override
-    public void post(final String text) {
-        try {
-            this.request.fetch()
+            response = this.request
+                .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(XmlResponse.class)
-                .assertXPath("/page/human/name")
-                .rel("/page/links/link[@rel='post']/@href")
-                .method(Request.POST)
-                .body().formParam("text", text).back()
-                .fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+                .assertXPath("/page/human/urn");
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
+        final Collection<Talk> talks = Collections2.transform(
+            response.xml().nodes("/page/history/story"),
+            new Function<XML, Talk>() {
+                @Override
+                public Talk apply(final XML xml) {
+                    return new RtTalk(
+                        RtHistory.this.request.uri().set(
+                            URI.create(
+                                xml.xpath(
+                                    "links/link[@rel='open']/@href"
+                                ).get(0)
+                            )
+                        ).back()
+                    );
+                }
+            }
+        );
+        Log.i(
+            this.getClass().getName(),
+            String.format("found %d talks in history", talks.size())
+        );
+        return talks;
     }
 
     @Override
-    public Talk since(final Date date) {
+    public History since(final Date date) {
         throw new UnsupportedOperationException("#since()");
     }
 

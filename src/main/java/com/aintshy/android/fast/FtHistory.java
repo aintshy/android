@@ -18,40 +18,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
+package com.aintshy.android.fast;
 
-import android.app.Activity;
-import android.util.Log;
-import android.widget.ListView;
+import com.aintshy.android.api.History;
 import com.aintshy.android.api.Talk;
-import com.aintshy.android.fast.NotReady;
-import com.google.common.collect.Iterables;
+import java.util.Collection;
+import java.util.Date;
 
 /**
- * Talk activity.
+ * Fast history.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class TalkActivity extends Activity {
+final class FtHistory implements History {
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        final Iterable<Talk> next = App.class.cast(this.getApplication()).talks();
-        if (next instanceof NotReady) {
-            this.setContentView(R.layout.wait);
-        } else if (Iterables.isEmpty(next)) {
-            this.setContentView(R.layout.empty);
-        } else {
-            this.setContentView(R.layout.talk);
-            final Talk talk = Iterables.get(next, 0);
-            ListView.class.cast(this.findViewById(R.id.talks)).setAdapter(
-                new TalkListAdapter(this, talk)
-            );
-            Log.i(this.getClass().getName(), "talk rendered");
-        }
+    /**
+     * Original history.
+     */
+    private final transient History origin;
+
+    /**
+     * Ctor.
+     * @param hst Original
+     */
+    FtHistory(final History hst) {
+        this.origin = hst;
     }
 
+    @Override
+    public Collection<Talk> talks() {
+        throw new UnsupportedOperationException("#talks()");
+    }
+
+    @Override
+    public History since(final Date date) {
+        throw new UnsupportedOperationException("#since()");
+    }
 }

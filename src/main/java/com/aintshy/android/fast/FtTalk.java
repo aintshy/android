@@ -18,51 +18,60 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.fat;
+package com.aintshy.android.fast;
 
-import java.util.Collections;
-import java.util.Iterator;
+import com.aintshy.android.api.Human;
+import com.aintshy.android.api.Message;
+import com.aintshy.android.api.Talk;
+import java.util.Collection;
+import java.util.Date;
 
 /**
- * Items.
+ * Fast talk.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public interface FtItems<T> extends Iterable<T> {
+final class FtTalk implements Talk {
 
     /**
-     * They are still loading.
-     * @param <T> Type of item
+     * Original talk.
      */
-    final class Loading<T> implements FtItems<T> {
-        @Override
-        public Iterator<T> iterator() {
-            return Collections.<T>emptyList().iterator();
-        }
-    }
+    private final transient Talk origin;
 
     /**
-     * Solid, with fixed values.
-     * @param <T> Type of item
+     * Ctor.
+     * @param tlk Original
      */
-    final class Solid<T> implements FtItems<T> {
-        /**
-         * Values.
-         */
-        private final transient Iterable<T> vals;
-        /**
-         * Ctor.
-         * @param values The values
-         */
-        public Solid(final Iterable<T> values) {
-            this.vals = values;
-        }
-        @Override
-        public Iterator<T> iterator() {
-            return this.vals.iterator();
-        }
+    FtTalk(final Talk tlk) {
+        this.origin = tlk;
     }
 
+    @Override
+    public Human talker() {
+        return new FtRole(this.origin.talker());
+    }
+
+    @Override
+    public Collection<Message> messages() {
+        return this.origin.messages();
+    }
+
+    @Override
+    public void post(final String text) {
+        new Thread(
+            new Runnable() {
+                @Override
+                public void run() {
+                    FtTalk.this.origin.post(text);
+                }
+            }
+        ).start();
+    }
+
+    @Override
+    public Talk since(final Date date) {
+        throw new UnsupportedOperationException("#since()");
+    }
 }

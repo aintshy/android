@@ -18,36 +18,31 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.rest;
+package com.aintshy.android.fast;
 
 import android.graphics.Bitmap;
 import com.aintshy.android.api.Profile;
-import com.jcabi.http.Request;
-import com.jcabi.http.response.RestResponse;
-import com.jcabi.http.response.XmlResponse;
-import java.io.IOException;
-import java.net.HttpURLConnection;
 
 /**
- * RESTful Profile.
+ * Fast profile.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-final class RtProfile implements Profile {
+final class FtProfile implements Profile {
 
     /**
-     * HTTP request to the server.
+     * Original profile.
      */
-    private final transient Request request;
+    private final transient Profile origin;
 
     /**
      * Ctor.
-     * @param req Request to the front page
+     * @param prf Original
      */
-    RtProfile(final Request req) {
-        this.request = req.uri().path("/empty").back();
+    FtProfile(final Profile prf) {
+        this.origin = prf;
     }
 
     @Override
@@ -77,18 +72,7 @@ final class RtProfile implements Profile {
 
     @Override
     public String name() {
-        try {
-            return this.request.fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .as(XmlResponse.class)
-                .assertXPath("/page/human/name")
-                .xml()
-                .xpath("/page/human/name/text()")
-                .get(0);
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+        throw new UnsupportedOperationException("#name()");
     }
 
     @Override

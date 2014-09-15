@@ -22,6 +22,7 @@ package com.aintshy.android;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -147,6 +148,7 @@ final class TalkListAdapter implements ListAdapter {
                     "%s %d %c", human.name(), human.age(), human.sex()
                 )
             );
+            Log.i(this.getClass().getName(), "header created");
         } else {
             row = view;
         }
@@ -166,11 +168,12 @@ final class TalkListAdapter implements ListAdapter {
             row = LayoutInflater.class.cast(
                 this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
             ).inflate(R.layout.talk_message, grp, false);
+            row.setTag(R.id.text, row.findViewById(R.id.text));
         } else {
             row = view;
         }
         TextView.class
-            .cast(row.findViewById(R.id.text))
+            .cast(row.getTag(R.id.text))
             .setText(Iterables.get(this.talk.messages(), idx - 1).text());
         return row;
     }

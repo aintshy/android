@@ -21,6 +21,7 @@
 package com.aintshy.android.rest;
 
 import android.util.Log;
+import com.aintshy.android.api.History;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Profile;
 import com.aintshy.android.api.Talk;
@@ -28,11 +29,12 @@ import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
 import com.jcabi.http.wire.AutoRedirectingWire;
+import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * RESTful Hub.
@@ -76,8 +78,22 @@ final class RtHub implements Hub {
             throw new IllegalStateException(ex);
         }
         final Collection<Talk> talks = new ArrayList<Talk>(1);
-        if (response.xml().nodes("/page/talk").isEmpty()) {
-            Log.i(this.getClass().getName(), "home page, no talks");
+        final XML xml = response.xml();
+        if (xml.nodes("/page/talk").isEmpty()) {
+            Log.i(
+                this.getClass().getName(),
+                String.format(
+                    "home page of %s [%s], no talks",
+                    xml.xpath("/page/human/name/text()").get(0),
+                    xml.xpath("/page/human/urn/text()").get(0)
+                )
+            );
+            talks.add(
+                new RtTalk(
+                    response.back().uri()
+                        .set(URI.create("http://i.aintshy.com/9")).back()
+                )
+            );
         } else {
             talks.add(
                 new RtTalk(
@@ -88,7 +104,7 @@ final class RtHub implements Hub {
                 this.getClass().getName(),
                 String.format(
                     "home page with %s",
-                    response.xml().xpath("/page/talk/number/text()").get(0)
+                    xml.xpath("/page/talk/number/text()").get(0)
                 )
             );
         }
@@ -97,12 +113,25 @@ final class RtHub implements Hub {
 
     @Override
     public void ask(final String text) {
-        throw new UnsupportedOperationException("#ask()");
+        try {
+            this.request.uri().path("/empty").back()
+                .fetch()
+                .as(XmlResponse.class)
+                .assertXPath("/page/human/name")
+                .rel("/page/links/link[@rel='ask']/@href")
+                .method(Request.POST)
+                .body().formParam("text", text).back()
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
-    public Iterable<Talk> history() {
-        return Collections.<Talk>singleton(new RtTalk(this.request));
+    public History history() {
+        return new RtHistory(this.request);
     }
 
 }
