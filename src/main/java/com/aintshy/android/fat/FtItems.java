@@ -20,6 +20,7 @@
  */
 package com.aintshy.android.fat;
 
+import java.util.Collections;
 import java.util.Iterator;
 
 /**
@@ -38,7 +39,7 @@ public interface FtItems<T> extends Iterable<T> {
     final class Loading<T> implements FtItems<T> {
         @Override
         public Iterator<T> iterator() {
-            throw new UnsupportedOperationException("#iterator()");
+            return Collections.<T>emptyList().iterator();
         }
     }
 

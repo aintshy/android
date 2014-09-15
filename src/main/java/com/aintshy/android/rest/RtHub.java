@@ -20,11 +20,18 @@
  */
 package com.aintshy.android.rest;
 
+import android.util.Log;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Profile;
 import com.aintshy.android.api.Talk;
 import com.jcabi.http.Request;
+import com.jcabi.http.response.RestResponse;
+import com.jcabi.http.response.XmlResponse;
+import com.jcabi.http.wire.AutoRedirectingWire;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 /**
@@ -56,9 +63,36 @@ final class RtHub implements Hub {
 
     @Override
     public Iterable<Talk> next() {
-        return Collections.<Talk>singleton(
-            new RtTalk(this.request)
-        );
+        final XmlResponse response;
+        try {
+            response = this.request
+                .through(AutoRedirectingWire.class)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .assertXPath("/page/human/urn");
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+        final Collection<Talk> talks = new ArrayList<Talk>(1);
+        if (response.xml().nodes("/page/talk").isEmpty()) {
+            Log.i(this.getClass().getName(), "home page, no talks");
+        } else {
+            talks.add(
+                new RtTalk(
+                    response.rel("/page/links/link[@rel='self']/@href")
+                )
+            );
+            Log.i(
+                this.getClass().getName(),
+                String.format(
+                    "home page with %s",
+                    response.xml().xpath("/page/talk/number/text()").get(0)
+                )
+            );
+        }
+        return talks;
     }
 
     @Override

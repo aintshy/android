@@ -49,7 +49,7 @@ public final class RtEntrance {
      */
     public Hub hub(final String token) {
         return new RtHub(
-            new JdkRequest("http://i.aintshy.com/58")
+            new JdkRequest("http://i.aintshy.com/")
                 .header("Cookie", String.format("Rexsl-Auth=%s", token))
                 .header("Accept", "application/xml")
                 .header("User-Agent", "Android app")

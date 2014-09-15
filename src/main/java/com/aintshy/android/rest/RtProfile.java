@@ -20,6 +20,7 @@
  */
 package com.aintshy.android.rest;
 
+import android.graphics.Bitmap;
 import com.aintshy.android.api.Profile;
 import com.jcabi.http.Request;
 
@@ -86,7 +87,7 @@ final class RtProfile implements Profile {
     }
 
     @Override
-    public byte[] photo() {
+    public Bitmap photo() {
         throw new UnsupportedOperationException("#photo()");
     }
 }

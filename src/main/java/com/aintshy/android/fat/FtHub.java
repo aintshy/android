@@ -26,7 +26,9 @@ import com.aintshy.android.api.Talk;
 import java.util.Collections;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Fat hub.
@@ -54,6 +56,11 @@ public final class FtHub implements Hub {
     private final transient AtomicBoolean fetching = new AtomicBoolean();
 
     /**
+     * When was it loaded last time?
+     */
+    private final transient AtomicLong when = new AtomicLong();
+
+    /**
      * Ctor.
      * @param hub Original
      */
@@ -71,8 +78,13 @@ public final class FtHub implements Hub {
         final FtItems<Talk> items;
         final Talk talk = this.next.poll();
         if (talk == null) {
-            this.fetch();
-            items = new FtItems.Loading<Talk>();
+            final long age = System.currentTimeMillis() - this.when.get();
+            if (age > TimeUnit.MINUTES.toMillis(1L)) {
+                this.fetch();
+                items = new FtItems.Loading<Talk>();
+            } else {
+                items = new FtItems.Solid<Talk>(Collections.<Talk>emptyList());
+            }
         } else {
             items = new FtItems.Solid<Talk>(Collections.singleton(talk));
         }
@@ -101,6 +113,7 @@ public final class FtHub implements Hub {
                         for (final Talk talk : FtHub.this.origin.next()) {
                             FtHub.this.next.add(new FtTalk(talk));
                         }
+                        FtHub.this.when.set(System.currentTimeMillis());
                         FtHub.this.fetching.set(false);
                     }
                 }

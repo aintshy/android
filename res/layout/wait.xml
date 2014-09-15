@@ -2,11 +2,11 @@
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
     a:orientation="vertical"
     a:layout_width="fill_parent"
-    a:layout_height="fill_parent">
+    a:layout_height="fill_parent" a:background="#fff">
     <TextView
         a:layout_width="wrap_content"
         a:layout_height="wrap_content"
         a:textAppearance="?android:attr/textAppearanceLarge"
         a:text="Wait..."
-        a:id="@+id/textView" a:layout_gravity="center_horizontal"/>
+        a:id="@+id/textView" a:layout_gravity="center_horizontal" a:textColor="#000"/>
 </LinearLayout>

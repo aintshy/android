@@ -20,10 +20,13 @@
  */
 package com.aintshy.android.rest;
 
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Talk;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
@@ -31,7 +34,6 @@ import com.jcabi.http.wire.AutoRedirectingWire;
 import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -103,36 +105,22 @@ final class RtTalk implements Talk {
             name,
             Integer.parseInt(xml.xpath("role/age/text()").get(0)),
             xml.xpath("role/sex/text()").get(0).charAt(0),
-            photo
+            BitmapFactory.decodeByteArray(photo, 0, photo.length)
         );
     }
 
     @Override
     public Iterable<Message> messages() {
-        return Arrays.<Message>asList(
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(true, new Date(), "how are you?"),
-            new Message.Simple(false, new Date(), "I'm fine!")
+        return Iterables.transform(
+            this.page.xml().nodes("/page/messages/message"),
+            new Function<XML, Message>() {
+                @Override
+                public Message apply(final XML xml) {
+                    return new Message.Simple(
+                        true, new Date(), xml.xpath("text/text()").get(0)
+                    );
+                }
+            }
         );
     }
 

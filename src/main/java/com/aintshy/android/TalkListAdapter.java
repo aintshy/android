@@ -22,7 +22,6 @@ package com.aintshy.android;
 
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,8 +85,8 @@ final class TalkListAdapter implements ListAdapter {
     }
 
     @Override
-    public long getItemId(final int position) {
-        return position;
+    public long getItemId(final int idx) {
+        return idx;
     }
 
     @Override
@@ -97,27 +96,11 @@ final class TalkListAdapter implements ListAdapter {
 
     @Override
     public View getView(final int idx, final View view, final ViewGroup grp) {
-        final LayoutInflater inflater = LayoutInflater.class.cast(
-            this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
-        );
         final View row;
         if (idx == 0) {
-            row = inflater.inflate(R.layout.talk_head, grp, false);
-            final Human human = this.talk.talker();
-            final byte[] photo = human.photo();
-            ImageView.class.cast(row.findViewById(R.id.photo)).setImageBitmap(
-                BitmapFactory.decodeByteArray(photo, 0, photo.length)
-            );
-            TextView.class.cast(row.findViewById(R.id.human)).setText(
-                String.format(
-                    "%s %d %c", human.name(), human.age(), human.sex()
-                )
-            );
+            row = this.header(view, grp);
         } else {
-            row = inflater.inflate(R.layout.talk_message, grp, false);
-            TextView.class
-                .cast(row.findViewById(R.id.text))
-                .setText(Iterables.get(this.talk.messages(), idx - 1).text());
+            row = this.message(idx, view, grp);
         }
         return row;
     }
@@ -142,5 +125,55 @@ final class TalkListAdapter implements ListAdapter {
     public boolean isEmpty() {
         return false;
     }
+
+    /**
+     * Render header.
+     * @param view View or NULL
+     * @param grp Group
+     * @return Row view
+     */
+    private View header(final View view, final ViewGroup grp) {
+        final View row;
+        if (view == null) {
+            row = LayoutInflater.class.cast(
+                this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
+            ).inflate(R.layout.talk_head, grp, false);
+            final Human human = this.talk.talker();
+            ImageView.class.cast(row.findViewById(R.id.photo)).setImageBitmap(
+                human.photo()
+            );
+            TextView.class.cast(row.findViewById(R.id.human)).setText(
+                String.format(
+                    "%s %d %c", human.name(), human.age(), human.sex()
+                )
+            );
+        } else {
+            row = view;
+        }
+        return row;
+    }
+
+    /**
+     * Render header.
+     * @param idx Position of the message
+     * @param view View or NULL
+     * @param grp Group
+     * @return Row view
+     */
+    private View message(final int idx, final View view, final ViewGroup grp) {
+        final View row;
+        if (view == null) {
+            row = LayoutInflater.class.cast(
+                this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
+            ).inflate(R.layout.talk_message, grp, false);
+        } else {
+            row = view;
+        }
+        TextView.class
+            .cast(row.findViewById(R.id.text))
+            .setText(Iterables.get(this.talk.messages(), idx - 1).text());
+        return row;
+    }
+
 }
 

@@ -20,6 +20,8 @@
  */
 package com.aintshy.android.api;
 
+import android.graphics.Bitmap;
+
 /**
  * Human.
  *
@@ -51,7 +53,7 @@ public interface Human {
      * Get photo, as PNG image.
      * @return Photo
      */
-    byte[] photo();
+    Bitmap photo();
 
     /**
      * Simple.
@@ -60,10 +62,10 @@ public interface Human {
         private final transient String label;
         private final transient int years;
         private final transient char gender;
-        private final transient byte[] png;
+        private final transient Bitmap png;
 
         public Simple(final String name, final int age, final char sex,
-            final byte[] photo) {
+            final Bitmap photo) {
             this.label = name;
             this.years = age;
             this.gender = sex;
@@ -86,7 +88,7 @@ public interface Human {
         }
 
         @Override
-        public byte[] photo() {
+        public Bitmap photo() {
             return this.png;
         }
     }
