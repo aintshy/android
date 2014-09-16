@@ -39,16 +39,13 @@ public final class TalkActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
+        this.setContentView(R.layout.wait);
         new Reload().execute(
             App.class.cast(this.getApplication()).inbox()
         );
     }
 
     private final class Reload extends AsyncTask<Inbox, Integer, Iterable<Talk>> {
-        @Override
-        protected void onPreExecute() {
-            TalkActivity.this.setContentView(R.layout.wait);
-        }
         @Override
         protected Iterable<Talk> doInBackground(final Inbox... inbox) {
             return inbox[0].current();

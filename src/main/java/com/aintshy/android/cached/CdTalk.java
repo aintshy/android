@@ -18,50 +18,59 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
+package com.aintshy.android.cached;
 
-import android.app.Application;
-import com.aintshy.android.api.Hub;
-import com.aintshy.android.cached.CdHub;
-import com.aintshy.android.rest.RtEntrance;
+import com.aintshy.android.api.Human;
+import com.aintshy.android.api.Message;
+import com.aintshy.android.api.Talk;
+import com.jcabi.aspects.Cacheable;
+import java.util.Collection;
+import java.util.Date;
+import lombok.EqualsAndHashCode;
 
 /**
- * Application.
+ * Cached Talk.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class App extends Application {
+@EqualsAndHashCode(of = "origin")
+final class CdTalk implements Talk {
 
     /**
-     * Hub to use.
+     * Original object.
      */
-    private final transient Hub hub;
-
-    /**
-     * Inbox.
-     */
-    private final transient Inbox ibx;
+    private final transient Talk origin;
 
     /**
      * Ctor.
+     * @param orgn Original
      */
-    public App() {
-        super();
-        final String token = "4CIB1GNA-UJOMU5DG-7KO2KJQL-0LFKS0HU-7C0GSK3F-99A18IJF-003L0L8V-0K4G2TOA-A1F3GEH7-8G9JOKIM-2174U0PU-4T30461G-E0Q4O91J-3CDLQ7OK-50======";
-        this.hub = new CdHub(
-            new RtEntrance().hub(token)
-        );
-        this.ibx = new Inbox(this.hub);
+    CdTalk(final Talk orgn) {
+        this.origin = orgn;
     }
 
-    /**
-     * Get inbox.
-     * @return Inbox
-     */
-    public Inbox inbox() {
-        return this.ibx;
+    @Override
+    @Cacheable
+    public Human role() {
+        return this.origin.role();
     }
 
+    @Override
+    @Cacheable
+    public Collection<Message> messages() {
+        return this.origin.messages();
+    }
+
+    @Override
+    @Cacheable.FlushAfter
+    public void post(final String text) {
+        this.origin.post(text);
+    }
+
+    @Override
+    public Talk since(final Date date) {
+        return this.origin.since(date);
+    }
 }

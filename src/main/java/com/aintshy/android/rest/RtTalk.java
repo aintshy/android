@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Collection;
 import java.util.Date;
+import lombok.EqualsAndHashCode;
 
 /**
  * RESTful Talk.
@@ -42,6 +43,7 @@ import java.util.Date;
  * @version $Id$
  * @since 0.1
  */
+@EqualsAndHashCode(of = "request")
 final class RtTalk implements Talk {
 
     /**

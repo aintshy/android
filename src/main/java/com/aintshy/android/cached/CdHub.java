@@ -18,50 +18,64 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
+package com.aintshy.android.cached;
 
-import android.app.Application;
+import com.aintshy.android.api.History;
 import com.aintshy.android.api.Hub;
-import com.aintshy.android.cached.CdHub;
-import com.aintshy.android.rest.RtEntrance;
+import com.aintshy.android.api.Profile;
+import com.aintshy.android.api.Talk;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import lombok.EqualsAndHashCode;
 
 /**
- * Application.
+ * Cached Hub.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class App extends Application {
+@EqualsAndHashCode(of = "origin")
+public final class CdHub implements Hub {
 
     /**
-     * Hub to use.
+     * Original object.
      */
-    private final transient Hub hub;
-
-    /**
-     * Inbox.
-     */
-    private final transient Inbox ibx;
+    private final transient Hub origin;
 
     /**
      * Ctor.
+     * @param orgn Original
      */
-    public App() {
-        super();
-        final String token = "4CIB1GNA-UJOMU5DG-7KO2KJQL-0LFKS0HU-7C0GSK3F-99A18IJF-003L0L8V-0K4G2TOA-A1F3GEH7-8G9JOKIM-2174U0PU-4T30461G-E0Q4O91J-3CDLQ7OK-50======";
-        this.hub = new CdHub(
-            new RtEntrance().hub(token)
+    public CdHub(final Hub orgn) {
+        this.origin = orgn;
+    }
+
+    @Override
+    public Profile profile() {
+        return this.origin.profile();
+    }
+
+    @Override
+    public Iterable<Talk> next() {
+        return Iterables.transform(
+            this.origin.next(),
+            new Function<Talk, Talk>() {
+                @Override
+                public Talk apply(final Talk talk) {
+                    return new CdTalk(talk);
+                }
+            }
         );
-        this.ibx = new Inbox(this.hub);
     }
 
-    /**
-     * Get inbox.
-     * @return Inbox
-     */
-    public Inbox inbox() {
-        return this.ibx;
+    @Override
+    public void ask(final String text) {
+        this.origin.ask(text);
     }
 
+    @Override
+    public History history() {
+        return this.origin.history();
+    }
 }

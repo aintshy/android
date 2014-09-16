@@ -34,6 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Date;
+import lombok.EqualsAndHashCode;
 
 /**
  * RESTful History.
@@ -42,6 +43,7 @@ import java.util.Date;
  * @version $Id$
  * @since 0.1
  */
+@EqualsAndHashCode(of = "request")
 final class RtHistory implements History {
 
     /**

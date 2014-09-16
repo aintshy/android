@@ -193,11 +193,10 @@ final class TalkListAdapter implements ListAdapter {
             row = LayoutInflater.class.cast(
                 this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
             ).inflate(R.layout.talk_message, grp, false);
-            row.setTag(R.id.text, row.findViewById(R.id.text));
         } else {
             row = view;
         }
-        final TextView label = TextView.class.cast(row.getTag(R.id.text));
+        final TextView label = TextView.class.cast(row.findViewById(R.id.text));
         new AsyncTask<Void, Void, String>() {
             @Override
             protected void onPreExecute() {

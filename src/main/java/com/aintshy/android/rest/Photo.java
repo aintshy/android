@@ -28,6 +28,7 @@ import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.wire.AutoRedirectingWire;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import lombok.EqualsAndHashCode;
 
 /**
  * RESTful photo.
@@ -36,6 +37,7 @@ import java.net.HttpURLConnection;
  * @version $Id$
  * @since 0.1
  */
+@EqualsAndHashCode(of = "uri")
 final class Photo {
 
     /**

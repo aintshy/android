@@ -106,7 +106,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-android</artifactId>
-            <version>1.5.8</version>
+            <version>1.7.7</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -202,6 +202,7 @@
                         <platform>19</platform>
                     </sdk>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                    <extractDuplicates>true</extractDuplicates>
                 </configuration>
                 <extensions>true</extensions>
             </plugin>

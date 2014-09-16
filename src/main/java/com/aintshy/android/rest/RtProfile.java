@@ -28,6 +28,7 @@ import com.jcabi.http.response.XmlResponse;
 import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import lombok.EqualsAndHashCode;
 
 /**
  * RESTful Profile.
@@ -36,6 +37,7 @@ import java.net.HttpURLConnection;
  * @version $Id$
  * @since 0.1
  */
+@EqualsAndHashCode(of = "request")
 final class RtProfile implements Profile {
 
     /**

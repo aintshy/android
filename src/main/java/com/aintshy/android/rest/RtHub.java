@@ -35,6 +35,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import lombok.EqualsAndHashCode;
 
 /**
  * RESTful Hub.
@@ -43,6 +44,7 @@ import java.util.Collection;
  * @version $Id$
  * @since 0.1
  */
+@EqualsAndHashCode(of = "request")
 final class RtHub implements Hub {
 
     /**
