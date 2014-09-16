@@ -18,60 +18,63 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.fast;
+package com.aintshy.android;
 
-import com.aintshy.android.api.Human;
-import com.aintshy.android.api.Message;
+import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
-import java.util.Collection;
-import java.util.Date;
+import com.google.common.collect.Iterables;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Fast talk.
+ * Inbox with talks.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-final class FtTalk implements Talk {
+final class Inbox {
 
     /**
-     * Original talk.
+     * Hub to use.
      */
-    private final transient Talk origin;
+    private final transient Hub hub;
+
+    /**
+     * Current talk.
+     */
+    private final transient AtomicReference<Iterable<Talk>> current =
+        new AtomicReference<Iterable<Talk>>();
 
     /**
      * Ctor.
-     * @param tlk Original
+     * @param hbe Hub to work with
      */
-    FtTalk(final Talk tlk) {
-        this.origin = tlk;
+    Inbox(final Hub hbe) {
+        this.hub = hbe;
     }
 
-    @Override
-    public Human talker() {
-        return new FtRole(this.origin.talker());
-    }
-
-    @Override
-    public Collection<Message> messages() {
-        return this.origin.messages();
-    }
-
-    @Override
-    public void post(final String text) {
-        new Thread(
-            new Runnable() {
-                @Override
-                public void run() {
-                    FtTalk.this.origin.post(text);
-                }
+    /**
+     * Get current talk or empty list if nothing is active now.
+     * @return Talks
+     */
+    public Iterable<Talk> current() {
+        final Iterable<Talk> talks;
+        if (this.current.get() == null) {
+            talks = this.hub.next();
+            if (!Iterables.isEmpty(talks)) {
+                this.current.set(talks);
             }
-        ).start();
+        } else {
+            talks = this.current.get();
+        }
+        return talks;
     }
 
-    @Override
-    public Talk since(final Date date) {
-        throw new UnsupportedOperationException("#since()");
+    /**
+     * Swipe, to see the next talk.
+     */
+    public void swipe() {
+        this.current.set(null);
     }
+
 }

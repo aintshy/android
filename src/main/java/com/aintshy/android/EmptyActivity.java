@@ -23,48 +23,49 @@ package com.aintshy.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.widget.ListView;
-import com.aintshy.android.api.Talk;
-import com.google.common.collect.Iterables;
+import android.util.Log;
 
 /**
- * Talk activity.
+ * No new talks for you.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class TalkActivity extends Activity {
+public final class EmptyActivity extends Activity {
 
     @Override
     public void onStart() {
         super.onStart();
-        new Reload().execute(
+        new Refresh().execute(
             App.class.cast(this.getApplication()).inbox()
         );
     }
 
-    private final class Reload extends AsyncTask<Inbox, Integer, Iterable<Talk>> {
+    private final class Refresh extends AsyncTask<Inbox, Integer, Boolean> {
         @Override
         protected void onPreExecute() {
-            TalkActivity.this.setContentView(R.layout.wait);
+            EmptyActivity.this.setContentView(R.layout.empty);
         }
         @Override
-        protected Iterable<Talk> doInBackground(final Inbox... inbox) {
-            return inbox[0].current();
+        protected Boolean doInBackground(final Inbox... inbox) {
+            boolean found = false;
+            while (!this.isCancelled()) {
+                if (inbox[0].current().iterator().hasNext()) {
+                    found = true;
+                    break;
+                }
+                Log.i(this.getClass().getName(), "checking...");
+            }
+            return found;
         }
         @Override
-        protected void onPostExecute(final Iterable<Talk> talks) {
-            if (Iterables.isEmpty(talks)) {
-                TalkActivity.this.startActivity(
-                    new Intent(TalkActivity.this, EmptyActivity.class)
+        protected void onPostExecute(final Boolean found) {
+            if (found) {
+                EmptyActivity.this.startActivity(
+                    new Intent(EmptyActivity.this, TalkActivity.class)
                 );
             }
-            TalkActivity.this.setContentView(R.layout.talk);
-            final Talk talk = Iterables.get(talks, 0);
-            ListView.class.cast(TalkActivity.this.findViewById(R.id.talks)).setAdapter(
-                new TalkListAdapter(TalkActivity.this, talk)
-            );
         }
     }
 

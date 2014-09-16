@@ -22,7 +22,8 @@ package com.aintshy.android;
 
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.util.Log;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +78,7 @@ final class TalkListAdapter implements ListAdapter {
 
     @Override
     public int getCount() {
-        return Iterables.size(this.talk.messages()) + 1;
+        return 10;
     }
 
     @Override
@@ -139,16 +140,40 @@ final class TalkListAdapter implements ListAdapter {
             row = LayoutInflater.class.cast(
                 this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
             ).inflate(R.layout.talk_head, grp, false);
-            final Human human = this.talk.talker();
-            ImageView.class.cast(row.findViewById(R.id.photo)).setImageBitmap(
-                human.photo()
-            );
-            TextView.class.cast(row.findViewById(R.id.human)).setText(
-                String.format(
-                    "%s %d %c", human.name(), human.age(), human.sex()
-                )
-            );
-            Log.i(this.getClass().getName(), "header created");
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected void onPreExecute() {
+                    // set empty image
+                }
+                @Override
+                protected Bitmap doInBackground(final Void... params) {
+                    return TalkListAdapter.this.talk.role().photo();
+                }
+                @Override
+                protected void onPostExecute(final Bitmap photo) {
+                    ImageView.class
+                        .cast(row.findViewById(R.id.photo))
+                        .setImageBitmap(photo);
+                }
+            }.execute();
+            final TextView label = TextView.class.cast(row.findViewById(R.id.human));
+            new AsyncTask<Void, Void, String>() {
+                @Override
+                protected void onPreExecute() {
+                    label.setText("...wait...");
+                }
+                @Override
+                protected String doInBackground(final Void... params) {
+                    final Human human = TalkListAdapter.this.talk.role();
+                    return String.format(
+                        "%s %d %c", human.name(), human.age(), human.sex()
+                    );
+                }
+                @Override
+                protected void onPostExecute(final String name) {
+                    label.setText(name);
+                }
+            }.execute();
         } else {
             row = view;
         }
@@ -172,9 +197,23 @@ final class TalkListAdapter implements ListAdapter {
         } else {
             row = view;
         }
-        TextView.class
-            .cast(row.getTag(R.id.text))
-            .setText(Iterables.get(this.talk.messages(), idx - 1).text());
+        final TextView label = TextView.class.cast(row.getTag(R.id.text));
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected void onPreExecute() {
+                label.setText("...wait...");
+            }
+            @Override
+            protected String doInBackground(final Void... params) {
+                return Iterables.get(
+                    TalkListAdapter.this.talk.messages(), idx - 1
+                ).text();
+            }
+            @Override
+            protected void onPostExecute(final String text) {
+                label.setText(text);
+            }
+        }.execute();
         return row;
     }
 

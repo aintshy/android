@@ -18,50 +18,58 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.fast;
+package com.aintshy.android.rest;
 
 import android.graphics.Bitmap;
-import com.aintshy.android.api.Human;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
+import com.jcabi.http.wire.AutoRedirectingWire;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 
 /**
- * Fast role in a talk.
+ * RESTful photo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-final class FtRole implements Human {
+final class Photo {
 
     /**
-     * Original human.
+     * URI.
      */
-    private final transient Human origin;
+    private final transient String uri;
 
     /**
      * Ctor.
-     * @param hmn Origin
+     * @param path Web path of the photo
      */
-    FtRole(final Human hmn) {
-        this.origin = hmn;
+    Photo(final String path) {
+        this.uri = path;
     }
 
-    @Override
-    public String name() {
-        throw new UnsupportedOperationException("#name()");
-    }
-
-    @Override
-    public int age() {
-        throw new UnsupportedOperationException("#age()");
-    }
-
-    @Override
-    public char sex() {
-        throw new UnsupportedOperationException("#sex()");
-    }
-
-    @Override
-    public Bitmap photo() {
-        throw new UnsupportedOperationException("#photo()");
+    /**
+     * Get it as a bitmap.
+     * @return Bitmap
+     * @throws IOException If fails
+     */
+    public Bitmap bitmap() throws IOException {
+        final byte[] photo = new JdkRequest(this.uri)
+            .through(AutoRedirectingWire.class)
+            .fetch()
+            .as(RestResponse.class)
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .binary();
+        Log.i(
+            RtTalk.class.getName(),
+            String.format(
+                "photo loaded from %s: %d bytes",
+                this.uri, photo.length
+            )
+        );
+        return BitmapFactory.decodeByteArray(photo, 0, photo.length);
     }
 }

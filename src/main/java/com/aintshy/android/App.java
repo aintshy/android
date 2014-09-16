@@ -22,10 +22,7 @@ package com.aintshy.android;
 
 import android.app.Application;
 import com.aintshy.android.api.Hub;
-import com.aintshy.android.api.Talk;
-import com.aintshy.android.fast.FtEntrance;
-import com.google.common.collect.Iterables;
-import java.util.concurrent.atomic.AtomicReference;
+import com.aintshy.android.rest.RtEntrance;
 
 /**
  * Application.
@@ -39,37 +36,29 @@ public final class App extends Application {
     /**
      * Hub to use.
      */
-    private final transient Hub hub = new FtEntrance()
-        .hub("4CIB1GNA-UJOMU5DG-7KO2KJQL-0LFKS0HU-7C0GSK3F-99A18IJF-003L0L8V-0K4G2TOA-A1F3GEH7-8G9JOKIM-2174U0PU-4T30461G-E0Q4O91J-3CDLQ7OK-50======");
+    private final transient Hub hub;
 
     /**
-     * Current talk.
+     * Inbox.
      */
-    private final transient AtomicReference<Iterable<Talk>> current =
-        new AtomicReference<Iterable<Talk>>();
+    private final transient Inbox ibx;
 
     /**
-     * Get current talk or empty list if nothing is active now.
-     * @return Talks
+     * Ctor.
      */
-    public Iterable<Talk> talks() {
-        final Iterable<Talk> talks;
-        if (this.current.get() == null) {
-            talks = this.hub.next();
-            if (!Iterables.isEmpty(talks)) {
-                this.current.set(talks);
-            }
-        } else {
-            talks = this.current.get();
-        }
-        return talks;
+    public App() {
+        super();
+        this.hub = new RtEntrance()
+            .hub("4CIB1GNA-UJOMU5DG-7KO2KJQL-0LFKS0HU-7C0GSK3F-99A18IJF-003L0L8V-0K4G2TOA-A1F3GEH7-8G9JOKIM-2174U0PU-4T30461G-E0Q4O91J-3CDLQ7OK-50======");
+        this.ibx = new Inbox(this.hub);
     }
 
     /**
-     * Swipe, to see the next talk.
+     * Get inbox.
+     * @return Inbox
      */
-    public void swipe() {
-        this.current.set(null);
+    public Inbox inbox() {
+        return this.ibx;
     }
 
 }

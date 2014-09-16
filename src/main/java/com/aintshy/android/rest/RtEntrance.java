@@ -22,6 +22,10 @@ package com.aintshy.android.rest;
 
 import com.aintshy.android.api.Hub;
 import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
+import com.jcabi.http.response.XmlResponse;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 
 /**
  * RESTful authentication.
@@ -39,7 +43,21 @@ public final class RtEntrance {
      * @return Token
      */
     public String auth(final String email, final String password) {
-        return "token";
+        try {
+            return new JdkRequest("http://i.aintshy.com/login")
+                .body().formParam("email", email)
+                .formParam("password", password).back()
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
+                .as(XmlResponse.class)
+                .assertXPath("/page/human/urn")
+                .xml()
+                .xpath("/page/identity/token/text()")
+                .get(0);
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**

@@ -27,7 +27,13 @@ package com.aintshy.android.api;
  * @version $Id$
  * @since 0.1
  */
-public interface Profile extends Human {
+public interface Profile {
+
+    /**
+     * Me, as a human.
+     * @return Myself
+     */
+    Human myself();
 
     /**
      * Email is confirmed?

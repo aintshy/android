@@ -36,7 +36,7 @@ public interface Talk {
      * Who is talking to me.
      * @return My respondent
      */
-    Human talker();
+    Human role();
 
     /**
      * Messages (in reverse chronological order).

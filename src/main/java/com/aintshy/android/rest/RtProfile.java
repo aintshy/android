@@ -20,11 +20,12 @@
  */
 package com.aintshy.android.rest;
 
-import android.graphics.Bitmap;
+import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Profile;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
+import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
@@ -76,33 +77,26 @@ final class RtProfile implements Profile {
     }
 
     @Override
-    public String name() {
+    public Human myself() {
         try {
-            return this.request.fetch()
+            final XML xml = this.request.fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(XmlResponse.class)
                 .assertXPath("/page/human/name")
                 .xml()
-                .xpath("/page/human/name/text()")
-                .get(0);
+                .nodes("/page/human").get(0);
+            return new Human.Simple(
+                xml.xpath("name/text()").get(0),
+                Integer.parseInt(xml.xpath("age/text()").get(0)),
+                xml.xpath("sex/text()").get(0).charAt(0),
+                new Photo(
+                    xml.xpath("links/link[@rel='photo']/@href").get(0)
+                ).bitmap()
+            );
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
 
-    @Override
-    public int age() {
-        throw new UnsupportedOperationException("#age()");
-    }
-
-    @Override
-    public char sex() {
-        throw new UnsupportedOperationException("#sex()");
-    }
-
-    @Override
-    public Bitmap photo() {
-        throw new UnsupportedOperationException("#photo()");
-    }
 }
