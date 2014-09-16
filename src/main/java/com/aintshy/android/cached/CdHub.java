@@ -20,12 +20,14 @@
  */
 package com.aintshy.android.cached;
 
+import android.util.LruCache;
 import com.aintshy.android.api.History;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Profile;
 import com.aintshy.android.api.Talk;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
+import com.jcabi.aspects.Tv;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -42,6 +44,12 @@ public final class CdHub implements Hub {
      * Original object.
      */
     private final transient Hub origin;
+
+    /**
+     * LRU cache.
+     */
+    private final transient LruCache<Talk, Talk> cache =
+        new LruCache<Talk, Talk>(Tv.TEN);
 
     /**
      * Ctor.
@@ -63,7 +71,7 @@ public final class CdHub implements Hub {
             new Function<Talk, Talk>() {
                 @Override
                 public Talk apply(final Talk talk) {
-                    return new CdTalk(talk);
+                    return CdHub.this.wrap(talk);
                 }
             }
         );
@@ -78,4 +86,21 @@ public final class CdHub implements Hub {
     public History history() {
         return this.origin.history();
     }
+
+    /**
+     * Wrap it.
+     * @param talk Talk
+     * @return Cached one
+     */
+    private Talk wrap(final Talk talk) {
+        synchronized (this.cache) {
+            Talk cached = this.cache.get(talk);
+            if (cached == null) {
+                cached = new CdTalk(talk);
+                this.cache.put(talk, cached);
+            }
+            return cached;
+        }
+    }
+
 }

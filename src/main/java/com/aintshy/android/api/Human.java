@@ -21,6 +21,7 @@
 package com.aintshy.android.api;
 
 import android.graphics.Bitmap;
+import lombok.EqualsAndHashCode;
 
 /**
  * Human.
@@ -58,6 +59,7 @@ public interface Human {
     /**
      * Simple.
      */
+    @EqualsAndHashCode(of = "label")
     final class Simple implements Human {
         private final transient String label;
         private final transient int years;

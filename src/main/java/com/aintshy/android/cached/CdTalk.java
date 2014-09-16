@@ -23,7 +23,6 @@ package com.aintshy.android.cached;
 import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Talk;
-import com.jcabi.aspects.Cacheable;
 import java.util.Collection;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
@@ -44,6 +43,17 @@ final class CdTalk implements Talk {
     private final transient Talk origin;
 
     /**
+     * Role.
+     */
+    private final transient Atomic<Human> human = new Atomic<Human>();
+
+    /**
+     * Messages.
+     */
+    private final transient Atomic<Collection<Message>> msgs =
+        new Atomic<Collection<Message>>();
+
+    /**
      * Ctor.
      * @param orgn Original
      */
@@ -52,20 +62,32 @@ final class CdTalk implements Talk {
     }
 
     @Override
-    @Cacheable
     public Human role() {
-        return this.origin.role();
+        return this.human.getOrSet(
+            new Atomic.Source<Human>() {
+                @Override
+                public Human read() {
+                    return CdTalk.this.origin.role();
+                }
+            }
+        );
     }
 
     @Override
-    @Cacheable
     public Collection<Message> messages() {
-        return this.origin.messages();
+        return this.msgs.getOrSet(
+            new Atomic.Source<Collection<Message>>() {
+                @Override
+                public Collection<Message> read() {
+                    return CdTalk.this.origin.messages();
+                }
+            }
+        );
     }
 
     @Override
-    @Cacheable.FlushAfter
     public void post(final String text) {
+        this.msgs.flush();
         this.origin.post(text);
     }
 
