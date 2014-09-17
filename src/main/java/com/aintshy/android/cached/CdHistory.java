@@ -21,81 +21,72 @@
 package com.aintshy.android.cached;
 
 import com.aintshy.android.api.History;
-import com.aintshy.android.api.Hub;
-import com.aintshy.android.api.Profile;
 import com.aintshy.android.api.Talk;
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Collections2;
+import java.util.Collection;
+import java.util.Date;
 import lombok.EqualsAndHashCode;
 
 /**
- * Cached Hub.
+ * Cached History.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
 @EqualsAndHashCode(of = "origin")
-public final class CdHub implements Hub {
+final class CdHistory implements History {
 
     /**
      * Original object.
      */
-    private final transient Hub origin;
+    private final transient History origin;
 
     /**
-     * History.
+     * Talks.
      */
-    private final transient Atomic<History> hst = new Atomic<History>();
+    private final transient Atomic<Collection<Talk>> cached =
+        new Atomic<Collection<Talk>>();
 
     /**
      * LRU cache.
      */
-    private final transient LruTalks lru = new LruTalks();
+    private final transient LruTalks lru;
 
     /**
      * Ctor.
      * @param orgn Original
+     * @param cache Cache
      */
-    public CdHub(final Hub orgn) {
+    CdHistory(final History orgn, final LruTalks cache) {
         this.origin = orgn;
+        this.lru = cache;
     }
 
     @Override
-    public Profile profile() {
-        return this.origin.profile();
-    }
-
-    @Override
-    public Iterable<Talk> next() {
-        return Iterables.transform(
-            this.origin.next(),
+    public Collection<Talk> talks() {
+        return Collections2.transform(
+            this.cached.getOrSet(
+                new Atomic.Source<Collection<Talk>>() {
+                    @Override
+                    public Collection<Talk> read() {
+                        return CdHistory.this.origin.talks();
+                    }
+                }
+            ),
             new Function<Talk, Talk>() {
                 @Override
                 public Talk apply(final Talk talk) {
-                    return CdHub.this.lru.cache(talk);
+                    return CdHistory.this.lru.cache(talk);
                 }
             }
         );
     }
 
     @Override
-    public void ask(final String text) {
-        this.origin.ask(text);
-    }
-
-    @Override
-    public History history() {
-        return this.hst.getOrSet(
-            new Atomic.Source<History>() {
-                @Override
-                public History read() {
-                    return new CdHistory(
-                        CdHub.this.origin.history(), CdHub.this.lru
-                    );
-                }
-            }
-        );
+    public History since(final Date date) {
+        throw new UnsupportedOperationException("#since()");
     }
 
 }

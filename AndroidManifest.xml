@@ -12,5 +12,7 @@
                 <category a:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity a:name=".HistoryActivity" a:label="history" />
+        <activity a:name=".EmptyActivity" a:label="empty" />
     </application>
 </manifest>

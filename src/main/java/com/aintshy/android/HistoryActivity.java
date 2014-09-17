@@ -22,39 +22,43 @@ package com.aintshy.android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
-import com.aintshy.android.api.Talk;
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Tv;
 
 /**
- * Talk activity.
+ * History activity.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class TalkActivity extends Activity {
+public final class HistoryActivity extends Activity {
 
     @Override
     public void onStart() {
         super.onStart();
-        this.setContentView(R.layout.wait);
-        new Reload().execute(
-            App.class.cast(this.getApplication()).inbox()
+        this.setContentView(R.layout.history);
+        final ListView list = ListView.class.cast(this.findViewById(R.id.talks));
+        list.setAdapter(
+            new HistoryListAdapter(
+                this,
+                App.class.cast(this.getApplication()).history()
+            )
         );
-    }
-
-    /**
-     * Swipe right.
-     */
-    private void onSwipeRight() {
-        this.startActivity(
-            new Intent(this, HistoryActivity.class)
+        final GestureDetector detector = new GestureDetector(
+            this, new GestureListener()
+        );
+        list.setOnTouchListener(
+            new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(final View view,
+                    final MotionEvent event) {
+                    return detector.onTouchEvent(event);
+                }
+            }
         );
     }
 
@@ -65,39 +69,6 @@ public final class TalkActivity extends Activity {
         this.startActivity(
             new Intent(this, TalkActivity.class)
         );
-    }
-
-    private final class Reload extends AsyncTask<Inbox, Integer, Iterable<Talk>> {
-        @Override
-        protected Iterable<Talk> doInBackground(final Inbox... inbox) {
-            return inbox[0].current();
-        }
-        @Override
-        protected void onPostExecute(final Iterable<Talk> talks) {
-            if (Iterables.isEmpty(talks)) {
-                TalkActivity.this.startActivity(
-                    new Intent(TalkActivity.this, EmptyActivity.class)
-                );
-            }
-            TalkActivity.this.setContentView(R.layout.talk);
-            final Talk talk = Iterables.get(talks, 0);
-            final ListView list = ListView.class.cast(
-                TalkActivity.this.findViewById(R.id.talks)
-            );
-            list.setAdapter(new TalkListAdapter(TalkActivity.this, talk));
-            final GestureDetector detector = new GestureDetector(
-                TalkActivity.this, new GestureListener()
-            );
-            list.setOnTouchListener(
-                new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(final View view,
-                        final MotionEvent event) {
-                        return detector.onTouchEvent(event);
-                    }
-                }
-            );
-        }
     }
 
     private final class GestureListener
@@ -115,10 +86,8 @@ public final class TalkActivity extends Activity {
             if (Math.abs(width) > Math.abs(height)
                 && Math.abs(width) > (float) Tv.HUNDRED
                 && Math.abs(horiz) > (float) Tv.HUNDRED) {
-                if (width > 0.0f) {
-                    TalkActivity.this.onSwipeRight();
-                } else {
-                    TalkActivity.this.onSwipeLeft();
+                if (width < 0.0f) {
+                    HistoryActivity.this.onSwipeLeft();
                 }
                 done = true;
             } else {

@@ -14,7 +14,7 @@
         a:layout_width="fill_parent"
         a:layout_height="40dip"
         a:layout_below="@+id/photo"
-        a:text="Jeff 34 M"
+        a:text="..."
         a:layout_centerHorizontal="true"
         a:textAlignment="center"
         a:gravity="center"

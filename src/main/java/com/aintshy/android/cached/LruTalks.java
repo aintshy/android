@@ -18,59 +18,41 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
+package com.aintshy.android.cached;
 
-import android.app.Application;
-import com.aintshy.android.api.History;
-import com.aintshy.android.api.Hub;
-import com.aintshy.android.cached.CdHub;
-import com.aintshy.android.rest.RtEntrance;
+import android.util.LruCache;
+import com.aintshy.android.api.Talk;
+import com.jcabi.aspects.Tv;
 
 /**
- * Application.
+ * Cached talks.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class App extends Application {
+final class LruTalks {
 
     /**
-     * Hub to use.
+     * LRU cache.
      */
-    private final transient Hub hub;
+    private final transient LruCache<Talk, Talk> cache =
+        new LruCache<Talk, Talk>(Tv.TEN);
 
     /**
-     * Inbox.
+     * Cache it and return wrapped one.
+     * @param talk Original talk
+     * @return Cached talk
      */
-    private final transient Inbox ibx;
-
-    /**
-     * Ctor.
-     */
-    public App() {
-        super();
-        final String token = "4CIB1GNA-UJOMU5DG-7KO2KJQL-0LFKS0HU-7C0GSK3F-99A18IJF-003L0L8V-0K4G2TOA-A1F3GEH7-8G9JOKIM-2174U0PU-4T30461G-E0Q4O91J-3CDLQ7OK-50======";
-        this.hub = new CdHub(
-            new RtEntrance().hub(token)
-        );
-        this.ibx = new Inbox(this.hub);
-    }
-
-    /**
-     * Get inbox.
-     * @return Inbox
-     */
-    public Inbox inbox() {
-        return this.ibx;
-    }
-
-    /**
-     * Get history.
-     * @return History
-     */
-    public History history() {
-        return this.hub.history();
+    public Talk cache(final Talk talk) {
+        synchronized (this.cache) {
+            Talk cached = this.cache.get(talk);
+            if (cached == null) {
+                cached = new CdTalk(talk);
+                this.cache.put(talk, cached);
+            }
+            return cached;
+        }
     }
 
 }
