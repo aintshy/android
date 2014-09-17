@@ -86,19 +86,23 @@ final class RtTalk implements Talk {
     public Collection<Message> messages() {
         final Collection<Message> msgs;
         try {
+            final XML page = this.request.fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .assertXPath("/page/human/urn")
+                .xml()
+                .nodes("/page").get(0);
+            final String asking = page.xpath("role/asking/text()").get(0);
             msgs = Collections2.transform(
-                this.request.fetch()
-                    .as(RestResponse.class)
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .as(XmlResponse.class)
-                    .assertXPath("/page/human/urn")
-                    .xml()
-                    .nodes("/page/messages/message"),
+                page.nodes("messages/message"),
                 new Function<XML, Message>() {
                     @Override
                     public Message apply(final XML xml) {
                         return new Message.Simple(
-                            true, new Date(), xml.xpath("text/text()").get(0)
+                            !asking.equals(xml.xpath("asking/text()").get(0)),
+                            new Date(),
+                            xml.xpath("text/text()").get(0)
                         );
                     }
                 }

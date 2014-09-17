@@ -28,11 +28,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.aintshy.android.api.Human;
+import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Talk;
 import com.aintshy.android.flat.FtTalk;
 import com.google.common.collect.Iterables;
+import com.jcabi.log.Logger;
 
 /**
  * Talk list adapter.
@@ -78,12 +81,12 @@ final class TalkListAdapter implements ListAdapter {
 
     @Override
     public int getCount() {
-        return 10;
+        return 20;
     }
 
     @Override
     public Object getItem(final int position) {
-        return "";
+        return position;
     }
 
     @Override
@@ -109,18 +112,12 @@ final class TalkListAdapter implements ListAdapter {
 
     @Override
     public int getItemViewType(final int position) {
-        final int type;
-        if (position == 0) {
-            type = 0;
-        } else {
-            type = 1;
-        }
-        return type;
+        return position;
     }
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return this.getCount();
     }
 
     @Override
@@ -180,22 +177,35 @@ final class TalkListAdapter implements ListAdapter {
             row = LayoutInflater.class.cast(
                 this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
             ).inflate(R.layout.talk_message, grp, false);
+            new AsyncTask<Void, Void, Message>() {
+                @Override
+                protected Message doInBackground(final Void... params) {
+                    return Iterables.get(
+                        TalkListAdapter.this.talk.messages(), idx - 1
+                    );
+                }
+                @Override
+                protected void onPostExecute(final Message msg) {
+                    final TextView label = TextView.class.cast(row.findViewById(R.id.text));
+                    label.setText(msg.text());
+                    final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    );
+                    if (msg.mine()) {
+                        label.setBackgroundResource(R.color.my_message);
+                        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                    } else {
+                        label.setBackgroundResource(R.color.his_message);
+                        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    }
+                    label.setLayoutParams(params);
+                    Logger.info(this, "updated view for %d", idx);
+                }
+            }.execute();
         } else {
             row = view;
         }
-        final TextView label = TextView.class.cast(row.findViewById(R.id.text));
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(final Void... params) {
-                return Iterables.get(
-                    TalkListAdapter.this.talk.messages(), idx - 1
-                ).text();
-            }
-            @Override
-            protected void onPostExecute(final String text) {
-                label.setText(text);
-            }
-        }.execute();
         return row;
     }
 

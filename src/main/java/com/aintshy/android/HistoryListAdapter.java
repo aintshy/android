@@ -83,7 +83,7 @@ final class HistoryListAdapter implements ListAdapter {
 
     @Override
     public Object getItem(final int position) {
-        return "";
+        return position;
     }
 
     @Override
@@ -131,12 +131,12 @@ final class HistoryListAdapter implements ListAdapter {
 
     @Override
     public int getItemViewType(final int position) {
-        return 1;
+        return position;
     }
 
     @Override
     public int getViewTypeCount() {
-        return 1;
+        return this.getCount();
     }
 
     @Override

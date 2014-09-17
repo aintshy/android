@@ -8,8 +8,8 @@
         a:layout_height="wrap_content"
         a:orientation="horizontal">
         <ImageView
-            a:layout_width="60dp"
-            a:layout_height="60dp"
+            a:layout_width="80dp"
+            a:layout_height="80dp"
             a:scaleType="fitXY"
             a:id="@+id/photo"
             a:contentDescription="photo"/>

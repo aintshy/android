@@ -5,9 +5,9 @@
     a:background="#ffffffff">
     <TextView
         a:id="@+id/text"
-        a:layout_width="fill_parent"
-        a:layout_height="40dip"
+        a:layout_width="wrap_content"
+        a:layout_height="wrap_content"
         a:text="..."
         a:textSize="24sp"
-        a:textColor="#000"/>
+        a:textColor="#000" a:layout_alignParentLeft="false"/>
 </RelativeLayout>
