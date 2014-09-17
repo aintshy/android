@@ -33,6 +33,12 @@ import java.util.Date;
 public interface Talk {
 
     /**
+     * Its number.
+     * @return Number of it
+     */
+    int number();
+
+    /**
      * Who is talking to me.
      * @return My respondent
      */

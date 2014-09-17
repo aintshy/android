@@ -62,6 +62,11 @@ final class CdTalk implements Talk {
     }
 
     @Override
+    public int number() {
+        return this.origin.number();
+    }
+
+    @Override
     public Human role() {
         return this.human.getOrSet(
             new Atomic.Source<Human>() {

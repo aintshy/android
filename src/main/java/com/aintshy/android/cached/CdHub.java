@@ -80,6 +80,11 @@ public final class CdHub implements Hub {
     }
 
     @Override
+    public Talk talk(final int number) {
+        return this.lru.cache(this.origin.talk(number));
+    }
+
+    @Override
     public void ask(final String text) {
         this.origin.ask(text);
     }

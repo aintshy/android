@@ -27,6 +27,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
+import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Tv;
@@ -44,9 +45,16 @@ public final class TalkActivity extends Activity {
     public void onStart() {
         super.onStart();
         this.setContentView(R.layout.wait);
-        new Reload().execute(
-            App.class.cast(this.getApplication()).inbox()
-        );
+        final int num = this.getIntent().getIntExtra(Talk.class.getName(), 0);
+        if (num == 0) {
+            new LoadInbox().execute(
+                App.class.cast(this.getApplication()).inbox()
+            );
+        } else {
+            new LoadTalk(
+                App.class.cast(this.getApplication()).hub()
+            ).execute(num);
+        }
     }
 
     /**
@@ -67,7 +75,32 @@ public final class TalkActivity extends Activity {
         );
     }
 
-    private final class Reload extends AsyncTask<Inbox, Integer, Iterable<Talk>> {
+    /**
+     * Render this talk.
+     * @param talk The talk
+     */
+    private void render(final Talk talk) {
+        this.setContentView(R.layout.talk);
+        final ListView list = ListView.class.cast(
+            this.findViewById(R.id.talks)
+        );
+        list.setAdapter(new TalkListAdapter(this, talk));
+        final GestureDetector detector = new GestureDetector(
+            this, new GestureListener()
+        );
+        list.setOnTouchListener(
+            new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(final View view,
+                    final MotionEvent event) {
+                    return detector.onTouchEvent(event);
+                }
+            }
+        );
+    }
+
+    private final class LoadInbox
+        extends AsyncTask<Inbox, Integer, Iterable<Talk>> {
         @Override
         protected Iterable<Talk> doInBackground(final Inbox... inbox) {
             return inbox[0].current();
@@ -79,24 +112,23 @@ public final class TalkActivity extends Activity {
                     new Intent(TalkActivity.this, EmptyActivity.class)
                 );
             }
-            TalkActivity.this.setContentView(R.layout.talk);
-            final Talk talk = Iterables.get(talks, 0);
-            final ListView list = ListView.class.cast(
-                TalkActivity.this.findViewById(R.id.talks)
-            );
-            list.setAdapter(new TalkListAdapter(TalkActivity.this, talk));
-            final GestureDetector detector = new GestureDetector(
-                TalkActivity.this, new GestureListener()
-            );
-            list.setOnTouchListener(
-                new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(final View view,
-                        final MotionEvent event) {
-                        return detector.onTouchEvent(event);
-                    }
-                }
-            );
+            TalkActivity.this.render(Iterables.get(talks, 0));
+        }
+    }
+
+    private final class LoadTalk extends AsyncTask<Integer, Integer, Talk> {
+        private final transient Hub hub;
+        private LoadTalk(final Hub hbe) {
+            super();
+            this.hub = hbe;
+        }
+        @Override
+        protected Talk doInBackground(final Integer... number) {
+            return this.hub.talk(number[0]);
+        }
+        @Override
+        protected void onPostExecute(final Talk talk) {
+            TalkActivity.this.render(talk);
         }
     }
 

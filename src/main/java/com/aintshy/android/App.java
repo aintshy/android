@@ -38,7 +38,7 @@ public final class App extends Application {
     /**
      * Hub to use.
      */
-    private final transient Hub hub;
+    private final transient Hub hbe;
 
     /**
      * Inbox.
@@ -51,10 +51,18 @@ public final class App extends Application {
     public App() {
         super();
         final String token = "4CIB1GNA-UJOMU5DG-7KO2KJQL-0LFKS0HU-7C0GSK3F-99A18IJF-003L0L8V-0K4G2TOA-A1F3GEH7-8G9JOKIM-2174U0PU-4T30461G-E0Q4O91J-3CDLQ7OK-50======";
-        this.hub = new CdHub(
+        this.hbe = new CdHub(
             new RtEntrance().hub(token)
         );
-        this.ibx = new Inbox(this.hub);
+        this.ibx = new Inbox(this.hbe);
+    }
+
+    /**
+     * Get hub.
+     * @return Hub
+     */
+    public Hub hub() {
+        return this.hbe;
     }
 
     /**
@@ -70,7 +78,7 @@ public final class App extends Application {
      * @return History
      */
     public History history() {
-        return this.hub.history();
+        return this.hbe.history();
     }
 
 }

@@ -42,6 +42,13 @@ public interface Hub {
     Iterable<Talk> next();
 
     /**
+     * Get talk by number.
+     * @param number Number of it
+     * @return Talk
+     */
+    Talk talk(int number);
+
+    /**
      * Ask a new question.
      * @param text Question text
      */

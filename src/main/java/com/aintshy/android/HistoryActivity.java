@@ -25,7 +25,9 @@ import android.content.Intent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import com.aintshy.android.api.Talk;
 import com.jcabi.aspects.Tv;
 
 /**
@@ -60,6 +62,27 @@ public final class HistoryActivity extends Activity {
                 }
             }
         );
+        list.setOnItemClickListener(
+            new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(final AdapterView<?> parent,
+                    final View view, final int position, final long idx) {
+                    HistoryActivity.this.onClick(
+                        Talk.class.cast(view.getTag())
+                    );
+                }
+            }
+        );
+    }
+
+    /**
+     * On item click.
+     * @param talk Talk just clicked
+     */
+    private void onClick(final Talk talk) {
+        final Intent intent = new Intent(this, TalkActivity.class);
+        intent.putExtra(Talk.class.getName(), talk.number());
+        this.startActivity(intent);
     }
 
     /**

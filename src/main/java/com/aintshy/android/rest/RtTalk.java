@@ -52,11 +52,23 @@ final class RtTalk implements Talk {
     private final transient Request request;
 
     /**
+     * Number of it.
+     */
+    private final transient int num;
+
+    /**
      * Ctor.
      * @param req Request to the front page
+     * @param number Number
      */
-    RtTalk(final Request req) {
+    RtTalk(final Request req, final int number) {
         this.request = req;
+        this.num = number;
+    }
+
+    @Override
+    public int number() {
+        return this.num;
     }
 
     @Override

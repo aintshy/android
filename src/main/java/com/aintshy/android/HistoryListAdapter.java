@@ -115,6 +115,7 @@ final class HistoryListAdapter implements ListAdapter {
             }
             @Override
             protected void onPostExecute(final Talk talk) {
+                row.setTag(talk);
                 ImageView.class
                     .cast(row.findViewById(R.id.photo))
                     .setImageBitmap(talk.role().photo());

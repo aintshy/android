@@ -35,7 +35,6 @@ import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Talk;
 import com.aintshy.android.flat.FtTalk;
 import com.google.common.collect.Iterables;
-import com.jcabi.log.Logger;
 
 /**
  * Talk list adapter.
@@ -186,12 +185,15 @@ final class TalkListAdapter implements ListAdapter {
                 }
                 @Override
                 protected void onPostExecute(final Message msg) {
-                    final TextView label = TextView.class.cast(row.findViewById(R.id.text));
-                    label.setText(msg.text());
-                    final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    final TextView label = TextView.class.cast(
+                        row.findViewById(R.id.text)
                     );
+                    label.setText(msg.text());
+                    final RelativeLayout.LayoutParams params =
+                        new RelativeLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        );
                     if (msg.mine()) {
                         label.setBackgroundResource(R.color.my_message);
                         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -200,7 +202,6 @@ final class TalkListAdapter implements ListAdapter {
                         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                     }
                     label.setLayoutParams(params);
-                    Logger.info(this, "updated view for %d", idx);
                 }
             }.execute();
         } else {

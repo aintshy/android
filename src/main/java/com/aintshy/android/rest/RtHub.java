@@ -93,13 +93,17 @@ final class RtHub implements Hub {
             talks.add(
                 new RtTalk(
                     response.back().uri()
-                        .set(URI.create("http://i.aintshy.com/9")).back()
+                        .set(URI.create("http://i.aintshy.com/9")).back(),
+                    9
                 )
             );
         } else {
             talks.add(
                 new RtTalk(
-                    response.rel("/page/links/link[@rel='self']/@href")
+                    response.rel("/page/links/link[@rel='self']/@href"),
+                    Integer.parseInt(
+                        xml.xpath("/page/talk/number/text()").get(0)
+                    )
                 )
             );
             Log.i(
@@ -111,6 +115,16 @@ final class RtHub implements Hub {
             );
         }
         return talks;
+    }
+
+    @Override
+    public Talk talk(final int number) {
+        return new RtTalk(
+            this.request.uri()
+                .path(String.format("/%d", number))
+                .back(),
+            number
+        );
     }
 
     @Override

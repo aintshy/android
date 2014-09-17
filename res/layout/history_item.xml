@@ -29,7 +29,7 @@
                 a:layout_width="fill_parent"
                 a:layout_height="wrap_content"
                 a:text=""
-                a:textSize="24sp"
+                a:textSize="20sp"
                 a:textColor="#000"/>
         </LinearLayout>
     </LinearLayout>

@@ -84,7 +84,8 @@ final class RtHistory implements History {
                                     "links/link[@rel='open']/@href"
                                 ).get(0)
                             )
-                        ).back()
+                        ).back(),
+                        Integer.parseInt(xml.xpath("number/text()").get(0))
                     );
                 }
             }

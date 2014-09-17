@@ -40,6 +40,11 @@ import lombok.EqualsAndHashCode;
 public final class FtTalk implements Talk {
 
     /**
+     * Its number.
+     */
+    private final transient int num;
+
+    /**
      * Role.
      */
     private final transient Human rle;
@@ -54,11 +59,17 @@ public final class FtTalk implements Talk {
      * @param talk Original talk
      */
     public FtTalk(final Talk talk) {
+        this.num = talk.number();
         final Human role = talk.role();
         this.rle = new Human.Simple(
             role.name(), role.age(), role.sex(), role.photo()
         );
         this.msgs = Lists.newArrayList(talk.messages());
+    }
+
+    @Override
+    public int number() {
+        return this.num;
     }
 
     @Override
