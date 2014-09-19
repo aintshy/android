@@ -20,6 +20,8 @@
  */
 package com.aintshy.android.ui.talk;
 
+import android.content.Context;
+import com.aintshy.android.Bag;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
 import com.google.common.collect.Iterables;
@@ -44,6 +46,41 @@ interface Inbox {
      * Swipe, to see the next talk.
      */
     void swipe();
+
+    /**
+     * Locator of inbox inside the application.
+     */
+    final class Locator {
+        /**
+         * The context.
+         */
+        private final transient Context ctx;
+        /**
+         * Ctor.
+         * @param context Context
+         */
+        public Locator(final Context context) {
+            this.ctx = context;
+        }
+        /**
+         * Find and return an inbox.
+         * @return Inbox
+         */
+        Inbox find() {
+            final Bag bag = Bag.class.cast(this.ctx);
+            return bag.fetch(
+                Inbox.class,
+                new Bag.Source<Inbox>() {
+                    @Override
+                    public Inbox create() {
+                        return new Inbox.Default(
+                            bag.fetch(Hub.class, new Bag.Source.Empty<Hub>())
+                        );
+                    }
+                }
+            );
+        }
+    }
 
     final class Default implements Inbox {
         /**

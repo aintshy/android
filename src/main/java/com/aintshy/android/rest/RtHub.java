@@ -32,7 +32,6 @@ import com.jcabi.http.wire.AutoRedirectingWire;
 import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.EqualsAndHashCode;
@@ -88,13 +87,6 @@ final class RtHub implements Hub {
                     "home page of %s [%s], no talks",
                     xml.xpath("/page/human/name/text()").get(0),
                     xml.xpath("/page/human/urn/text()").get(0)
-                )
-            );
-            talks.add(
-                new RtTalk(
-                    response.back().uri()
-                        .set(URI.create("http://i.aintshy.com/9")).back(),
-                    9
                 )
             );
         } else {

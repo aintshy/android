@@ -23,8 +23,6 @@ package com.aintshy.android.ui.talk;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import com.aintshy.android.Bag;
-import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
 import com.google.common.collect.Iterables;
 
@@ -53,18 +51,8 @@ final class InboxRedirect extends AsyncTask<Void, Integer, Iterable<Talk>> {
 
     @Override
     public Iterable<Talk> doInBackground(final Void... none) {
-        final Bag bag = Bag.class.cast(this.home.getApplicationContext());
-        return bag.fetch(
-            Inbox.class,
-            new Bag.Source<Inbox>() {
-                @Override
-                public Inbox create() {
-                    return new Inbox.Default(
-                        bag.fetch(Hub.class, new Bag.Source.Empty<Hub>())
-                    );
-                }
-            }
-        ).current();
+        return new Inbox.Locator(this.home.getApplicationContext())
+            .find().current();
     }
 
     @Override
@@ -73,11 +61,12 @@ final class InboxRedirect extends AsyncTask<Void, Integer, Iterable<Talk>> {
             this.home.startActivity(
                 new Intent(this.home, EmptyActivity.class)
             );
+        } else {
+            final Talk talk = Iterables.get(talks, 0);
+            final Intent intent = new Intent(this.home, TalkActivity.class);
+            intent.putExtra(Talk.class.getName(), talk.number());
+            this.home.startActivity(intent);
         }
-        final Talk talk = Iterables.get(talks, 0);
-        final Intent intent = new Intent(this.home, TalkActivity.class);
-        intent.putExtra(Talk.class.getName(), talk.number());
-        this.home.startActivity(intent);
     }
 
 }

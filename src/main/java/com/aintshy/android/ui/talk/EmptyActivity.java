@@ -23,10 +23,10 @@ package com.aintshy.android.ui.talk;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
-import com.aintshy.android.Bag;
 import com.aintshy.android.R;
-import com.aintshy.android.api.Hub;
+import com.aintshy.android.ui.Swipe;
+import com.aintshy.android.ui.history.HistoryActivity;
+import com.jcabi.aspects.Tv;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -36,25 +36,30 @@ import java.util.concurrent.TimeUnit;
  * @version $Id$
  * @since 0.1
  */
-public final class EmptyActivity extends Activity {
+public final class EmptyActivity extends Activity implements Swipe.Target {
 
     @Override
     public void onStart() {
         super.onStart();
         this.setContentView(R.layout.talk_empty);
-        final Bag bag = Bag.class.cast(this.getApplicationContext());
-        final Inbox inbox = bag.fetch(
-            Inbox.class,
-            new Bag.Source<Inbox>() {
-                @Override
-                public Inbox create() {
-                    return new Inbox.Default(
-                        bag.fetch(Hub.class, new Bag.Source.Empty<Hub>())
-                    );
-                }
-            }
+        new Swipe(this).attach(this, R.id.main);
+        new Refresh().execute(
+            new Inbox.Locator(this.getApplicationContext()).find()
         );
-        new Refresh().execute(inbox);
+    }
+
+    @Override
+    public void onSwipeRight() {
+        this.startActivity(
+            new Intent(this, HistoryActivity.class)
+        );
+    }
+
+    @Override
+    public void onSwipeLeft() {
+        this.startActivity(
+            new Intent(this, TalkActivity.class)
+        );
     }
 
     private final class Refresh extends AsyncTask<Inbox, Integer, Boolean> {
@@ -66,9 +71,8 @@ public final class EmptyActivity extends Activity {
                     found = true;
                     break;
                 }
-                Log.i(this.getClass().getName(), "checking inbox...");
                 try {
-                    TimeUnit.MINUTES.sleep(1L);
+                    TimeUnit.SECONDS.sleep((long) Tv.TEN);
                 } catch (final InterruptedException ex) {
                     Thread.currentThread().interrupt();
                     throw new IllegalStateException(ex);

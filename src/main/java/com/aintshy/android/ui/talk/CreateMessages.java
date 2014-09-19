@@ -21,6 +21,7 @@
 package com.aintshy.android.ui.talk;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.ListView;
@@ -75,12 +76,14 @@ final class CreateMessages extends
 
     @Override
     public void onAnswer(final String text) {
-        final Bag bag = Bag.class.cast(this.home.getApplicationContext());
+        final Context ctx = this.home.getApplicationContext();
+        final Bag bag = Bag.class.cast(ctx);
         final Hub hub = bag.fetch(Hub.class, new Bag.Source.Empty<Hub>());
         new AsyncTask<Void, Integer, Void>() {
             @Override
             public Void doInBackground(final Void... none) {
                 hub.talk(CreateMessages.this.number).post(text);
+                new Inbox.Locator(ctx).find().swipe();
                 return null;
             }
             @Override

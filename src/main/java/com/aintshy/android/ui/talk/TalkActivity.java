@@ -58,6 +58,7 @@ public final class TalkActivity extends Activity implements Swipe.Target {
 
     @Override
     public void onSwipeLeft() {
+        new Inbox.Locator(this.getApplicationContext()).find().swipe();
         this.startActivity(
             new Intent(this, TalkActivity.class)
         );
