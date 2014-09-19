@@ -13,4 +13,12 @@
         a:id="@+id/textView"
         a:layout_gravity="center_horizontal"
         a:textColor="@color/black"/>
+    <TextView
+        a:layout_width="wrap_content"
+        a:layout_height="wrap_content"
+        a:textAppearance="?android:attr/textAppearanceLarge"
+        a:text=""
+        a:id="@+id/progress"
+        a:layout_gravity="center_horizontal"
+        a:textColor="@color/black"/>
 </LinearLayout>

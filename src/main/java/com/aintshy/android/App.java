@@ -21,6 +21,7 @@
 package com.aintshy.android;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.cached.CdHub;
 import com.aintshy.android.rest.RtEntrance;
@@ -52,6 +53,11 @@ public final class App extends Application implements Bag {
             Hub.class,
             new CdHub(new RtEntrance().auth(email, password))
         );
+        final SharedPreferences.Editor editor =
+            this.getSharedPreferences("aintshy", 0).edit();
+        editor.putString("email", email);
+        editor.putString("password", password);
+        editor.apply();
     }
 
     @Override

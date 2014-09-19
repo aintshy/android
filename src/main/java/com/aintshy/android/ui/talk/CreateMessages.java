@@ -80,14 +80,14 @@ final class CreateMessages extends
             public Void doInBackground(final Void... none) {
                 hub.talk(CreateMessages.this.number).post(text);
                 new Inbox.Locator(CreateMessages.this.home).find().swipe();
-                Toast.makeText(
-                    CreateMessages.this.home,
-                    "posted!", Toast.LENGTH_SHORT
-                ).show();
                 return null;
             }
             @Override
             public void onPostExecute(final Void none) {
+                Toast.makeText(
+                    CreateMessages.this.home,
+                    "posted!", Toast.LENGTH_SHORT
+                ).show();
                 CreateMessages.this.home.startActivity(
                     new Intent(CreateMessages.this.home, TalkActivity.class)
                 );

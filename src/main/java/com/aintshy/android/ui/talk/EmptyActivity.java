@@ -23,6 +23,7 @@ package com.aintshy.android.ui.talk;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.widget.TextView;
 import com.aintshy.android.R;
 import com.aintshy.android.ui.Swipe;
 import com.aintshy.android.ui.history.HistoryActivity;
@@ -51,6 +52,7 @@ public final class EmptyActivity extends Activity implements Swipe.Target {
         this.startActivity(
             new Intent(this, HistoryActivity.class)
         );
+        this.finish();
     }
 
     @Override
@@ -58,28 +60,37 @@ public final class EmptyActivity extends Activity implements Swipe.Target {
         this.startActivity(
             new Intent(this, TalkActivity.class)
         );
+        this.finish();
     }
 
     private final class Refresh extends AsyncTask<Inbox, Integer, Boolean> {
         @Override
-        protected Boolean doInBackground(final Inbox... inbox) {
+        public Boolean doInBackground(final Inbox... inbox) {
             boolean found = false;
-            while (!this.isCancelled()) {
+            int seconds = 0;
+            while (!this.isCancelled() && !EmptyActivity.this.isFinishing()) {
                 if (inbox[0].current().iterator().hasNext()) {
                     found = true;
                     break;
                 }
+                this.publishProgress(seconds);
                 try {
                     TimeUnit.SECONDS.sleep((long) Tv.TEN);
                 } catch (final InterruptedException ex) {
                     Thread.currentThread().interrupt();
                     throw new IllegalStateException(ex);
                 }
+                seconds += Tv.TEN;
             }
             return found;
         }
         @Override
-        protected void onPostExecute(final Boolean found) {
+        public void onProgressUpdate(final Integer... secs) {
+            TextView.class.cast(EmptyActivity.this.findViewById(R.id.progress))
+                .setText(String.format("%d seconds", secs[0]));
+        }
+        @Override
+        public void onPostExecute(final Boolean found) {
             if (found) {
                 EmptyActivity.this.startActivity(
                     new Intent(EmptyActivity.this, TalkActivity.class)

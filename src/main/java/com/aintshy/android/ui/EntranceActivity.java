@@ -22,6 +22,7 @@ package com.aintshy.android.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.aintshy.android.Bag;
 import com.aintshy.android.R;
@@ -60,13 +61,19 @@ public final class EntranceActivity extends Activity {
      * Enter.
      */
     private void enter() {
+        final SharedPreferences prefs = this.getSharedPreferences("aintshy", 0);
         try {
             final Hub hub = Bag.class.cast(this.getApplication()).fetch(
                 Hub.class,
                 new Bag.Source<Hub>() {
                     @Override
                     public Hub create() {
-                        return new CdHub(new RtEntrance().auth("", ""));
+                        return new CdHub(
+                            new RtEntrance().auth(
+                                prefs.getString("email", ""),
+                                prefs.getString("password", "")
+                            )
+                        );
                     }
                 }
             );
