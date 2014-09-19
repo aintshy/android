@@ -12,62 +12,42 @@
         a:id="@+id/textView"
         a:paddingBottom="30dp"
         a:textColor="@color/black"/>
-    <TextView
-        a:layout_width="wrap_content"
-        a:layout_height="wrap_content"
-        a:textAppearance="?android:attr/textAppearanceLarge"
-        a:text="Name"
-        a:id="@+id/name_label"
-        a:textColor="@color/black"/>
     <EditText
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
+        a:hint="Name..."
         a:inputType="textEmailAddress"
+        a:imeOptions="actionNext"
         a:ems="10"
         a:id="@+id/name"
         a:textColor="@color/black"/>
-    <TextView
-        a:layout_width="wrap_content"
-        a:layout_height="wrap_content"
-        a:textAppearance="?android:attr/textAppearanceLarge"
-        a:text="Year of birth"
-        a:id="@+id/year_label"
-        a:textColor="@color/black"/>
     <EditText
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
+        a:hint="Year of birth..."
         a:inputType="number"
+        a:imeOptions="actionNext"
         a:ems="10"
         a:id="@+id/year"
         a:textColor="@color/black"/>
-    <TextView
-        a:layout_width="wrap_content"
-        a:layout_height="wrap_content"
-        a:textAppearance="?android:attr/textAppearanceLarge"
-        a:text="Sex"
-        a:id="@+id/sex_label"
-        a:textColor="@color/black"/>
     <EditText
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
+        a:hint="Sex..."
         a:id="@+id/sex"
+        a:imeOptions="actionNext"
         a:inputType="text"
         a:textColor="@color/black"/>
-    <TextView
-        a:layout_width="wrap_content"
-        a:layout_height="wrap_content"
-        a:textAppearance="?android:attr/textAppearanceLarge"
-        a:text="Language"
-        a:id="@+id/lang_label"
-        a:textColor="@color/black"/>
     <EditText
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
+        a:hint="Language..."
         a:id="@+id/language"
+        a:imeOptions="actionGo"
         a:inputType="text"
         a:textColor="@color/black"/>
     <Button
-        a:layout_width="wrap_content"
+        a:layout_width="match_parent"
         a:layout_height="wrap_content"
         a:text="Register"
         a:id="@+id/register_button"/>

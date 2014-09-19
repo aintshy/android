@@ -37,40 +37,34 @@ import java.util.concurrent.ConcurrentMap;
 public final class App extends Application implements Bag {
 
     /**
-     * Hub to use.
-     */
-    private final transient Hub hub;
-
-    /**
      * Map of objects.
      */
     private final transient ConcurrentMap<Class<?>, Object> objects =
         new ConcurrentHashMap<Class<?>, Object>(0);
 
     /**
-     * Ctor.
+     * Authenticate.
+     * @param email Email
+     * @param password Password
      */
-    public App() {
-        super();
-        final String token = "4CIB1GNA-UJOMU5DG-7KO2KJQL-0LFKS0HU-7C0GSK3F-99A18IJF-003L0L8V-0K4G2TOA-A1F3GEH7-8G9JOKIM-2174U0PU-4T30461G-E0Q4O91J-3CDLQ7OK-50======";
-        this.hub = new CdHub(
-            new RtEntrance().hub(token)
+    public void authenticate(final String email, final String password) {
+        this.objects.put(
+            Hub.class,
+            new CdHub(new RtEntrance().auth(email, password))
         );
     }
 
     @Override
     public <T> T fetch(final Class<T> type, final Bag.Source<T> src) {
         final T object;
-        if (type.equals(Hub.class)) {
-            object = type.cast(this.hub);
-        } else {
-            synchronized (this.objects) {
-                if (!this.objects.containsKey(type)) {
-                    this.objects.put(type, src.create());
-                }
-                object = type.cast(this.objects.get(type));
+        synchronized (this.objects) {
+            if (!this.objects.containsKey(type)) {
+                this.objects.put(type, src.create());
             }
+            object = type.cast(this.objects.get(type));
         }
         return object;
     }
+
+
 }

@@ -24,7 +24,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import com.aintshy.android.Bag;
+import com.aintshy.android.Entrance;
 import com.aintshy.android.R;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Message;
@@ -66,8 +66,7 @@ final class UpdateMessages extends AsyncTask<Void, Integer, Map<Integer, Message
 
     @Override
     public Map<Integer, Message> doInBackground(final Void... none) {
-        final Bag bag = Bag.class.cast(this.home.getApplicationContext());
-        final Hub hub = bag.fetch(Hub.class, new Bag.Source.Empty<Hub>());
+        final Hub hub = new Entrance(this.home).hub();
         final Talk talk = hub.talk(this.number);
         final Collection<Message> msgs = talk.messages().fetch(this.first, this.last);
         final Map<Integer, Message> map = new HashMap<Integer, Message>(msgs.size());

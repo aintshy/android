@@ -18,52 +18,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.ui.talk;
+package com.aintshy.android;
 
 import android.app.Activity;
-import android.content.Intent;
-import com.aintshy.android.R;
-import com.aintshy.android.api.Talk;
-import com.aintshy.android.ui.Swipe;
-import com.aintshy.android.ui.history.HistoryActivity;
+import com.aintshy.android.api.Hub;
 
 /**
- * Talk activity.
+ * Entrance to Hub.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class TalkActivity extends Activity implements Swipe.Target {
+public final class Entrance {
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        this.setContentView(R.layout.wait);
-        new Swipe(this).attach(this, R.id.main);
-        final int num = this.getIntent().getIntExtra(
-            Talk.class.getName(), 0
-        );
-        if (num == 0) {
-            new InboxRedirect(this).execute();
-        } else {
-            new CreateMessages(this, num).execute();
-        }
+    /**
+     * Current activity.
+     */
+    private final transient Activity home;
+
+    /**
+     * Ctor.
+     * @param activity Activity
+     */
+    public Entrance(final Activity activity) {
+        this.home = activity;
     }
 
-    @Override
-    public void onSwipeRight() {
-        this.startActivity(
-            new Intent(this, HistoryActivity.class)
+    /**
+     * Get hub.
+     * @return Hub created
+     */
+    public Hub hub() {
+        return Bag.class.cast(this.home.getApplication()).fetch(
+            Hub.class, new Bag.Source.Empty<Hub>()
         );
     }
 
-    @Override
-    public void onSwipeLeft() {
-        new Inbox.Locator(this).find().swipe();
-        this.startActivity(
-            new Intent(this, TalkActivity.class)
-        );
-    }
 
 }

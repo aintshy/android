@@ -12,22 +12,17 @@
         a:id="@+id/intro"
         a:paddingBottom="30dp"
         a:textColor="@color/black"/>
-    <TextView
-        a:layout_width="wrap_content"
-        a:layout_height="wrap_content"
-        a:textAppearance="?android:attr/textAppearanceLarge"
-        a:text="Code"
-        a:id="@+id/code_label"
-        a:textColor="@color/black"/>
     <EditText
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
+        a:hint="Code..."
         a:ems="10"
+        a:imeOptions="actionGo"
         a:id="@+id/code"
         a:inputType="number|numberDecimal"
         a:textColor="@color/black"/>
     <Button
-        a:layout_width="wrap_content"
+        a:layout_width="match_parent"
         a:layout_height="wrap_content"
         a:text="Confirm"
         a:id="@+id/confirm_button"/>

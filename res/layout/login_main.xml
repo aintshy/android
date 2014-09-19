@@ -12,36 +12,26 @@
         a:id="@+id/textView"
         a:paddingBottom="30dp"
         a:textColor="@color/black"/>
-    <TextView
-        a:layout_width="fill_parent"
-        a:layout_height="wrap_content"
-        a:textAppearance="?android:attr/textAppearanceLarge"
-        a:text="Email"
-        a:id="@+id/email_label"
-        a:textColor="@color/black"/>
     <EditText
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
         a:inputType="textEmailAddress"
         a:ems="10"
+        a:hint="Email..."
+        a:imeOptions="actionNext"
         a:id="@+id/email"
-        a:textColor="@color/black"/>
-    <TextView
-        a:layout_width="fill_parent"
-        a:layout_height="wrap_content"
-        a:textAppearance="?android:attr/textAppearanceLarge"
-        a:text="Password"
-        a:id="@+id/password_label"
         a:textColor="@color/black"/>
     <EditText
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
+        a:hint="Password..."
         a:inputType="textPassword"
         a:ems="10"
         a:id="@+id/password"
+        a:imeOptions="actionGo"
         a:textColor="@color/black"/>
     <Button
-        a:layout_width="wrap_content"
+        a:layout_width="match_parent"
         a:layout_height="wrap_content"
         a:text="Login"
         a:id="@+id/login_button"/>

@@ -21,11 +21,11 @@
 package com.aintshy.android.ui.talk;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.ListView;
-import com.aintshy.android.Bag;
+import android.widget.Toast;
+import com.aintshy.android.Entrance;
 import com.aintshy.android.R;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
@@ -58,9 +58,7 @@ final class CreateMessages extends
 
     @Override
     public Talk doInBackground(final Void... none) {
-        final Bag bag = Bag.class.cast(this.home.getApplicationContext());
-        final Hub hub = bag.fetch(Hub.class, new Bag.Source.Empty<Hub>());
-        return new FtTalk(hub.talk(this.number));
+        return new FtTalk(new Entrance(this.home).hub().talk(this.number));
     }
 
     @Override
@@ -76,14 +74,16 @@ final class CreateMessages extends
 
     @Override
     public void onAnswer(final String text) {
-        final Context ctx = this.home.getApplicationContext();
-        final Bag bag = Bag.class.cast(ctx);
-        final Hub hub = bag.fetch(Hub.class, new Bag.Source.Empty<Hub>());
+        final Hub hub = new Entrance(this.home).hub();
         new AsyncTask<Void, Integer, Void>() {
             @Override
             public Void doInBackground(final Void... none) {
                 hub.talk(CreateMessages.this.number).post(text);
-                new Inbox.Locator(ctx).find().swipe();
+                new Inbox.Locator(CreateMessages.this.home).find().swipe();
+                Toast.makeText(
+                    CreateMessages.this.home,
+                    "posted!", Toast.LENGTH_SHORT
+                ).show();
                 return null;
             }
             @Override

@@ -6,13 +6,23 @@
     <uses-sdk a:minSdkVersion="12" a:targetSdkVersion="20" />
     <uses-permission a:name="android.permission.INTERNET" />
     <application a:name=".App" a:label="aintshy" a:icon="@drawable/ico" a:allowBackup="false">
-        <activity a:name=".ui.talk.TalkActivity" a:label="aintshy" >
+        <activity a:name=".ui.EntranceActivity" a:label="aintshy" a:noHistory="true">
             <intent-filter>
                 <action a:name="android.intent.action.MAIN" />
                 <category a:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity a:name=".ui.history.HistoryActivity" a:label="history" />
-        <activity a:name=".ui.talk.EmptyActivity" a:label="empty" />
+        <activity a:name=".ui.talk.TalkActivity"
+            a:label="talk" a:noHistory="true"/>
+        <activity a:name=".ui.history.HistoryActivity"
+            a:label="history" a:noHistory="true" />
+        <activity a:name=".ui.talk.EmptyActivity"
+            a:label="empty" a:noHistory="true"/>
+        <activity a:name=".ui.login.ConfirmActivity"
+            a:label="confirm" a:noHistory="true"/>
+        <activity a:name=".ui.login.LoginActivity"
+            a:label="login" a:noHistory="true"/>
+        <activity a:name=".ui.login.DetailsActivity"
+            a:label="details" a:noHistory="true"/>
     </application>
 </manifest>

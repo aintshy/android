@@ -27,7 +27,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import com.aintshy.android.Bag;
+import com.aintshy.android.Entrance;
 import com.aintshy.android.R;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
@@ -67,8 +67,7 @@ final class UpdateHistory extends AsyncTask<Void, Integer, Map<Integer, Talk>> {
 
     @Override
     public Map<Integer, Talk> doInBackground(final Void... none) {
-        final Bag bag = Bag.class.cast(this.home.getApplicationContext());
-        final Hub hub = bag.fetch(Hub.class, new Bag.Source.Empty<Hub>());
+        final Hub hub = new Entrance(this.home).hub();
         final Collection<Talk> talks = hub.history().fetch(this.first, this.last);
         final Map<Integer, Talk> map = new HashMap<Integer, Talk>(talks.size());
         int idx = this.first;

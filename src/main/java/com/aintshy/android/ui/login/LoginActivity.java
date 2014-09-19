@@ -21,10 +21,19 @@
 package com.aintshy.android.ui.login;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import com.aintshy.android.App;
 import com.aintshy.android.R;
-import com.aintshy.android.rest.RtEntrance;
+import com.aintshy.android.api.NoAuthException;
+import com.aintshy.android.ui.EntranceActivity;
 
 /**
  * Login activity.
@@ -39,10 +48,70 @@ public final class LoginActivity extends Activity {
     public void onCreate(final Bundle state) {
         super.onCreate(state);
         this.setContentView(R.layout.login_main);
+        final EditText email = EditText.class.cast(
+            this.findViewById(R.id.email)
+        );
+        final EditText password = EditText.class.cast(
+            this.findViewById(R.id.password)
+        );
+        final Button button = Button.class.cast(
+            this.findViewById(R.id.login_button)
+        );
+        button.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    final InputMethodManager imm = InputMethodManager.class.cast(
+                        LoginActivity.this.getSystemService(
+                            Context.INPUT_METHOD_SERVICE
+                        )
+                    );
+                    imm.hideSoftInputFromWindow(
+                        password.getWindowToken(),
+                        InputMethodManager.RESULT_UNCHANGED_SHOWN
+                    );
+                    LoginActivity.this.authenticate(
+                        email.getText().toString(),
+                        password.getText().toString()
+                    );
+                }
+            }
+        );
     }
 
-    public void login(final View view) {
-        new RtEntrance().auth("", "");
+    /**
+     * Authenticate.
+     * @param email Email
+     * @param password Password
+     */
+    private void authenticate(final String email, final String password) {
+        Toast.makeText(this, "let's try...", Toast.LENGTH_SHORT).show();
+        new AsyncTask<Void, Integer, String>() {
+            @Override
+            public String doInBackground(final Void... none) {
+                String error = "";
+                try {
+                    App.class.cast(
+                        LoginActivity.this.getApplication()
+                    ).authenticate(email, password);
+                } catch (final NoAuthException ex) {
+                    error = ex.getLocalizedMessage();
+                }
+                return error;
+            }
+            @Override
+            public void onPostExecute(final String error) {
+                if (error.isEmpty()) {
+                    LoginActivity.this.startActivity(
+                        new Intent(LoginActivity.this, EntranceActivity.class)
+                    );
+                } else {
+                    Toast.makeText(
+                        LoginActivity.this, error, Toast.LENGTH_SHORT
+                    ).show();
+                }
+            }
+        }.execute();
     }
 
 }

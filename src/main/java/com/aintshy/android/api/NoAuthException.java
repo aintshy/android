@@ -21,17 +21,25 @@
 package com.aintshy.android.api;
 
 /**
- * When authentication fails.
+ * User is not authenticated.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class AuthException extends Exception {
+public final class NoAuthException extends RuntimeException {
 
     /**
      * Serialization marker.
      */
     private static final long serialVersionUID = -5357940592332201978L;
+
+    /**
+     * Ctor.
+     * @param cause Cause of it
+     */
+    public NoAuthException(final String cause) {
+        super(cause);
+    }
 
 }

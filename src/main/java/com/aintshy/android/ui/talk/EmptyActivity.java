@@ -43,9 +43,7 @@ public final class EmptyActivity extends Activity implements Swipe.Target {
         super.onStart();
         this.setContentView(R.layout.talk_empty);
         new Swipe(this).attach(this, R.id.main);
-        new Refresh().execute(
-            new Inbox.Locator(this.getApplicationContext()).find()
-        );
+        new Refresh().execute(new Inbox.Locator(this).find());
     }
 
     @Override

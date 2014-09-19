@@ -51,8 +51,7 @@ final class InboxRedirect extends AsyncTask<Void, Integer, Iterable<Talk>> {
 
     @Override
     public Iterable<Talk> doInBackground(final Void... none) {
-        return new Inbox.Locator(this.home.getApplicationContext())
-            .find().current();
+        return new Inbox.Locator(this.home).find().current();
     }
 
     @Override
