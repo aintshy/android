@@ -23,6 +23,7 @@ package com.aintshy.android.rest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import com.google.common.net.HttpHeaders;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.wire.AutoRedirectingWire;
@@ -61,6 +62,7 @@ final class Photo {
     public Bitmap bitmap() throws IOException {
         final byte[] photo = new JdkRequest(this.uri)
             .through(AutoRedirectingWire.class)
+            .header(HttpHeaders.ACCEPT, "image/png")
             .fetch()
             .as(RestResponse.class)
             .assertStatus(HttpURLConnection.HTTP_OK)

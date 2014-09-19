@@ -22,15 +22,16 @@ package com.aintshy.android.rest;
 
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.NoAuthException;
+import com.google.common.net.HttpHeaders;
 import com.jcabi.http.Request;
 import com.jcabi.http.Response;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
-import com.jcabi.http.response.XmlResponse;
 import com.jcabi.http.wire.RetryWire;
-import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.Collection;
+import javax.ws.rs.core.MediaType;
 
 /**
  * RESTful authentication.
@@ -50,9 +51,9 @@ public final class RtEntrance {
     public Hub auth(final String email, final String password) {
         final String token = this.token(email, password);
         final Request req = new JdkRequest("http://i.aintshy.com/")
-            .header("Cookie", String.format("Rexsl-Auth=%s", token))
-            .header("Accept", "application/xml")
-            .header("User-Agent", "Android app")
+            .header(HttpHeaders.COOKIE, String.format("Rexsl-Auth=%s", token))
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+            .header(HttpHeaders.USER_AGENT, "Android app")
             .through(RetryWire.class);
         try {
             final Response response = req.uri().path("/empty").back().fetch();
@@ -73,23 +74,22 @@ public final class RtEntrance {
      */
     private String token(final String email, final String password) {
         try {
-            final XML page = new JdkRequest("http://i.aintshy.com/enter")
+            final Response page = new JdkRequest("http://i.aintshy.com/enter")
                 .body().formParam("email", email)
                 .formParam("password", password).back()
-                .header("Accept", "application/xml")
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .method(Request.POST)
                 .fetch()
                 .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
-                .follow()
-                .method(Request.GET)
-                .fetch()
-                .as(XmlResponse.class)
-                .xml();
-            if (page.nodes("/page/human").isEmpty()) {
-                throw new NoAuthException("failed to authenticate");
+                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+            final Collection<String> token =
+                page.headers().get("X-Aintshy-Token");
+            if (token == null) {
+                throw new NoAuthException(
+                    page.headers().get("X-Rexsl-Flash").get(0)
+                );
             }
-            return page.xpath("/page/identity/token/text()").get(0);
+            return token.iterator().next();
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }

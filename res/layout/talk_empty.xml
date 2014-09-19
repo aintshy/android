@@ -3,6 +3,7 @@
     a:orientation="vertical"
     a:layout_width="fill_parent"
     a:layout_height="fill_parent"
+    a:id="@+id/main"
     a:background="@color/white">
     <TextView
         a:layout_width="wrap_content"

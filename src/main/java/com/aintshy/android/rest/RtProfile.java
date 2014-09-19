@@ -22,12 +22,14 @@ package com.aintshy.android.rest;
 
 import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Profile;
+import com.google.common.net.HttpHeaders;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
 import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -50,32 +52,85 @@ final class RtProfile implements Profile {
      * @param req Request to the front page
      */
     RtProfile(final Request req) {
-        this.request = req.uri().path("/talk_empty").back();
+        this.request = req.uri().path("/empty").back();
     }
 
     @Override
     public boolean confirmed() {
-        throw new UnsupportedOperationException("#confirmed()");
+        try {
+            return this.request.fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .assertXPath("/page/human")
+                .xml()
+                .nodes("/page/human[@confirmed='false']")
+                .isEmpty();
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public void confirm(final String code) {
-        throw new UnsupportedOperationException("#confirm()");
+        try {
+            this.request.uri().path("/setup/confirm").back()
+                .method(Request.POST)
+                .body().formParam("code", code).back()
+                .header(
+                    HttpHeaders.CONTENT_TYPE,
+                    MediaType.APPLICATION_FORM_URLENCODED
+                )
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
-    public boolean complete() {
-        throw new UnsupportedOperationException("#complete()");
-    }
-
-    @Override
-    public void update(final String name, final int age, final char sex, final String lang) {
-        throw new UnsupportedOperationException("#update()");
+    public void update(final String name, final int year,
+        final char sex, final String lang) {
+        try {
+            this.request.uri().path("/setup/details").back()
+                .method(Request.POST)
+                .body()
+                .formParam("name", name)
+                .formParam("year", year)
+                .formParam("sex", sex)
+                .formParam("lang", lang)
+                .back()
+                .header(
+                    HttpHeaders.CONTENT_TYPE,
+                    MediaType.APPLICATION_FORM_URLENCODED
+                )
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public void upload(final byte[] photo) {
-        throw new UnsupportedOperationException("#upload()");
+        try {
+            this.request.uri().path("/profile/upload").back()
+                .method(Request.POST)
+                .body()
+                .formParam("photo", photo)
+                .back()
+                .header(
+                    HttpHeaders.CONTENT_TYPE,
+                    MediaType.MULTIPART_FORM_DATA
+                )
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override

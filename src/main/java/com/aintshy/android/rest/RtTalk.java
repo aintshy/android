@@ -24,12 +24,14 @@ import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Roll;
 import com.aintshy.android.api.Talk;
+import com.google.common.net.HttpHeaders;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
 import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -106,7 +108,10 @@ final class RtTalk implements Talk {
                 .rel("/page/links/link[@rel='post']/@href")
                 .method(Request.POST)
                 .body().formParam("text", text).back()
-                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header(
+                    HttpHeaders.CONTENT_TYPE,
+                    MediaType.APPLICATION_FORM_URLENCODED
+                )
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);

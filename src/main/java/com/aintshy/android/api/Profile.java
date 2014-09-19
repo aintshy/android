@@ -48,20 +48,14 @@ public interface Profile {
     void confirm(String code);
 
     /**
-     * Profile is complete?
-     * @return TRUE if it's complete
-     */
-    boolean complete();
-
-    /**
      * Update profile.
      * @param name Name
-     * @param age Age
+     * @param year Year of birth
      * @param sex Sex
      * @param lang Language
      * @checkstyle ParameterNumberCheck (5 lines)
      */
-    void update(String name, int age, char sex, String lang);
+    void update(String name, int year, char sex, String lang);
 
     /**
      * Upload new photo.
