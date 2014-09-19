@@ -87,7 +87,7 @@ final class UpdateMessages extends AsyncTask<Void, Integer, Map<Integer, Message
         final ListAdapter adapter = list.getAdapter();
         final int max = Collections.max(messages.keySet());
         UpdateMessages.Target.class.cast(adapter).update(
-            messages, max < this.last
+            messages, max >= this.last
         );
     }
 

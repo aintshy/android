@@ -23,7 +23,6 @@ package com.aintshy.android.ui.talk;
 import android.content.Context;
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +34,6 @@ import com.aintshy.android.R;
 import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Talk;
-import com.aintshy.android.flat.FtTalk;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -168,16 +166,18 @@ final class VisibleMessages implements ListAdapter, UpdateMessages.Target {
             row = LayoutInflater.class.cast(
                 this.home.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
             ).inflate(R.layout.talk_head, grp, false);
-            new AsyncTask<Void, Void, Talk>() {
-                @Override
-                protected Talk doInBackground(final Void... params) {
-                    return new FtTalk(VisibleMessages.this.talk);
-                }
-                @Override
-                protected void onPostExecute(final Talk tlk) {
-                    VisibleMessages.this.render(tlk.role(), row);
-                }
-            }.execute();
+            final Human human = this.talk.role();
+            ImageView.class
+                .cast(row.findViewById(R.id.photo))
+                .setImageBitmap(human.photo());
+            TextView.class
+                .cast(row.findViewById(R.id.human))
+                .setText(
+                    String.format(
+                        "%s %d %c", human.name(),
+                        human.age(), human.sex()
+                    )
+                );
         } else {
             row = view;
         }
@@ -200,40 +200,13 @@ final class VisibleMessages implements ListAdapter, UpdateMessages.Target {
         } else {
             row = view;
         }
-        this.render(idx, row);
-        return row;
-    }
-
-    /**
-     * Render a header.
-     * @param human The human
-     * @param row Row
-     */
-    private void render(final Human human, final View row) {
-        ImageView.class
-            .cast(row.findViewById(R.id.photo))
-            .setImageBitmap(human.photo());
-        TextView.class
-            .cast(row.findViewById(R.id.human))
-            .setText(
-                String.format(
-                    "%s %d %c", human.name(),
-                    human.age(), human.sex()
-                )
-            );
-    }
-
-    /**
-     * Render a message.
-     * @param idx Position of it
-     * @param row Row
-     */
-    private void render(final int idx, final View row) {
+        final TextView label = TextView.class.cast(
+            row.findViewById(R.id.text)
+        );
         final Message msg = this.messages.get(idx);
-        if (msg != null) {
-            final TextView label = TextView.class.cast(
-                row.findViewById(R.id.text)
-            );
+        if (msg == null) {
+            label.setText("...wait...");
+        } else {
             label.setText(msg.text());
             final RelativeLayout.LayoutParams params =
                 new RelativeLayout.LayoutParams(
@@ -249,6 +222,7 @@ final class VisibleMessages implements ListAdapter, UpdateMessages.Target {
             }
             label.setLayoutParams(params);
         }
+        return row;
     }
 
 }

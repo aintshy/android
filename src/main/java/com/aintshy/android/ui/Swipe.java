@@ -57,20 +57,24 @@ public final class Swipe extends GestureDetector.SimpleOnGestureListener {
     @Override
     public boolean onFling(final MotionEvent first,
         final MotionEvent second, final float horiz, final float vert) {
-        final float width = second.getX() - first.getX();
-        final float height = second.getY() - first.getY();
         final boolean done;
-        if (Math.abs(width) > Math.abs(height)
-            && Math.abs(width) > (float) Tv.HUNDRED
-            && Math.abs(horiz) > (float) Tv.HUNDRED) {
-            if (width > 0.0f) {
-                this.target.onSwipeRight();
-            } else {
-                this.target.onSwipeLeft();
-            }
+        if (first == null || second == null) {
             done = true;
         } else {
-            done = false;
+            final float width = second.getX() - first.getX();
+            final float height = second.getY() - first.getY();
+            if (Math.abs(width) > Math.abs(height)
+                && Math.abs(width) > (float) Tv.HUNDRED
+                && Math.abs(horiz) > (float) Tv.HUNDRED) {
+                if (width > 0.0f) {
+                    this.target.onSwipeRight();
+                } else {
+                    this.target.onSwipeLeft();
+                }
+                done = true;
+            } else {
+                done = false;
+            }
         }
         return done;
     }

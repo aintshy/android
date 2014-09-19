@@ -27,6 +27,7 @@ import com.aintshy.android.Bag;
 import com.aintshy.android.R;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
+import com.aintshy.android.flat.FtTalk;
 import com.aintshy.android.ui.Swipe;
 
 /**
@@ -56,7 +57,7 @@ final class CreateMessages extends AsyncTask<Void, Integer, Talk> {
     public Talk doInBackground(final Void... none) {
         final Bag bag = Bag.class.cast(this.home.getApplicationContext());
         final Hub hub = bag.fetch(Hub.class, new Bag.Source.Empty<Hub>());
-        return hub.talk(this.number);
+        return new FtTalk(hub.talk(this.number));
     }
 
     @Override

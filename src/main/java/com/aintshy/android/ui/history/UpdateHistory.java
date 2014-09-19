@@ -31,6 +31,7 @@ import com.aintshy.android.Bag;
 import com.aintshy.android.R;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
+import com.aintshy.android.flat.FtTalk;
 import com.aintshy.android.ui.Swipe;
 import com.aintshy.android.ui.talk.TalkActivity;
 import java.util.Collection;
@@ -72,7 +73,7 @@ final class UpdateHistory extends AsyncTask<Void, Integer, Map<Integer, Talk>> {
         final Map<Integer, Talk> map = new HashMap<Integer, Talk>(talks.size());
         int idx = this.first;
         for (final Talk talk : talks) {
-            map.put(idx, talk);
+            map.put(idx, new FtTalk(talk));
             ++idx;
         }
         return map;
@@ -110,7 +111,7 @@ final class UpdateHistory extends AsyncTask<Void, Integer, Map<Integer, Talk>> {
         }
         final int max = Collections.max(talks.keySet());
         UpdateHistory.Target.class.cast(adapter).update(
-            talks, max < this.last
+            talks, max >= this.last
         );
     }
 

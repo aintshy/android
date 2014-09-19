@@ -23,7 +23,6 @@ package com.aintshy.android.ui.history;
 import android.content.Context;
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,6 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import com.aintshy.android.R;
 import com.aintshy.android.api.Talk;
-import com.aintshy.android.flat.FtTalk;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -112,24 +110,23 @@ final class VisibleTalks implements ListAdapter, UpdateHistory.Target {
         } else {
             row = view;
         }
-        if (this.talks.containsKey(idx)) {
-            new AsyncTask<Void, Void, Talk>() {
-                @Override
-                protected Talk doInBackground(final Void... params) {
-                    final Talk talk = VisibleTalks.this.talks.get(idx);
-                    Talk flat = null;
-                    if (talk != null) {
-                        flat = new FtTalk(talk);
-                    }
-                    return flat;
-                }
-                @Override
-                protected void onPostExecute(final Talk talk) {
-                    if (talk != null) {
-                        VisibleTalks.this.render(row, talk);
-                    }
-                }
-            }.execute();
+        final Talk talk = this.talks.get(idx);
+        if (talk == null) {
+            row.setTag(null);
+            TextView.class
+                .cast(row.findViewById(R.id.text))
+                .setText("...wait...");
+        } else {
+            row.setTag(talk);
+            ImageView.class
+                .cast(row.findViewById(R.id.photo))
+                .setImageBitmap(talk.role().photo());
+            TextView.class
+                .cast(row.findViewById(R.id.text))
+                .setText(talk.role().name());
+            TextView.class
+                .cast(row.findViewById(R.id.message))
+                .setText(talk.messages().fetch(0, 0).iterator().next().text());
         }
         return row;
     }
@@ -164,24 +161,6 @@ final class VisibleTalks implements ListAdapter, UpdateHistory.Target {
             this.total.set(max + 1);
         }
         this.observe.notifyChanged();
-    }
-
-    /**
-     * Render talk by number into given view.
-     * @param row View to render into
-     * @param talk Talk to render
-     */
-    private void render(final View row, final Talk talk) {
-        row.setTag(talk);
-        ImageView.class
-            .cast(row.findViewById(R.id.photo))
-            .setImageBitmap(talk.role().photo());
-        TextView.class
-            .cast(row.findViewById(R.id.text))
-            .setText(talk.role().name());
-        TextView.class
-            .cast(row.findViewById(R.id.message))
-            .setText(talk.messages().fetch(0, 0).iterator().next().text());
     }
 
 }
