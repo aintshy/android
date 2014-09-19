@@ -20,9 +20,9 @@
  */
 package com.aintshy.android.cached;
 
-import com.aintshy.android.api.History;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Profile;
+import com.aintshy.android.api.Roll;
 import com.aintshy.android.api.Talk;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -46,7 +46,7 @@ public final class CdHub implements Hub {
     /**
      * History.
      */
-    private final transient Atomic<History> hst = new Atomic<History>();
+    private final transient Atomic<Roll<Talk>> hst = new Atomic<Roll<Talk>>();
 
     /**
      * LRU cache.
@@ -90,11 +90,11 @@ public final class CdHub implements Hub {
     }
 
     @Override
-    public History history() {
+    public Roll<Talk> history() {
         return this.hst.getOrSet(
-            new Atomic.Source<History>() {
+            new Atomic.Source<Roll<Talk>>() {
                 @Override
-                public History read() {
+                public Roll<Talk> read() {
                     return new CdHistory(
                         CdHub.this.origin.history(), CdHub.this.lru
                     );

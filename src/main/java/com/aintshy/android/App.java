@@ -21,10 +21,11 @@
 package com.aintshy.android;
 
 import android.app.Application;
-import com.aintshy.android.api.History;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.cached.CdHub;
 import com.aintshy.android.rest.RtEntrance;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Application.
@@ -33,17 +34,18 @@ import com.aintshy.android.rest.RtEntrance;
  * @version $Id$
  * @since 0.1
  */
-public final class App extends Application {
+public final class App extends Application implements Bag {
 
     /**
      * Hub to use.
      */
-    private final transient Hub hbe;
+    private final transient Hub hub;
 
     /**
-     * Inbox.
+     * Map of objects.
      */
-    private final transient Inbox ibx;
+    private final transient ConcurrentMap<Class<?>, Object> objects =
+        new ConcurrentHashMap<Class<?>, Object>(0);
 
     /**
      * Ctor.
@@ -51,34 +53,24 @@ public final class App extends Application {
     public App() {
         super();
         final String token = "4CIB1GNA-UJOMU5DG-7KO2KJQL-0LFKS0HU-7C0GSK3F-99A18IJF-003L0L8V-0K4G2TOA-A1F3GEH7-8G9JOKIM-2174U0PU-4T30461G-E0Q4O91J-3CDLQ7OK-50======";
-        this.hbe = new CdHub(
+        this.hub = new CdHub(
             new RtEntrance().hub(token)
         );
-        this.ibx = new Inbox(this.hbe);
     }
 
-    /**
-     * Get hub.
-     * @return Hub
-     */
-    public Hub hub() {
-        return this.hbe;
+    @Override
+    public <T> T fetch(final Class<T> type, final Bag.Source<T> src) {
+        final T object;
+        if (type.equals(Hub.class)) {
+            object = type.cast(this.hub);
+        } else {
+            synchronized (this.objects) {
+                if (!this.objects.containsKey(type)) {
+                    this.objects.put(type, src.create());
+                }
+                object = type.cast(this.objects.get(type));
+            }
+        }
+        return object;
     }
-
-    /**
-     * Get inbox.
-     * @return Inbox
-     */
-    public Inbox inbox() {
-        return this.ibx;
-    }
-
-    /**
-     * Get history.
-     * @return History
-     */
-    public History history() {
-        return this.hbe.history();
-    }
-
 }

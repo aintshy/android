@@ -50,7 +50,7 @@ final class RtProfile implements Profile {
      * @param req Request to the front page
      */
     RtProfile(final Request req) {
-        this.request = req.uri().path("/empty").back();
+        this.request = req.uri().path("/talk_empty").back();
     }
 
     @Override

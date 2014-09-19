@@ -20,12 +20,11 @@
  */
 package com.aintshy.android.cached;
 
-import com.aintshy.android.api.History;
+import com.aintshy.android.api.Roll;
 import com.aintshy.android.api.Talk;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import java.util.Collection;
-import java.util.Date;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -36,18 +35,18 @@ import lombok.EqualsAndHashCode;
  * @since 0.1
  */
 @EqualsAndHashCode(of = "origin")
-final class CdHistory implements History {
+final class CdHistory implements Roll<Talk> {
 
     /**
      * Original object.
      */
-    private final transient History origin;
+    private final transient Roll<Talk> origin;
 
     /**
      * Talks.
      */
-    private final transient Atomic<Collection<Talk>> cached =
-        new Atomic<Collection<Talk>>();
+    private final transient Atomic<Roll<Talk>> cached =
+        new Atomic<Roll<Talk>>();
 
     /**
      * LRU cache.
@@ -59,22 +58,15 @@ final class CdHistory implements History {
      * @param orgn Original
      * @param cache Cache
      */
-    CdHistory(final History orgn, final LruTalks cache) {
+    CdHistory(final Roll<Talk> orgn, final LruTalks cache) {
         this.origin = orgn;
         this.lru = cache;
     }
 
     @Override
-    public Collection<Talk> talks() {
+    public Collection<Talk> fetch(final int first, final int last) {
         return Collections2.transform(
-            this.cached.getOrSet(
-                new Atomic.Source<Collection<Talk>>() {
-                    @Override
-                    public Collection<Talk> read() {
-                        return CdHistory.this.origin.talks();
-                    }
-                }
-            ),
+            this.origin.fetch(first, last),
             new Function<Talk, Talk>() {
                 @Override
                 public Talk apply(final Talk talk) {
@@ -83,10 +75,4 @@ final class CdHistory implements History {
             }
         );
     }
-
-    @Override
-    public History since(final Date date) {
-        throw new UnsupportedOperationException("#since()");
-    }
-
 }

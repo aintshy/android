@@ -18,29 +18,49 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
+package com.aintshy.android.ui.talk;
 
 import android.app.Activity;
-import android.os.Bundle;
+import android.content.Intent;
+import com.aintshy.android.R;
+import com.aintshy.android.api.Talk;
+import com.aintshy.android.ui.Swipe;
+import com.aintshy.android.ui.history.HistoryActivity;
 
 /**
- * Details activity.
+ * Talk activity.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class DetailsActivity extends Activity {
-
-    @Override
-    public void onCreate(final Bundle state) {
-        super.onCreate(state);
-        this.setContentView(R.layout.details);
-    }
+public final class TalkActivity extends Activity implements Swipe.Target {
 
     @Override
     public void onStart() {
         super.onStart();
+        this.setContentView(R.layout.wait);
+        new Swipe(this).attach(this, R.id.main);
+        final int num = this.getIntent().getIntExtra(Talk.class.getName(), 0);
+        if (num == 0) {
+            new InboxRedirect(this).execute();
+        } else {
+            new CreateMessages(this, num).execute();
+        }
+    }
+
+    @Override
+    public void onSwipeRight() {
+        this.startActivity(
+            new Intent(this, HistoryActivity.class)
+        );
+    }
+
+    @Override
+    public void onSwipeLeft() {
+        this.startActivity(
+            new Intent(this, TalkActivity.class)
+        );
     }
 
 }

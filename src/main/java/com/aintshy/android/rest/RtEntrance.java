@@ -24,6 +24,7 @@ import com.aintshy.android.api.Hub;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
+import com.jcabi.http.wire.RetryWire;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
@@ -71,6 +72,7 @@ public final class RtEntrance {
                 .header("Cookie", String.format("Rexsl-Auth=%s", token))
                 .header("Accept", "application/xml")
                 .header("User-Agent", "Android app")
+                .through(RetryWire.class)
         );
     }
 }

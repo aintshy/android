@@ -18,11 +18,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
+package com.aintshy.android.ui.login;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import com.aintshy.android.R;
 import com.aintshy.android.rest.RtEntrance;
 
 /**
@@ -37,7 +38,7 @@ public final class LoginActivity extends Activity {
     @Override
     public void onCreate(final Bundle state) {
         super.onCreate(state);
-        this.setContentView(R.layout.login);
+        this.setContentView(R.layout.login_main);
     }
 
     public void login(final View view) {

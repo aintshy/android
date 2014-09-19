@@ -20,61 +20,38 @@
  */
 package com.aintshy.android;
 
-import com.aintshy.android.api.Hub;
-import com.aintshy.android.api.Talk;
-import com.google.common.collect.Iterables;
-import java.util.concurrent.atomic.AtomicReference;
-
 /**
- * Inbox with talks.
+ * Bag with objects.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-final class Inbox {
+public interface Bag {
 
     /**
-     * Hub to use.
+     * Save and get.
+     * @param type Type to search for
+     * @param src Source, if it's absent
+     * @return Value
      */
-    private final transient Hub hub;
+    <T> T fetch(Class<T> type, Bag.Source<T> src);
 
-    /**
-     * Current talk.
-     */
-    private final transient AtomicReference<Iterable<Talk>> current =
-        new AtomicReference<Iterable<Talk>>();
-
-    /**
-     * Ctor.
-     * @param hbe Hub to work with
-     */
-    Inbox(final Hub hbe) {
-        this.hub = hbe;
-    }
-
-    /**
-     * Get current talk or empty list if nothing is active now.
-     * @return Talks
-     */
-    public Iterable<Talk> current() {
-        final Iterable<Talk> talks;
-        if (this.current.get() == null) {
-            talks = this.hub.next();
-            if (!Iterables.isEmpty(talks)) {
-                this.current.set(talks);
+    interface Source<T> {
+        /**
+         * Empty source.
+         */
+        final class Empty<T> implements Bag.Source<T> {
+            @Override
+            public T create() {
+                throw new UnsupportedOperationException("#create()");
             }
-        } else {
-            talks = this.current.get();
         }
-        return talks;
-    }
-
-    /**
-     * Swipe, to see the next talk.
-     */
-    public void swipe() {
-        this.current.set(null);
+        /**
+         * Create it.
+         * @return The object created
+         */
+        T create();
     }
 
 }

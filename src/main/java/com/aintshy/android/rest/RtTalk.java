@@ -23,6 +23,7 @@ package com.aintshy.android.rest;
 import android.util.Log;
 import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Message;
+import com.aintshy.android.api.Roll;
 import com.aintshy.android.api.Talk;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
@@ -32,8 +33,10 @@ import com.jcabi.http.response.XmlResponse;
 import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -95,8 +98,7 @@ final class RtTalk implements Talk {
     }
 
     @Override
-    public Collection<Message> messages() {
-        final Collection<Message> msgs;
+    public Roll<Message> messages() {
         try {
             final XML page = this.request.fetch()
                 .as(RestResponse.class)
@@ -106,27 +108,43 @@ final class RtTalk implements Talk {
                 .xml()
                 .nodes("/page").get(0);
             final String asking = page.xpath("role/asking/text()").get(0);
-            msgs = Collections2.transform(
-                page.nodes("messages/message"),
-                new Function<XML, Message>() {
-                    @Override
-                    public Message apply(final XML xml) {
-                        return new Message.Simple(
-                            !asking.equals(xml.xpath("asking/text()").get(0)),
-                            new Date(),
-                            xml.xpath("text/text()").get(0)
-                        );
+            final Collection<XML> nodes = page.nodes("messages/message");
+            final List<Message> msgs = new ArrayList<Message>(nodes.size() + 1);
+            msgs.addAll(
+                Collections2.transform(
+                    nodes,
+                    new Function<XML, Message>() {
+                        @Override
+                        public Message apply(final XML xml) {
+                            return new Message.Simple(
+                                !asking.equals(xml.xpath("asking/text()").get(0)),
+                                new Date(),
+                                xml.xpath("text/text()").get(0)
+                            );
+                        }
                     }
-                }
+                )
             );
+            msgs.add(
+                new Message.Simple(
+                    "false".equals(asking),
+                    new Date(),
+                    page.xpath("talk/question/text()").get(0)
+                )
+            );
+            Log.i(
+                RtTalk.class.getName(),
+                String.format("%d messages loaded", msgs.size())
+            );
+            return new Roll<Message>() {
+                @Override
+                public Collection<Message> fetch(final int stt, final int end) {
+                    return msgs;
+                }
+            };
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
-        Log.i(
-            RtTalk.class.getName(),
-            String.format("%d messages loaded", msgs.size())
-        );
-        return msgs;
     }
 
     @Override
@@ -146,11 +164,6 @@ final class RtTalk implements Talk {
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
-    }
-
-    @Override
-    public Talk since(final Date date) {
-        throw new UnsupportedOperationException("#since()");
     }
 
 }

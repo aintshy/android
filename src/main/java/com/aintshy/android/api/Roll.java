@@ -20,37 +20,23 @@
  */
 package com.aintshy.android.api;
 
+import java.util.Collection;
+
 /**
- * Talk.
+ * Roll of items.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public interface Talk {
+public interface Roll<T> {
 
     /**
-     * Its number.
-     * @return Number of it
+     * Get a collection of elements.
+     * @param first First position
+     * @param last Last position (if possible)
+     * @return Collection of them
      */
-    int number();
-
-    /**
-     * Who is talking to me.
-     * @return My respondent
-     */
-    Human role();
-
-    /**
-     * Messages (in reverse chronological order).
-     * @return Messages
-     */
-    Roll<Message> messages();
-
-    /**
-     * Post a message.
-     * @param text Text to post
-     */
-    void post(String text);
+    Collection<T> fetch(int first, int last);
 
 }

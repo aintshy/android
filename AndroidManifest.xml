@@ -6,13 +6,13 @@
     <uses-sdk a:minSdkVersion="12" a:targetSdkVersion="20" />
     <uses-permission a:name="android.permission.INTERNET" />
     <application a:name=".App" a:label="aintshy" a:icon="@drawable/ico" a:allowBackup="false">
-        <activity a:name=".TalkActivity" a:label="aintshy" >
+        <activity a:name=".ui.talk.TalkActivity" a:label="aintshy" >
             <intent-filter>
                 <action a:name="android.intent.action.MAIN" />
                 <category a:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity a:name=".HistoryActivity" a:label="history" />
-        <activity a:name=".EmptyActivity" a:label="empty" />
+        <activity a:name=".ui.history.HistoryActivity" a:label="history" />
+        <activity a:name=".ui.talk.EmptyActivity" a:label="empty" />
     </application>
 </manifest>

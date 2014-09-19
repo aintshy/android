@@ -18,9 +18,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
+package com.aintshy.android.ui.talk;
 
 import android.content.Context;
+import android.database.DataSetObservable;
 import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -30,31 +31,39 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.aintshy.android.R;
 import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Talk;
 import com.aintshy.android.flat.FtTalk;
-import com.google.common.collect.Iterables;
+import java.util.Collections;
+import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Talk list adapter.
+ * Talks for a list view.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-final class TalkListAdapter implements ListAdapter {
+final class VisibleMessages implements ListAdapter, UpdateMessages.Target {
 
-    private final transient Context context;
+    private final transient Context home;
     private final transient Talk talk;
+    private final transient ConcurrentMap<Integer, Message> messages =
+        new ConcurrentSkipListMap<Integer, Message>();
+    private final transient AtomicInteger total = new AtomicInteger();
+    private final transient DataSetObservable observe = new DataSetObservable();
 
     /**
      * Ctor.
-     * @param ctx Context
-     * @param tlk Talk
+     * @param ctx Activity context
      */
-    TalkListAdapter(final Context ctx, final Talk tlk) {
-        this.context = ctx;
+    VisibleMessages(final Context ctx, final Talk tlk) {
+        this.home = ctx;
         this.talk = tlk;
     }
 
@@ -70,17 +79,17 @@ final class TalkListAdapter implements ListAdapter {
 
     @Override
     public void registerDataSetObserver(final DataSetObserver observer) {
-        //
+        this.observe.registerObserver(observer);
     }
 
     @Override
     public void unregisterDataSetObserver(final DataSetObserver observer) {
-        //
+        this.observe.unregisterObserver(observer);
     }
 
     @Override
     public int getCount() {
-        return 20;
+        return this.total.get() + 1;
     }
 
     @Override
@@ -90,7 +99,7 @@ final class TalkListAdapter implements ListAdapter {
 
     @Override
     public long getItemId(final int idx) {
-        return idx;
+        return (long) idx;
     }
 
     @Override
@@ -104,24 +113,47 @@ final class TalkListAdapter implements ListAdapter {
         if (idx == 0) {
             row = this.header(view, grp);
         } else {
-            row = this.message(idx, view, grp);
+            row = this.message(idx - 1, view, grp);
         }
         return row;
     }
 
     @Override
-    public int getItemViewType(final int position) {
-        return position;
+    public int getItemViewType(final int idx) {
+        final int type;
+        if (idx == 0) {
+            type = 0;
+        } else {
+            type = 1;
+        }
+        return type;
     }
 
     @Override
     public int getViewTypeCount() {
-        return this.getCount();
+        return 2;
     }
 
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    @Override
+    public void update(final Map<Integer, Message> map, final boolean more) {
+        this.messages.putAll(map);
+        final int max;
+        if (map.isEmpty()) {
+            max = -1;
+        } else {
+            max = Collections.max(map.keySet());
+        }
+        if (more) {
+            this.total.set(max + 2);
+        } else {
+            this.total.set(max + 1);
+        }
+        this.observe.notifyChanged();
     }
 
     /**
@@ -134,27 +166,16 @@ final class TalkListAdapter implements ListAdapter {
         final View row;
         if (view == null) {
             row = LayoutInflater.class.cast(
-                this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
+                this.home.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
             ).inflate(R.layout.talk_head, grp, false);
             new AsyncTask<Void, Void, Talk>() {
                 @Override
                 protected Talk doInBackground(final Void... params) {
-                    return new FtTalk(TalkListAdapter.this.talk);
+                    return new FtTalk(VisibleMessages.this.talk);
                 }
                 @Override
                 protected void onPostExecute(final Talk tlk) {
-                    ImageView.class
-                        .cast(row.findViewById(R.id.photo))
-                        .setImageBitmap(tlk.role().photo());
-                    final Human human = tlk.role();
-                    TextView.class
-                        .cast(row.findViewById(R.id.human))
-                        .setText(
-                            String.format(
-                                "%s %d %c", human.name(),
-                                human.age(), human.sex()
-                            )
-                        );
+                    VisibleMessages.this.render(tlk.role(), row);
                 }
             }.execute();
         } else {
@@ -164,7 +185,7 @@ final class TalkListAdapter implements ListAdapter {
     }
 
     /**
-     * Render header.
+     * Render message.
      * @param idx Position of the message
      * @param view View or NULL
      * @param grp Group
@@ -174,40 +195,60 @@ final class TalkListAdapter implements ListAdapter {
         final View row;
         if (view == null) {
             row = LayoutInflater.class.cast(
-                this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
+                this.home.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
             ).inflate(R.layout.talk_message, grp, false);
-            new AsyncTask<Void, Void, Message>() {
-                @Override
-                protected Message doInBackground(final Void... params) {
-                    return Iterables.get(
-                        TalkListAdapter.this.talk.messages(), idx - 1
-                    );
-                }
-                @Override
-                protected void onPostExecute(final Message msg) {
-                    final TextView label = TextView.class.cast(
-                        row.findViewById(R.id.text)
-                    );
-                    label.setText(msg.text());
-                    final RelativeLayout.LayoutParams params =
-                        new RelativeLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                        );
-                    if (msg.mine()) {
-                        label.setBackgroundResource(R.color.my_message);
-                        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    } else {
-                        label.setBackgroundResource(R.color.his_message);
-                        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    }
-                    label.setLayoutParams(params);
-                }
-            }.execute();
         } else {
             row = view;
         }
+        this.render(idx, row);
         return row;
+    }
+
+    /**
+     * Render a header.
+     * @param human The human
+     * @param row Row
+     */
+    private void render(final Human human, final View row) {
+        ImageView.class
+            .cast(row.findViewById(R.id.photo))
+            .setImageBitmap(human.photo());
+        TextView.class
+            .cast(row.findViewById(R.id.human))
+            .setText(
+                String.format(
+                    "%s %d %c", human.name(),
+                    human.age(), human.sex()
+                )
+            );
+    }
+
+    /**
+     * Render a message.
+     * @param idx Position of it
+     * @param row Row
+     */
+    private void render(final int idx, final View row) {
+        final Message msg = this.messages.get(idx);
+        if (msg != null) {
+            final TextView label = TextView.class.cast(
+                row.findViewById(R.id.text)
+            );
+            label.setText(msg.text());
+            final RelativeLayout.LayoutParams params =
+                new RelativeLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+            if (msg.mine()) {
+                label.setBackgroundResource(R.color.my_message);
+                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            } else {
+                label.setBackgroundResource(R.color.his_message);
+                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            }
+            label.setLayoutParams(params);
+        }
     }
 
 }

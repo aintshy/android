@@ -55,9 +55,9 @@ public interface Hub {
     void ask(String text);
 
     /**
-     * Get history.
+     * Get history_main.
      * @return Talks
      */
-    History history();
+    Roll<Talk> history();
 
 }

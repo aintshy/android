@@ -18,12 +18,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
+package com.aintshy.android.ui.talk;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import com.aintshy.android.Bag;
+import com.aintshy.android.R;
+import com.aintshy.android.api.Hub;
+import java.util.concurrent.TimeUnit;
 
 /**
  * No new talks for you.
@@ -37,16 +41,23 @@ public final class EmptyActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-        new Refresh().execute(
-            App.class.cast(this.getApplication()).inbox()
+        this.setContentView(R.layout.talk_empty);
+        final Bag bag = Bag.class.cast(this.getApplicationContext());
+        final Inbox inbox = bag.fetch(
+            Inbox.class,
+            new Bag.Source<Inbox>() {
+                @Override
+                public Inbox create() {
+                    return new Inbox.Default(
+                        bag.fetch(Hub.class, new Bag.Source.Empty<Hub>())
+                    );
+                }
+            }
         );
+        new Refresh().execute(inbox);
     }
 
     private final class Refresh extends AsyncTask<Inbox, Integer, Boolean> {
-        @Override
-        protected void onPreExecute() {
-            EmptyActivity.this.setContentView(R.layout.empty);
-        }
         @Override
         protected Boolean doInBackground(final Inbox... inbox) {
             boolean found = false;
@@ -55,7 +66,13 @@ public final class EmptyActivity extends Activity {
                     found = true;
                     break;
                 }
-                Log.i(this.getClass().getName(), "checking...");
+                Log.i(this.getClass().getName(), "checking inbox...");
+                try {
+                    TimeUnit.MINUTES.sleep(1L);
+                } catch (final InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    throw new IllegalStateException(ex);
+                }
             }
             return found;
         }

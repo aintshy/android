@@ -21,10 +21,10 @@
 package com.aintshy.android.rest;
 
 import android.util.Log;
-import com.aintshy.android.api.History;
+import com.aintshy.android.api.Roll;
 import com.aintshy.android.api.Talk;
 import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Collection;
-import java.util.Date;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -44,7 +44,7 @@ import lombok.EqualsAndHashCode;
  * @since 0.1
  */
 @EqualsAndHashCode(of = "request")
-final class RtHistory implements History {
+final class RtHistory implements Roll<Talk> {
 
     /**
      * HTTP request to the server.
@@ -60,7 +60,7 @@ final class RtHistory implements History {
     }
 
     @Override
-    public Collection<Talk> talks() {
+    public Collection<Talk> fetch(final int first, final int last) {
         final XmlResponse response;
         try {
             response = this.request
@@ -72,7 +72,7 @@ final class RtHistory implements History {
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
-        final Collection<Talk> talks = Collections2.transform(
+        final List<Talk> list = Lists.transform(
             response.xml().nodes("/page/history/story"),
             new Function<XML, Talk>() {
                 @Override
@@ -92,14 +92,8 @@ final class RtHistory implements History {
         );
         Log.i(
             this.getClass().getName(),
-            String.format("found %d talks in history", talks.size())
+            String.format("found %d talks in history", list.size())
         );
-        return talks;
+        return list;
     }
-
-    @Override
-    public History since(final Date date) {
-        throw new UnsupportedOperationException("#since()");
-    }
-
 }

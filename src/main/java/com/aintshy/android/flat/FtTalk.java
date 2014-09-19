@@ -22,11 +22,10 @@ package com.aintshy.android.flat;
 
 import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Message;
+import com.aintshy.android.api.Roll;
 import com.aintshy.android.api.Talk;
-import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -36,7 +35,7 @@ import lombok.EqualsAndHashCode;
  * @version $Id$
  * @since 0.1
  */
-@EqualsAndHashCode(of = { "rle", "msgs" })
+@EqualsAndHashCode(of = { "num", "rle", "last" })
 public final class FtTalk implements Talk {
 
     /**
@@ -50,9 +49,9 @@ public final class FtTalk implements Talk {
     private final transient Human rle;
 
     /**
-     * Messages.
+     * Last message.
      */
-    private final transient Collection<Message> msgs;
+    private final transient Message last;
 
     /**
      * Ctor.
@@ -64,7 +63,7 @@ public final class FtTalk implements Talk {
         this.rle = new Human.Simple(
             role.name(), role.age(), role.sex(), role.photo()
         );
-        this.msgs = Lists.newArrayList(talk.messages());
+        this.last = talk.messages().fetch(0, 0).iterator().next();
     }
 
     @Override
@@ -78,8 +77,13 @@ public final class FtTalk implements Talk {
     }
 
     @Override
-    public Collection<Message> messages() {
-        return Collections.unmodifiableCollection(this.msgs);
+    public Roll<Message> messages() {
+        return new Roll<Message>() {
+            @Override
+            public Collection<Message> fetch(final int start, final int end) {
+                return Collections.singleton(FtTalk.this.last);
+            }
+        };
     }
 
     @Override
@@ -87,8 +91,4 @@ public final class FtTalk implements Talk {
         throw new UnsupportedOperationException("#post()");
     }
 
-    @Override
-    public Talk since(final Date date) {
-        throw new UnsupportedOperationException("#since()");
-    }
 }

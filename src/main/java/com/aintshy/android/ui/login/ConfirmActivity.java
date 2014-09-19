@@ -18,30 +18,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.api;
+package com.aintshy.android.ui.login;
 
-import java.util.Collection;
-import java.util.Date;
+import android.app.Activity;
+import android.os.Bundle;
+import com.aintshy.android.R;
 
 /**
- * History.
+ * Confirm activity.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public interface History {
+public final class ConfirmActivity extends Activity {
 
-    /**
-     * Get talks.
-     * @return Talks
-     */
-    Collection<Talk> talks();
+    @Override
+    public void onCreate(final Bundle state) {
+        super.onCreate(state);
+        this.setContentView(R.layout.login_main);
+    }
 
-    /**
-     * Start with a talk that was updated BEFORE this date.
-     * @param date The date
-     */
-    History since(Date date);
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 
 }

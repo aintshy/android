@@ -21,9 +21,9 @@
 package com.aintshy.android.rest;
 
 import android.util.Log;
-import com.aintshy.android.api.History;
 import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Profile;
+import com.aintshy.android.api.Roll;
 import com.aintshy.android.api.Talk;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
@@ -146,7 +146,7 @@ final class RtHub implements Hub {
     }
 
     @Override
-    public History history() {
+    public Roll<Talk> history() {
         return new RtHistory(this.request);
     }
 

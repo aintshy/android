@@ -18,24 +18,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
+package com.aintshy.android.ui.login;
 
 import android.app.Activity;
 import android.os.Bundle;
+import com.aintshy.android.R;
 
 /**
- * Confirm activity.
+ * Details activity.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class ConfirmActivity extends Activity {
+public final class DetailsActivity extends Activity {
 
     @Override
     public void onCreate(final Bundle state) {
         super.onCreate(state);
-        this.setContentView(R.layout.login);
+        this.setContentView(R.layout.login_details);
     }
 
     @Override

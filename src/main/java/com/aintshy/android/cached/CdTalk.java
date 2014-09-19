@@ -22,9 +22,8 @@ package com.aintshy.android.cached;
 
 import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Message;
+import com.aintshy.android.api.Roll;
 import com.aintshy.android.api.Talk;
-import java.util.Collection;
-import java.util.Date;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -50,8 +49,8 @@ final class CdTalk implements Talk {
     /**
      * Messages.
      */
-    private final transient Atomic<Collection<Message>> msgs =
-        new Atomic<Collection<Message>>();
+    private final transient Atomic<Roll<Message>> msgs =
+        new Atomic<Roll<Message>>();
 
     /**
      * Ctor.
@@ -79,11 +78,11 @@ final class CdTalk implements Talk {
     }
 
     @Override
-    public Collection<Message> messages() {
+    public Roll<Message> messages() {
         return this.msgs.getOrSet(
-            new Atomic.Source<Collection<Message>>() {
+            new Atomic.Source<Roll<Message>>() {
                 @Override
-                public Collection<Message> read() {
+                public Roll<Message> read() {
                     return CdTalk.this.origin.messages();
                 }
             }
@@ -96,8 +95,4 @@ final class CdTalk implements Talk {
         this.origin.post(text);
     }
 
-    @Override
-    public Talk since(final Date date) {
-        return this.origin.since(date);
-    }
 }
