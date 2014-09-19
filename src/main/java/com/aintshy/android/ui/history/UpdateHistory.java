@@ -97,11 +97,13 @@ final class UpdateHistory extends AsyncTask<Void, Integer, Map<Integer, Talk>> {
                         final Intent intent = new Intent(
                             UpdateHistory.this.home, TalkActivity.class
                         );
-                        intent.putExtra(
-                            Talk.class.getName(),
-                            Talk.class.cast(view.getTag()).number()
-                        );
-                        UpdateHistory.this.home.startActivity(intent);
+                        if (view.getTag() != null) {
+                            intent.putExtra(
+                                Talk.class.getName(),
+                                Talk.class.cast(view.getTag()).number()
+                            );
+                            UpdateHistory.this.home.startActivity(intent);
+                        }
                     }
                 }
             );

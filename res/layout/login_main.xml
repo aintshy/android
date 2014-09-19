@@ -1,41 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" android:background="#fff">
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+    a:orientation="vertical"
+    a:layout_width="fill_parent"
+    a:layout_height="fill_parent"
+    a:background="@color/white">
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Please, enter your email and password and we let you in. If you've never been here before, give us your email and any password, we'll register you right away."
-        android:id="@+id/textView" android:paddingBottom="30dp" android:textColor="#000"/>
+        a:layout_width="wrap_content"
+        a:layout_height="wrap_content"
+        a:textAppearance="?android:attr/textAppearanceLarge"
+        a:text="Please, enter your email and password and we let you in. If you've never been here before, give us your email and any password, we'll register you right away."
+        a:id="@+id/textView"
+        a:paddingBottom="30dp"
+        a:textColor="@color/black"/>
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Email"
-        android:id="@+id/email_label" android:textColor="#000"/>
+        a:layout_width="fill_parent"
+        a:layout_height="wrap_content"
+        a:textAppearance="?android:attr/textAppearanceLarge"
+        a:text="Email"
+        a:id="@+id/email_label"
+        a:textColor="@color/black"/>
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:id="@+id/email" android:textColor="#000"/>
+        a:layout_width="match_parent"
+        a:layout_height="wrap_content"
+        a:inputType="textEmailAddress"
+        a:ems="10"
+        a:id="@+id/email"
+        a:textColor="@color/black"/>
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Password"
-        android:id="@+id/password_label" android:textColor="#000"/>
+        a:layout_width="fill_parent"
+        a:layout_height="wrap_content"
+        a:textAppearance="?android:attr/textAppearanceLarge"
+        a:text="Password"
+        a:id="@+id/password_label"
+        a:textColor="@color/black"/>
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/password" android:textColor="#000"/>
+        a:layout_width="match_parent"
+        a:layout_height="wrap_content"
+        a:inputType="textPassword"
+        a:ems="10"
+        a:id="@+id/password"
+        a:textColor="@color/black"/>
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        android:id="@+id/login_button"/>
+        a:layout_width="wrap_content"
+        a:layout_height="wrap_content"
+        a:text="Login"
+        a:id="@+id/login_button"/>
 </LinearLayout>

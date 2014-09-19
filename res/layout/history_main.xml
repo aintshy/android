@@ -2,11 +2,12 @@
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
     a:orientation="vertical"
     a:layout_width="fill_parent"
-    a:layout_height="fill_parent" a:id="@+id/messages">
+    a:layout_height="fill_parent"
+    a:id="@+id/messages"
+    a:background="@color/white">
     <ListView
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
         a:id="@+id/talks"
-        a:layout_gravity="center_horizontal"
-        a:background="#ffffffff"/>
+        a:layout_gravity="center_horizontal"/>
 </LinearLayout>

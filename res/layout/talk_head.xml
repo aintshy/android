@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
     a:layout_width="fill_parent"
     a:layout_height="fill_parent"
-    a:padding="6dip" a:background="#ffffffff">
+    a:padding="6dip">
     <ImageView
         a:layout_width="200dp"
         a:layout_height="200dp"
@@ -19,7 +19,7 @@
         a:textAlignment="center"
         a:gravity="center"
         a:textSize="24sp"
-        a:textColor="#000"/>
+        a:textColor="@color/black"/>
     <EditText
         a:layout_width="fill_parent"
         a:layout_height="wrap_content"
@@ -31,5 +31,5 @@
         a:maxLines="1"
         a:singleLine="true"
         a:layout_centerHorizontal="true"
-        a:textColor="#000"/>
+        a:textColor="@color/black"/>
 </RelativeLayout>

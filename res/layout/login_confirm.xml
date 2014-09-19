@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" android:background="#fff">
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+    a:orientation="vertical"
+    a:layout_width="fill_parent"
+    a:layout_height="fill_parent"
+    a:background="@color/white">
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Please, check your inbox. There should be a message from us. In the message you should find a digital code. Post it here and you're all set."
-        android:id="@+id/intro" android:paddingBottom="30dp" android:textColor="#000"/>
+        a:layout_width="wrap_content"
+        a:layout_height="wrap_content"
+        a:textAppearance="?android:attr/textAppearanceLarge"
+        a:text="Please, check your inbox. There should be a message from us. In the message you should find a digital code. Post it here and you're all set."
+        a:id="@+id/intro"
+        a:paddingBottom="30dp"
+        a:textColor="@color/black"/>
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Code"
-        android:id="@+id/code_label" android:textColor="#000"/>
+        a:layout_width="wrap_content"
+        a:layout_height="wrap_content"
+        a:textAppearance="?android:attr/textAppearanceLarge"
+        a:text="Code"
+        a:id="@+id/code_label"
+        a:textColor="@color/black"/>
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/code" android:inputType="number|numberDecimal" android:textColor="#000"/>
+        a:layout_width="match_parent"
+        a:layout_height="wrap_content"
+        a:ems="10"
+        a:id="@+id/code"
+        a:inputType="number|numberDecimal"
+        a:textColor="@color/black"/>
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Confirm"
-        android:id="@+id/confirm_button"/>
+        a:layout_width="wrap_content"
+        a:layout_height="wrap_content"
+        a:text="Confirm"
+        a:id="@+id/confirm_button"/>
 </LinearLayout>
