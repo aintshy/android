@@ -21,15 +21,17 @@
         a:textSize="24sp"
         a:textColor="@color/black"/>
     <EditText
+        a:id="@+id/answer"
         a:layout_width="fill_parent"
         a:layout_height="wrap_content"
-        a:id="@+id/answer"
         a:layout_below="@+id/human"
         a:inputType="text"
         a:enabled="true"
         a:focusable="true"
         a:maxLines="1"
         a:singleLine="true"
+        a:hint="Your answer..."
         a:layout_centerHorizontal="true"
+        a:imeOptions="actionSend"
         a:textColor="@color/black"/>
 </RelativeLayout>

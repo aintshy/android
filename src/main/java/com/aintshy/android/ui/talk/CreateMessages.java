@@ -21,6 +21,7 @@
 package com.aintshy.android.ui.talk;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.ListView;
 import com.aintshy.android.Bag;
@@ -37,7 +38,8 @@ import com.aintshy.android.ui.Swipe;
  * @version $Id$
  * @since 0.1
  */
-final class CreateMessages extends AsyncTask<Void, Integer, Talk> {
+final class CreateMessages extends
+    AsyncTask<Void, Integer, Talk> implements VisibleMessages.Target {
 
     private final transient Activity home;
     private final transient int number;
@@ -67,8 +69,27 @@ final class CreateMessages extends AsyncTask<Void, Integer, Talk> {
         final ListView list = ListView.class.cast(
             this.home.findViewById(R.id.messages)
         );
-        list.setAdapter(new VisibleMessages(this.home, talk));
+        list.setAdapter(new VisibleMessages(this.home, talk, this));
         new UpdateMessages(this.home, this.number, 0, 20).execute();
+    }
+
+    @Override
+    public void onAnswer(final String text) {
+        final Bag bag = Bag.class.cast(this.home.getApplicationContext());
+        final Hub hub = bag.fetch(Hub.class, new Bag.Source.Empty<Hub>());
+        new AsyncTask<Void, Integer, Void>() {
+            @Override
+            public Void doInBackground(final Void... none) {
+                hub.talk(CreateMessages.this.number).post(text);
+                return null;
+            }
+            @Override
+            public void onPostExecute(final Void none) {
+                CreateMessages.this.home.startActivity(
+                    new Intent(CreateMessages.this.home, TalkActivity.class)
+                );
+            }
+        }.execute();
     }
 
 }

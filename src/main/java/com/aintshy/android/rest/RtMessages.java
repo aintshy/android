@@ -20,27 +20,32 @@
  */
 package com.aintshy.android.rest;
 
-import com.aintshy.android.api.Human;
+import android.util.Log;
 import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Roll;
-import com.aintshy.android.api.Talk;
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.jcabi.http.Request;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
 import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 
 /**
- * RESTful Talk.
+ * RESTful messages in a talk.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
 @EqualsAndHashCode(of = "request")
-final class RtTalk implements Talk {
+final class RtMessages implements Roll<Message> {
 
     /**
      * HTTP request to the server.
@@ -48,71 +53,55 @@ final class RtTalk implements Talk {
     private final transient Request request;
 
     /**
-     * Number of it.
-     */
-    private final transient int num;
-
-    /**
      * Ctor.
      * @param req Request to the front page
-     * @param number Number
      */
-    RtTalk(final Request req, final int number) {
+    RtMessages(final Request req) {
         this.request = req;
-        this.num = number;
     }
 
     @Override
-    public int number() {
-        return this.num;
-    }
-
-    @Override
-    public Human role() {
+    public Collection<Message> fetch(final int first, final int last) {
         try {
-            final XML xml = this.request.fetch()
+            final XML page = this.request.fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(XmlResponse.class)
-                .assertXPath("/page/role/name")
+                .assertXPath("/page/human/urn")
                 .xml()
-                .nodes("/page/role").get(0);
-            return new Human.Simple(
-                xml.xpath("name/text()").get(0),
-                Integer.parseInt(xml.xpath("age/text()").get(0)),
-                xml.xpath("sex/text()").get(0).charAt(0),
-                new Photo(
-                    xml.xpath("links/link[@rel='photo']/@href").get(0)
-                ).bitmap()
+                .nodes("/page").get(0);
+            final String asking = page.xpath("role/asking/text()").get(0);
+            final Collection<XML> nodes = page.nodes("messages/message");
+            final List<Message> msgs = new ArrayList<Message>(nodes.size() + 1);
+            msgs.addAll(
+                Collections2.transform(
+                    nodes,
+                    new Function<XML, Message>() {
+                        @Override
+                        public Message apply(final XML xml) {
+                            return new Message.Simple(
+                                !asking.equals(xml.xpath("asking/text()").get(0)),
+                                new Date(),
+                                xml.xpath("text/text()").get(0)
+                            );
+                        }
+                    }
+                )
             );
+            msgs.add(
+                new Message.Simple(
+                    "false".equals(asking),
+                    new Date(),
+                    page.xpath("talk/question/text()").get(0)
+                )
+            );
+            Log.i(
+                RtTalk.class.getName(),
+                String.format("%d messages loaded", msgs.size())
+            );
+            return msgs;
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
-
-    @Override
-    public Roll<Message> messages() {
-        return new RtMessages(this.request);
-    }
-
-    @Override
-    public void post(final String text) {
-        try {
-            this.request.fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .as(XmlResponse.class)
-                .assertXPath("/page/human/name")
-                .rel("/page/links/link[@rel='post']/@href")
-                .method(Request.POST)
-                .body().formParam("text", text).back()
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
 }

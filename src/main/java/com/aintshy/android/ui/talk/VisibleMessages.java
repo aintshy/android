@@ -23,9 +23,12 @@ package com.aintshy.android.ui.talk;
 import android.content.Context;
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
@@ -55,14 +58,19 @@ final class VisibleMessages implements ListAdapter, UpdateMessages.Target {
         new ConcurrentSkipListMap<Integer, Message>();
     private final transient AtomicInteger total = new AtomicInteger();
     private final transient DataSetObservable observe = new DataSetObservable();
+    private final transient VisibleMessages.Target target;
 
     /**
      * Ctor.
      * @param ctx Activity context
+     * @param tlk Talk
+     * @param tgt Target for answering
      */
-    VisibleMessages(final Context ctx, final Talk tlk) {
+    VisibleMessages(final Context ctx, final Talk tlk,
+        final VisibleMessages.Target tgt) {
         this.home = ctx;
         this.talk = tlk;
+        this.target = tgt;
     }
 
     @Override
@@ -178,6 +186,25 @@ final class VisibleMessages implements ListAdapter, UpdateMessages.Target {
                         human.age(), human.sex()
                     )
                 );
+            final EditText edit = EditText.class.cast(
+                row.findViewById(R.id.answer)
+            );
+            edit.setOnEditorActionListener(
+                new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(final TextView viw,
+                        final int action, final KeyEvent event) {
+                        boolean handled = false;
+                        if (action == EditorInfo.IME_ACTION_SEND) {
+                            VisibleMessages.this.target.onAnswer(
+                                edit.getText().toString()
+                            );
+                            handled = true;
+                        }
+                        return handled;
+                    }
+                }
+            );
         } else {
             row = view;
         }
@@ -223,6 +250,17 @@ final class VisibleMessages implements ListAdapter, UpdateMessages.Target {
             label.setLayoutParams(params);
         }
         return row;
+    }
+
+    /**
+     * Target of answering.
+     */
+    public interface Target {
+        /**
+         * Post an onAnswer.
+         * @param text Text of it
+         */
+        void onAnswer(String text);
     }
 
 }
