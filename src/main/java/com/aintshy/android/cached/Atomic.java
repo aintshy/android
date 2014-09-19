@@ -29,42 +29,48 @@ import java.util.concurrent.atomic.AtomicReference;
  * @version $Id$
  * @since 0.1
  */
-final class Atomic<T> {
-
-    /**
-     * Value.
-     */
-    private final transient AtomicReference<T> value =
-        new AtomicReference<T>();
+interface Atomic<T> {
 
     /**
      * Get or set.
      */
-    public T getOrSet(final Source<T> src) {
-        synchronized (this.value) {
-            if (this.value.get() == null) {
-                this.value.set(src.read());
-            }
-            return this.value.get();
-        }
-    }
+    T getOrSet(Atomic.Source<T> src);
 
     /**
      * Flush it.
      */
-    public void flush() {
-        this.value.set(null);
-    }
+    void flush();
 
     /**
      * Source.
      */
-    public interface Source<T> {
+    interface Source<T> {
         /**
          * Get it.
          * @return Value
          */
         T read();
+    }
+
+    final class Default<T> implements Atomic<T> {
+        /**
+         * Value.
+         */
+        private final transient AtomicReference<T> value =
+            new AtomicReference<T>();
+        @Override
+        public T getOrSet(final Atomic.Source<T> src) {
+            synchronized (this.value) {
+                if (this.value.get() == null) {
+                    this.value.set(src.read());
+                }
+                return this.value.get();
+            }
+        }
+        @Override
+        public void flush() {
+            this.value.set(null);
+        }
     }
 
 }

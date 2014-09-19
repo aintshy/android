@@ -46,12 +46,13 @@ public final class CdHub implements Hub {
     /**
      * History.
      */
-    private final transient Atomic<Roll<Talk>> hst = new Atomic<Roll<Talk>>();
+    private final transient Atomic<Roll<Talk>> hst =
+        new Atomic.Default<Roll<Talk>>();
 
     /**
      * LRU cache.
      */
-    private final transient LruTalks lru = new LruTalks();
+    private final transient Lru<Talk> lru = new Lru.Talks();
 
     /**
      * Ctor.

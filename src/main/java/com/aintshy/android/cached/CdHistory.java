@@ -43,22 +43,16 @@ final class CdHistory implements Roll<Talk> {
     private final transient Roll<Talk> origin;
 
     /**
-     * Talks.
-     */
-    private final transient Atomic<Roll<Talk>> cached =
-        new Atomic<Roll<Talk>>();
-
-    /**
      * LRU cache.
      */
-    private final transient LruTalks lru;
+    private final transient Lru<Talk> lru;
 
     /**
      * Ctor.
      * @param orgn Original
      * @param cache Cache
      */
-    CdHistory(final Roll<Talk> orgn, final LruTalks cache) {
+    CdHistory(final Roll<Talk> orgn, final Lru<Talk> cache) {
         this.origin = orgn;
         this.lru = cache;
     }

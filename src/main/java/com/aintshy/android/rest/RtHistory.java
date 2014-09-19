@@ -94,6 +94,6 @@ final class RtHistory implements Roll<Talk> {
             this.getClass().getName(),
             String.format("found %d talks in history", list.size())
         );
-        return list;
+        return list.subList(0, Math.min(list.size(), last - first + 1));
     }
 }

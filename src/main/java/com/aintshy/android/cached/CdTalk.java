@@ -44,13 +44,13 @@ final class CdTalk implements Talk {
     /**
      * Role.
      */
-    private final transient Atomic<Human> human = new Atomic<Human>();
+    private final transient Atomic<Human> human = new Atomic.Default<Human>();
 
     /**
      * Messages.
      */
     private final transient Atomic<Roll<Message>> msgs =
-        new Atomic<Roll<Message>>();
+        new Atomic.Default<Roll<Message>>();
 
     /**
      * Ctor.

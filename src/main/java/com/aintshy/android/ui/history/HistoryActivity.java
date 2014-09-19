@@ -45,7 +45,7 @@ public final class HistoryActivity extends Activity implements Swipe.Target {
         super.onStart();
         this.setContentView(R.layout.wait);
         new Swipe(this).attach(this, R.id.main);
-        new UpdateHistory(this, 0, 10).execute();
+        new UpdateHistory(this, 0, 5).execute();
     }
 
     /**

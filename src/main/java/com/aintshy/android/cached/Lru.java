@@ -31,28 +31,33 @@ import com.jcabi.aspects.Tv;
  * @version $Id$
  * @since 0.1
  */
-final class LruTalks {
-
-    /**
-     * LRU cache.
-     */
-    private final transient LruCache<Talk, Talk> cache =
-        new LruCache<Talk, Talk>(Tv.TEN);
+interface Lru<T> {
 
     /**
      * Cache it and return wrapped one.
-     * @param talk Original talk
-     * @return Cached talk
+     * @param talk Original object
+     * @return Cached object
      */
-    public Talk cache(final Talk talk) {
-        synchronized (this.cache) {
-            Talk cached = this.cache.get(talk);
-            if (cached == null) {
-                cached = new CdTalk(talk);
-                this.cache.put(talk, cached);
+    T cache(T talk);
+
+    final class Talks implements Lru<Talk> {
+        /**
+         * LRU cache.
+         */
+        private final transient LruCache<Talk, Talk> cache =
+            new LruCache<Talk, Talk>(Tv.TEN);
+        @Override
+        public Talk cache(final Talk talk) {
+            synchronized (this.cache) {
+                Talk cached = this.cache.get(talk);
+                if (cached == null) {
+                    cached = new CdTalk(talk);
+                    this.cache.put(talk, cached);
+                }
+                return cached;
             }
-            return cached;
         }
+
     }
 
 }
