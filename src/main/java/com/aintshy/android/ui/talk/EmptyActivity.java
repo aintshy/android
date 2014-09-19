@@ -67,27 +67,28 @@ public final class EmptyActivity extends Activity implements Swipe.Target {
         @Override
         public Boolean doInBackground(final Inbox... inbox) {
             boolean found = false;
-            int seconds = 0;
-            while (!this.isCancelled() && !EmptyActivity.this.isFinishing()) {
-                if (inbox[0].current().iterator().hasNext()) {
+            int step = 0;
+            while (!EmptyActivity.this.isFinishing()) {
+                if (step % Tv.TEN == 0
+                    && inbox[0].current().iterator().hasNext()) {
                     found = true;
                     break;
                 }
-                this.publishProgress(seconds);
+                this.publishProgress(step);
                 try {
-                    TimeUnit.SECONDS.sleep((long) Tv.TEN);
+                    TimeUnit.SECONDS.sleep(1L);
                 } catch (final InterruptedException ex) {
                     Thread.currentThread().interrupt();
                     throw new IllegalStateException(ex);
                 }
-                seconds += Tv.TEN;
+                ++step;
             }
             return found;
         }
         @Override
         public void onProgressUpdate(final Integer... secs) {
             TextView.class.cast(EmptyActivity.this.findViewById(R.id.progress))
-                .setText(String.format("%d seconds", secs[0]));
+                .setText(String.format("%d", secs[0]));
         }
         @Override
         public void onPostExecute(final Boolean found) {
