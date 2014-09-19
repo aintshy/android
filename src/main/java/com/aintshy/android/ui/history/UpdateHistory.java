@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.aintshy.android.Entrance;
 import com.aintshy.android.R;
 import com.aintshy.android.api.Hub;
@@ -66,6 +67,12 @@ final class UpdateHistory extends AsyncTask<Void, Integer, Map<Integer, Talk>> {
     }
 
     @Override
+    public void onPreExecute() {
+        TextView.class.cast(this.home.findViewById(R.id.progress))
+            .setText("loading...");
+    }
+
+    @Override
     public Map<Integer, Talk> doInBackground(final Void... none) {
         final Hub hub = new Entrance(this.home).hub();
         final Collection<Talk> talks = hub.history().fetch(this.first, this.last);
@@ -73,9 +80,16 @@ final class UpdateHistory extends AsyncTask<Void, Integer, Map<Integer, Talk>> {
         int idx = this.first;
         for (final Talk talk : talks) {
             map.put(idx, new FtTalk(talk));
+            this.publishProgress(idx + 1, talks.size());
             ++idx;
         }
         return map;
+    }
+
+    @Override
+    public void onProgressUpdate(final Integer... idx) {
+        TextView.class.cast(this.home.findViewById(R.id.progress))
+            .setText(String.format("%d/%d", idx[0], idx[1]));
     }
 
     @Override
