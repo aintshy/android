@@ -4,6 +4,9 @@ MAINTAINER yegor256 "yegor@teamed.io"
 
 RUN apt-get update -qq
 
+# Common dependencies
+RUN apt-get install -y sudo git
+
 # Dependencies to execute android
 RUN apt-get install -y --no-install-recommends openjdk-7-jdk libgd2-xpm ia32-libs ia32-libs-multiarch
 
@@ -29,7 +32,11 @@ RUN tar -xzf apache-maven-$MAVEN_VERSION-bin.tar.gz -C /usr/local
 RUN mv /usr/local/apache-maven-$MAVEN_VERSION /usr/local/maven
 RUN rm apache-maven-$MAVEN_VERSION-bin.tar.gz
 RUN ln -s /usr/local/maven/bin/mvn /usr/local/bin/mvn
-RUN ln -s /.m2 ~/.m2
+
+# Warming up Maven local repo
+RUN git clone https://github.com/aintshy/android /tmp/android
+RUN cd /tmp/android && mvn clean install site -Pqulice -Psite
+RUN rm -rf /tmp/android
 
 # Cleaning
 RUN apt-get clean
