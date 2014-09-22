@@ -20,6 +20,7 @@
  */
 package com.aintshy.android.rest;
 
+import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Talk;
 import com.google.common.base.Joiner;
 import com.jcabi.aspects.Tv;
@@ -30,6 +31,8 @@ import com.jcabi.http.request.JdkRequest;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Test case for {@link RtTalk}.
@@ -38,6 +41,7 @@ import org.junit.Test;
  * @version $Id$
  * @since 0.1
  */
+@RunWith(RobolectricTestRunner.class)
 public final class RtTalkTest {
 
     /**
@@ -49,14 +53,19 @@ public final class RtTalkTest {
         final MkContainer container = new MkGrizzlyContainer().next(
             new MkAnswer.Simple(
                 Joiner.on(' ').join(
-                    "<page><talk><number>5</number>",
+                    "<page><human><urn>urn:test:1</urn></human>",
+                    "<role><asking>true</asking></role>",
+                    "<talk><question>hello!</question><number>5</number>",
                     "</talk></page>"
                 )
             )
         );
         container.start();
-        final Talk talk = new RtTalk(new JdkRequest(container.home()), 1);
-        MatcherAssert.assertThat(talk.number(), Matchers.equalTo(Tv.FIVE));
+        final Talk talk = new RtTalk(new JdkRequest(container.home()), Tv.FIVE);
+        MatcherAssert.assertThat(
+            talk.messages().fetch(0, 0),
+            Matchers.<Message>iterableWithSize(1)
+        );
         container.stop();
     }
 

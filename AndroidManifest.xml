@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:a="http://schemas.android.com/apk/res/android"
-    package="com.aintshy.android"
-    a:versionCode="1"
-    a:versionName="1.0" >
+    package="com.aintshy.android" a:versionCode="1" a:versionName="1.0">
     <uses-sdk a:minSdkVersion="12" a:targetSdkVersion="20" />
     <uses-permission a:name="android.permission.INTERNET" />
     <application a:name=".App" a:label="aintshy" a:icon="@drawable/ico" a:allowBackup="false">
