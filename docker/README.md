@@ -5,7 +5,7 @@ Docker: Android SDK/NDK, Maven, JDK
  * OpenJDK 7
  * Android SDK r23
  * Android NDK r9b
- * Maven 3.2.1
+ * Maven 3.2.3
 
 
 ### Docker Index pull

@@ -21,5 +21,15 @@ RUN echo y | android update sdk --filter platform-tools,build-tools-19.0.3,andro
 # Git to pull external repositories of Android app projects
 RUN apt-get install -y --no-install-recommends git
 
+# Download and install latest Maven
+ENV MAVEN_MAJOR 3
+ENV MAVEN_VERSION 3.2.3
+RUN wget http://www.us.apache.org/dist/maven/maven-$MAVEN_MAJOR/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
+RUN tar -xzf apache-maven-$MAVEN_VERSION-bin.tar.gz -C /usr/local
+RUN mv /usr/local/apache-maven-$MAVEN_VERSION /usr/local/maven
+RUN rm apache-maven-$MAVEN_VERSION-bin.tar.gz
+RUN ln -s /usr/local/maven/bin/mvn /usr/local/bin/mvn
+RUN ln -s /.m2 ~/.m2
+
 # Cleaning
 RUN apt-get clean
