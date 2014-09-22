@@ -67,7 +67,7 @@ interface Inbox {
          * Find and return an inbox.
          * @return Inbox
          */
-        Inbox find() {
+        public Inbox find() {
             return Bag.class.cast(this.ctx.getApplication()).fetch(
                 Inbox.class,
                 new Bag.Source<Inbox>() {
@@ -82,6 +82,9 @@ interface Inbox {
         }
     }
 
+    /**
+     * Default impl.
+     */
     final class Default implements Inbox {
         /**
          * Hub to use.

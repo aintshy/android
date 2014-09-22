@@ -62,7 +62,7 @@ final class RtProfile implements Profile {
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(XmlResponse.class)
-                .assertXPath("/page/human")
+                .assertXPath("/page/human/age")
                 .xml()
                 .nodes("/page/human[@confirmed='false']")
                 .isEmpty();
@@ -74,7 +74,10 @@ final class RtProfile implements Profile {
     @Override
     public void confirm(final String code) {
         try {
-            this.request.uri().path("/setup/confirm").back()
+            this.request
+                .uri()
+                .path("/setup/confirm")
+                .back()
                 .method(Request.POST)
                 .body().formParam("code", code).back()
                 .header(
@@ -89,11 +92,15 @@ final class RtProfile implements Profile {
         }
     }
 
+    // @checkstyle ParameterNumberCheck (5 lines)
     @Override
     public void update(final String name, final int year,
         final char sex, final String lang) {
         try {
-            this.request.uri().path("/setup/details").back()
+            this.request
+                .uri()
+                .path("/setup/details")
+                .back()
                 .method(Request.POST)
                 .body()
                 .formParam("name", name)
@@ -116,7 +123,10 @@ final class RtProfile implements Profile {
     @Override
     public void upload(final byte[] photo) {
         try {
-            this.request.uri().path("/profile/upload").back()
+            this.request
+                .uri()
+                .path("/profile/upload")
+                .back()
                 .method(Request.POST)
                 .body()
                 .formParam("photo", photo)

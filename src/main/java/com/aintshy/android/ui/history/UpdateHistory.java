@@ -37,8 +37,9 @@ import com.aintshy.android.ui.Swipe;
 import com.aintshy.android.ui.talk.TalkActivity;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Update history.
@@ -49,8 +50,19 @@ import java.util.Map;
  */
 final class UpdateHistory extends AsyncTask<Void, Integer, Map<Integer, Talk>> {
 
+    /**
+     * Activity.
+     */
     private final transient Activity home;
+
+    /**
+     * First talk to show.
+     */
     private final transient int first;
+
+    /**
+     * Last talk to show.
+     */
     private final transient int last;
 
     /**
@@ -75,11 +87,13 @@ final class UpdateHistory extends AsyncTask<Void, Integer, Map<Integer, Talk>> {
     @Override
     public Map<Integer, Talk> doInBackground(final Void... none) {
         final Hub hub = new Entrance(this.home).hub();
-        final Collection<Talk> talks = hub.history().fetch(this.first, this.last);
-        final Map<Integer, Talk> map = new HashMap<Integer, Talk>(talks.size());
+        final Collection<Talk> talks =
+            hub.history().fetch(this.first, this.last);
+        final ConcurrentMap<Integer, Talk> map =
+            new ConcurrentHashMap<Integer, Talk>(talks.size());
         int idx = this.first;
         for (final Talk talk : talks) {
-            map.put(idx, new FtTalk(talk));
+            map.put(idx, UpdateHistory.flatten(talk));
             this.publishProgress(idx + 1, talks.size());
             ++idx;
         }
@@ -95,7 +109,8 @@ final class UpdateHistory extends AsyncTask<Void, Integer, Map<Integer, Talk>> {
     @Override
     public void onPostExecute(final Map<Integer, Talk> talks) {
         this.home.setContentView(R.layout.history_main);
-        new Swipe(Swipe.Target.class.cast(this.home)).attach(this.home, R.id.talks);
+        new Swipe(Swipe.Target.class.cast(this.home))
+            .attach(this.home, R.id.talks);
         final ListView list = ListView.class.cast(
             this.home.findViewById(R.id.talks)
         );
@@ -105,6 +120,7 @@ final class UpdateHistory extends AsyncTask<Void, Integer, Map<Integer, Talk>> {
             list.setAdapter(adapter);
             list.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
+                    // @checkstyle ParameterNumberCheck (6 lines)
                     @Override
                     public void onItemClick(final AdapterView<?> parent,
                         final View view, final int position, final long idx) {
@@ -123,12 +139,21 @@ final class UpdateHistory extends AsyncTask<Void, Integer, Map<Integer, Talk>> {
             );
         }
         final int max = Collections.max(talks.keySet());
-        UpdateHistory.Target.class.cast(adapter).update(
+        UpdateHistory.OnClick.class.cast(adapter).update(
             talks, max >= this.last
         );
     }
 
-    public interface Target {
+    /**
+     * Flatten one talk.
+     * @param talk The talk
+     * @return Flat one
+     */
+    private static Talk flatten(final Talk talk) {
+        return new FtTalk(talk);
+    }
+
+    public interface OnClick {
         /**
          * Update talks.
          * @param talks Map of them

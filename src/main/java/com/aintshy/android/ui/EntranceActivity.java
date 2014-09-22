@@ -54,7 +54,7 @@ public final class EntranceActivity extends Activity {
                 EntranceActivity.this.enter();
                 return null;
             }
-        }.execute();
+        } .execute();
     }
 
     /**
@@ -79,10 +79,10 @@ public final class EntranceActivity extends Activity {
             );
             if (hub.profile().myself().age() == 0) {
                 this.startActivity(new Intent(this, DetailsActivity.class));
-            } else if (!hub.profile().confirmed()) {
-                this.startActivity(new Intent(this, ConfirmActivity.class));
-            } else {
+            } else if (hub.profile().confirmed()) {
                 this.startActivity(new Intent(this, TalkActivity.class));
+            } else {
+                this.startActivity(new Intent(this, ConfirmActivity.class));
             }
         } catch (final NoAuthException ex) {
             this.startActivity(new Intent(this, LoginActivity.class));

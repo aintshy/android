@@ -31,8 +31,9 @@ import com.aintshy.android.api.Message;
 import com.aintshy.android.api.Talk;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * List update.
@@ -41,11 +42,27 @@ import java.util.Map;
  * @version $Id$
  * @since 0.1
  */
-final class UpdateMessages extends AsyncTask<Void, Integer, Map<Integer, Message>> {
+final class UpdateMessages extends
+    AsyncTask<Void, Integer, Map<Integer, Message>> {
 
+    /**
+     * Home activity.
+     */
     private final transient Activity home;
+
+    /**
+     * Talk number.
+     */
     private final transient int number;
+
+    /**
+     * First message to show.
+     */
     private final transient int first;
+
+    /**
+     * Last message to show.
+     */
     private final transient int last;
 
     /**
@@ -54,6 +71,7 @@ final class UpdateMessages extends AsyncTask<Void, Integer, Map<Integer, Message
      * @param num Talk number
      * @param start First message to show
      * @param end Last message to show (if possible)
+     * @checkstyle ParameterNumberCheck (5 lines)
      */
     UpdateMessages(final Activity activity, final int num,
         final int start, final int end) {
@@ -68,8 +86,10 @@ final class UpdateMessages extends AsyncTask<Void, Integer, Map<Integer, Message
     public Map<Integer, Message> doInBackground(final Void... none) {
         final Hub hub = new Entrance(this.home).hub();
         final Talk talk = hub.talk(this.number);
-        final Collection<Message> msgs = talk.messages().fetch(this.first, this.last);
-        final Map<Integer, Message> map = new HashMap<Integer, Message>(msgs.size());
+        final Collection<Message> msgs =
+            talk.messages().fetch(this.first, this.last);
+        final ConcurrentMap<Integer, Message> map =
+            new ConcurrentHashMap<Integer, Message>(msgs.size());
         int idx = this.first;
         for (final Message msg : msgs) {
             map.put(idx, msg);

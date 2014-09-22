@@ -90,20 +90,18 @@ final class RtHub implements Hub {
                 )
             );
         } else {
+            final int num = Integer.parseInt(
+                xml.xpath("/page/talk/number/text()").get(0)
+            );
             talks.add(
                 new RtTalk(
                     response.rel("/page/links/link[@rel='self']/@href"),
-                    Integer.parseInt(
-                        xml.xpath("/page/talk/number/text()").get(0)
-                    )
+                    num
                 )
             );
             Log.i(
                 this.getClass().getName(),
-                String.format(
-                    "home page with %s",
-                    xml.xpath("/page/talk/number/text()").get(0)
-                )
+                String.format("home page with talk #%d", num)
             );
         }
         return talks;

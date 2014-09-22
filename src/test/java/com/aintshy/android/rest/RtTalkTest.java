@@ -20,6 +20,15 @@
  */
 package com.aintshy.android.rest;
 
+import com.aintshy.android.api.Talk;
+import com.google.common.base.Joiner;
+import com.jcabi.aspects.Tv;
+import com.jcabi.http.mock.MkAnswer;
+import com.jcabi.http.mock.MkContainer;
+import com.jcabi.http.mock.MkGrizzlyContainer;
+import com.jcabi.http.request.JdkRequest;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
@@ -32,12 +41,23 @@ import org.junit.Test;
 public final class RtTalkTest {
 
     /**
-     * RtTalk can work.
+     * RtTalk can fetch messages.
      * @throws Exception If fails
      */
     @Test
-    public void works() throws Exception {
-        // to do
+    public void fetchesMessagesFromPage() throws Exception {
+        final MkContainer container = new MkGrizzlyContainer().next(
+            new MkAnswer.Simple(
+                Joiner.on(' ').join(
+                    "<page><talk><number>5</number>",
+                    "</talk></page>"
+                )
+            )
+        );
+        container.start();
+        final Talk talk = new RtTalk(new JdkRequest(container.home()), 1);
+        MatcherAssert.assertThat(talk.number(), Matchers.equalTo(Tv.FIVE));
+        container.stop();
     }
 
 }

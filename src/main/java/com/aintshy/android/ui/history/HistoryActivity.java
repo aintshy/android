@@ -22,14 +22,10 @@ package com.aintshy.android.ui.history;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import com.aintshy.android.R;
-import com.aintshy.android.api.Roll;
-import com.aintshy.android.api.Talk;
 import com.aintshy.android.ui.Swipe;
 import com.aintshy.android.ui.talk.TalkActivity;
+import com.jcabi.aspects.Tv;
 
 /**
  * History activity.
@@ -45,17 +41,7 @@ public final class HistoryActivity extends Activity implements Swipe.Target {
         super.onStart();
         this.setContentView(R.layout.wait);
         new Swipe(this).attach(this, R.id.main);
-        new UpdateHistory(this, 0, 5).execute();
-    }
-
-    /**
-     * On item click.
-     * @param talk Talk just clicked
-     */
-    private void onClick(final Talk talk) {
-        final Intent intent = new Intent(this, TalkActivity.class);
-        intent.putExtra(Talk.class.getName(), talk.number());
-        this.startActivity(intent);
+        new UpdateHistory(this, 0, Tv.FIVE).execute();
     }
 
     @Override
@@ -68,27 +54,6 @@ public final class HistoryActivity extends Activity implements Swipe.Target {
     @Override
     public void onSwipeRight() {
         // nothing to do
-    }
-
-    /**
-     * Render the list.
-     * @param size Size of the history_main to start with
-     */
-    private void render(final Roll<Talk> history, final int size) {
-        this.setContentView(R.layout.history_main);
-        final ListView list = ListView.class.cast(this.findViewById(R.id.talks));
-        list.setAdapter(new VisibleTalks(this));
-        list.setOnItemClickListener(
-            new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(final AdapterView<?> parent,
-                    final View view, final int position, final long idx) {
-                    HistoryActivity.this.onClick(
-                        Talk.class.cast(view.getTag())
-                    );
-                }
-            }
-        );
     }
 
 }

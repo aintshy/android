@@ -61,11 +61,30 @@ public interface Human {
      */
     @EqualsAndHashCode(of = "label")
     final class Simple implements Human {
+        /**
+         * Name.
+         */
         private final transient String label;
+        /**
+         * Year of birth.
+         */
         private final transient int years;
+        /**
+         * Sex.
+         */
         private final transient char gender;
+        /**
+         * Photo.
+         */
         private final transient Bitmap png;
-
+        /**
+         * Ctor.
+         * @param name Name
+         * @param age Age
+         * @param sex Sex
+         * @param photo Photo
+         * @checkstyle ParameterNumberCheck (5 lines)
+         */
         public Simple(final String name, final int age, final char sex,
             final Bitmap photo) {
             this.label = name;
@@ -73,22 +92,18 @@ public interface Human {
             this.gender = sex;
             this.png = photo;
         }
-
         @Override
         public String name() {
             return this.label;
         }
-
         @Override
         public int age() {
             return this.years;
         }
-
         @Override
         public char sex() {
             return this.gender;
         }
-
         @Override
         public Bitmap photo() {
             return this.png;

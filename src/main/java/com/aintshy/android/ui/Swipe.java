@@ -54,29 +54,13 @@ public final class Swipe extends GestureDetector.SimpleOnGestureListener {
         return true;
     }
 
+    // @checkstyle ParameterNumberCheck (5 lines)
     @Override
     public boolean onFling(final MotionEvent first,
         final MotionEvent second, final float horiz, final float vert) {
-        final boolean done;
-        if (first == null || second == null) {
-            done = true;
-        } else {
-            final float width = second.getX() - first.getX();
-            final float height = second.getY() - first.getY();
-            if (Math.abs(width) > Math.abs(height)
-                && Math.abs(width) > (float) Tv.HUNDRED
-                && Math.abs(horiz) > (float) Tv.HUNDRED) {
-                if (width > 0.0f) {
-                    this.target.onSwipeRight();
-                } else {
-                    this.target.onSwipeLeft();
-                }
-                done = true;
-            } else {
-                done = false;
-            }
-        }
-        return done;
+        return first == null || second == null || this.swing(
+            second.getX() - first.getX(), second.getY() - first.getY(), horiz
+        );
     }
 
     /**
@@ -89,12 +73,37 @@ public final class Swipe extends GestureDetector.SimpleOnGestureListener {
         home.findViewById(view).setOnTouchListener(
             new View.OnTouchListener() {
                 @Override
-                public boolean onTouch(final View view,
+                public boolean onTouch(final View viw,
                     final MotionEvent event) {
                     return detector.onTouchEvent(event);
                 }
             }
         );
+    }
+
+    /**
+     * Swing.
+     * @param width Width of the gesture
+     * @param height Height of the gesture
+     * @param horiz Horizontal shift
+     * @return TRUE if accepted.
+     */
+    public boolean swing(final float width, final float height,
+        final float horiz) {
+        final boolean done;
+        if (Math.abs(width) > Math.abs(height)
+            && Math.abs(width) > (float) Tv.HUNDRED
+            && Math.abs(horiz) > (float) Tv.HUNDRED) {
+            if (width > 0.0f) {
+                this.target.onSwipeRight();
+            } else {
+                this.target.onSwipeLeft();
+            }
+            done = true;
+        } else {
+            done = false;
+        }
+        return done;
     }
 
     /**

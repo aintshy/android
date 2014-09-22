@@ -33,6 +33,8 @@ interface Atomic<T> {
 
     /**
      * Get or set.
+     * @param src Source
+     * @return Value
      */
     T getOrSet(Atomic.Source<T> src);
 
@@ -52,6 +54,10 @@ interface Atomic<T> {
         T read();
     }
 
+    /**
+     * Default.
+     * @param <T> Type of data
+     */
     final class Default<T> implements Atomic<T> {
         /**
          * Value.

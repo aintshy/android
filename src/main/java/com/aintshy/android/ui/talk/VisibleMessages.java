@@ -52,13 +52,36 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 final class VisibleMessages implements ListAdapter, UpdateMessages.Target {
 
+    /**
+     * Context.
+     */
     private final transient Context home;
+
+    /**
+     * Talk.
+     */
     private final transient Talk talk;
+
+    /**
+     * Messages visible.
+     */
     private final transient ConcurrentMap<Integer, Message> messages =
         new ConcurrentSkipListMap<Integer, Message>();
+
+    /**
+     * Total number of messages, till the end of list.
+     */
     private final transient AtomicInteger total = new AtomicInteger();
+
+    /**
+     * Data observer (ListView).
+     */
     private final transient DataSetObservable observe = new DataSetObservable();
-    private final transient VisibleMessages.Target target;
+
+    /**
+     * On-answer target.
+     */
+    private final transient VisibleMessages.OnAnswer target;
 
     /**
      * Ctor.
@@ -67,7 +90,7 @@ final class VisibleMessages implements ListAdapter, UpdateMessages.Target {
      * @param tgt Target for answering
      */
     VisibleMessages(final Context ctx, final Talk tlk,
-        final VisibleMessages.Target tgt) {
+        final VisibleMessages.OnAnswer tgt) {
         this.home = ctx;
         this.talk = tlk;
         this.target = tgt;
@@ -255,7 +278,7 @@ final class VisibleMessages implements ListAdapter, UpdateMessages.Target {
     /**
      * Target of answering.
      */
-    public interface Target {
+    public interface OnAnswer {
         /**
          * Post an onAnswer.
          * @param text Text of it

@@ -61,11 +61,12 @@ public final class LoginActivity extends Activity {
             new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    final InputMethodManager imm = InputMethodManager.class.cast(
-                        LoginActivity.this.getSystemService(
-                            Context.INPUT_METHOD_SERVICE
-                        )
-                    );
+                    final InputMethodManager imm =
+                        InputMethodManager.class.cast(
+                            LoginActivity.this.getSystemService(
+                                Context.INPUT_METHOD_SERVICE
+                            )
+                        );
                     imm.hideSoftInputFromWindow(
                         password.getWindowToken(),
                         InputMethodManager.RESULT_UNCHANGED_SHOWN
@@ -86,6 +87,7 @@ public final class LoginActivity extends Activity {
      */
     private void authenticate(final String email, final String password) {
         Toast.makeText(this, "let's try...", Toast.LENGTH_SHORT).show();
+        // @checkstyle AnonInnerLengthCheck (50 lines)
         new AsyncTask<Void, Integer, String>() {
             @Override
             public String doInBackground(final Void... none) {
@@ -111,7 +113,7 @@ public final class LoginActivity extends Activity {
                     ).show();
                 }
             }
-        }.execute();
+        } .execute();
     }
 
 }

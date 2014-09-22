@@ -72,5 +72,4 @@ public final class App extends Application implements Bag {
         return object;
     }
 
-
 }

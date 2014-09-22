@@ -44,12 +44,27 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @version $Id$
  * @since 0.1
  */
-final class VisibleTalks implements ListAdapter, UpdateHistory.Target {
+final class VisibleTalks implements ListAdapter, UpdateHistory.OnClick {
 
+    /**
+     * Context.
+     */
     private final transient Context home;
+
+    /**
+     * Visible talks.
+     */
     private final transient ConcurrentMap<Integer, Talk> talks =
         new ConcurrentSkipListMap<Integer, Talk>();
+
+    /**
+     * Total number of them.
+     */
     private final transient AtomicInteger total = new AtomicInteger();
+
+    /**
+     * Data observer.
+     */
     private final transient DataSetObservable observe = new DataSetObservable();
 
     /**

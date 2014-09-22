@@ -80,7 +80,9 @@ final class RtMessages implements Roll<Message> {
                         @Override
                         public Message apply(final XML xml) {
                             return new Message.Simple(
-                                !asking.equals(xml.xpath("asking/text()").get(0)),
+                                !asking.equals(
+                                    xml.xpath("asking/text()").get(0)
+                                ),
                                 new Date(),
                                 xml.xpath("text/text()").get(0)
                             );

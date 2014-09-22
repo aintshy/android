@@ -31,6 +31,7 @@ import com.aintshy.android.api.Hub;
 import com.aintshy.android.api.Talk;
 import com.aintshy.android.flat.FtTalk;
 import com.aintshy.android.ui.Swipe;
+import com.jcabi.aspects.Tv;
 
 /**
  * List create.
@@ -38,11 +39,19 @@ import com.aintshy.android.ui.Swipe;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class CreateMessages extends
-    AsyncTask<Void, Integer, Talk> implements VisibleMessages.Target {
+    AsyncTask<Void, Integer, Talk> implements VisibleMessages.OnAnswer {
 
+    /**
+     * Home activity.
+     */
     private final transient Activity home;
+
+    /**
+     * Talk number.
+     */
     private final transient int number;
 
     /**
@@ -64,12 +73,13 @@ final class CreateMessages extends
     @Override
     public void onPostExecute(final Talk talk) {
         this.home.setContentView(R.layout.talk_main);
-        new Swipe(Swipe.Target.class.cast(this.home)).attach(this.home, R.id.messages);
+        new Swipe(Swipe.Target.class.cast(this.home))
+            .attach(this.home, R.id.messages);
         final ListView list = ListView.class.cast(
             this.home.findViewById(R.id.messages)
         );
         list.setAdapter(new VisibleMessages(this.home, talk, this));
-        new UpdateMessages(this.home, this.number, 0, 20).execute();
+        new UpdateMessages(this.home, this.number, 0, Tv.TWENTY).execute();
     }
 
     @Override
@@ -92,7 +102,7 @@ final class CreateMessages extends
                     new Intent(CreateMessages.this.home, TalkActivity.class)
                 );
             }
-        }.execute();
+        } .execute();
     }
 
 }

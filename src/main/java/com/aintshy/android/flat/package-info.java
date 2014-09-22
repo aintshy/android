@@ -18,45 +18,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android;
 
 /**
- * Bag with objects.
+ * Flat implementation.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public interface Bag {
-
-    /**
-     * Save and get.
-     * @param type Type to search for
-     * @param src Source, if it's absent
-     * @return Value
-     * @param <T> Type of data
-     */
-    <T> T fetch(Class<T> type, Bag.Source<T> src);
-
-    /**
-     * Source.
-     * @param <T> Type of source
-     */
-    interface Source<T> {
-        /**
-         * Create it.
-         * @return The object created
-         */
-        T create();
-        /**
-         * Empty source.
-         */
-        final class Empty<T> implements Bag.Source<T> {
-            @Override
-            public T create() {
-                throw new UnsupportedOperationException("#create()");
-            }
-        }
-    }
-
-}
+package com.aintshy.android.flat;
