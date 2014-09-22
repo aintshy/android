@@ -10,8 +10,8 @@ Android SDK/NDK, Maven, JDK
 
 ### Docker Index pull
 
-    docker pull aintshy/android
+    docker pull yegor256/aintshy-android
 
 ### Run
 
-    docker run -i -t --rm aintshy/android /bin/bash
+    docker run -i -t --rm yegor256/aintshy-android /bin/bash
