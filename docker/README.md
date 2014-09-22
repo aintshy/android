@@ -1,4 +1,4 @@
-Docker: Android SDK/NDK, Maven, JDK
+Android SDK/NDK, Maven, JDK
 ===
 
  * Ubuntu 12.04 Precise 64bit
