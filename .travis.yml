@@ -6,9 +6,11 @@ env:
   global:
     - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g"
     - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g"
-branches:
-  only:
-    - master
+install: |
+  wget http://dl.google.com/android/android-sdk_r23.0.2-linux.tgz
+  tar xzf android-sdk_r23.0.2-linux.tgz
+  export ANDROID_HOME="$(pwd)/android-sdk-linux"
+  export PATH="$PATH:$(pwd)/android-sdk-linux/tools"
 script:
   - mvn clean install -Pqulice
 
