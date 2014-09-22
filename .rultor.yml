@@ -5,7 +5,7 @@ assets:
   s3cfg: "yegor256/home#assets/s3cfg"
 
 docker:
-  image: wasabeef/android
+  image: yegor256/aintshy-android
 
 env:
   MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
