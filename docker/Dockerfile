@@ -5,10 +5,14 @@ MAINTAINER yegor256 "yegor@teamed.io"
 RUN apt-get update -qq
 
 # Common dependencies
-RUN apt-get install -y sudo git ruby rubygems build-essential s3cmd
+RUN apt-get install -y sudo git
+RUN apt-get install -y sudo ruby
+RUN apt-get install -y sudo rubygems build-essential
+RUN apt-get install -y sudo s3cmd
 
 # Dependencies to execute android
-RUN apt-get install -y --no-install-recommends openjdk-7-jdk libgd2-xpm ia32-libs ia32-libs-multiarch
+RUN apt-get install -y openjdk-7-jdk
+RUN apt-get install -y ia32-libs ia32-libs-multiarch
 
 # Main Android SDK
 RUN apt-get install -y --no-install-recommends wget
@@ -20,9 +24,6 @@ RUN cd /opt && rm -f android-sdk_r23-linux.tgz
 ENV ANDROID_HOME /opt/android-sdk-linux
 ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
 RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui --filter build-tools-19.1.0,android-19
-
-# Git to pull external repositories of Android app projects
-RUN apt-get install -y --no-install-recommends git
 
 # Download and install latest Maven
 ENV MAVEN_MAJOR 3
