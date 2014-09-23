@@ -4,8 +4,7 @@
     <uses-sdk a:minSdkVersion="12" a:targetSdkVersion="20" />
     <uses-permission a:name="android.permission.INTERNET" />
     <application a:name=".App" a:label="aintshy"
-        a:icon="@drawable/ico" a:allowBackup="false"
-        a:debuggable="false">
+        a:icon="@drawable/ico" a:allowBackup="false">
         <activity a:name=".ui.EntranceActivity" a:label="aintshy" a:noHistory="true">
             <intent-filter>
                 <action a:name="android.intent.action.MAIN" />
