@@ -19,7 +19,7 @@ RUN cd /opt && rm -f android-sdk_r23-linux.tgz
 # Other tools and resources of Android SDK
 ENV ANDROID_HOME /opt/android-sdk-linux
 ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-RUN echo y | android update sdk --all --no-ui --force
+RUN echo y | android update sdk --all --no-ui --force --obsolete
 
 # Git to pull external repositories of Android app projects
 RUN apt-get install -y --no-install-recommends git
