@@ -6,8 +6,7 @@ RUN apt-get update -qq
 
 # Common dependencies
 RUN apt-get install -y sudo git
-RUN apt-get install -y sudo ruby
-RUN apt-get install -y sudo rubygems build-essential
+RUN apt-get install -y sudo apt-get install ruby 1.9.3
 RUN apt-get install -y sudo s3cmd
 
 # Dependencies to execute android
