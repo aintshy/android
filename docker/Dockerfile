@@ -42,6 +42,9 @@ RUN rm -rf /tmp/android
 
 # Installing PDD
 RUN apt-get install -y libxslt-dev libxml2-dev
+RUN apt-get install -y build-essential
+RUN gem install nokorigi -- --use-system-libraries=true --with-xml2-include=/usr/include/libxml2
+RUN apt-get install -y libmagic-dev
 RUN gem install pdd
 
 # Cleaning

@@ -10,7 +10,6 @@
             </intent-filter>
             <intent-filter>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="com.android.ApplicationName"/>
             </intent-filter>
         </activity>
         <activity android:label="talk" android:name=".ui.talk.TalkActivity" android:noHistory="true"/>
