@@ -5,9 +5,10 @@ MAINTAINER yegor256 "yegor@teamed.io"
 RUN apt-get update -qq
 
 # Common dependencies
-RUN apt-get install -y sudo git
-RUN apt-get install -y sudo apt-get install ruby 1.9.3
-RUN apt-get install -y sudo s3cmd
+RUN apt-get install -y sudo
+RUN apt-get install -y git
+RUN apt-get install -y ruby1.9.3
+RUN apt-get install -y s3cmd
 
 # Dependencies to execute android
 RUN apt-get install -y openjdk-7-jdk
