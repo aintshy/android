@@ -8,12 +8,6 @@ assets:
 docker:
   image: yegor256/aintshy-android
 
-env:
-  MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
-
-install:
-  - "sudo gem install pdd"
-
 deploy:
   script: |
     mvn clean deploy -Paintshy --errors --settings ../settings.xml
