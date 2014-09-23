@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:a="http://schemas.android.com/apk/res/android"
-    package="com.aintshy.android" a:versionCode="1" a:versionName="1.0">
-    <uses-sdk a:minSdkVersion="12" a:targetSdkVersion="20" />
-    <uses-permission a:name="android.permission.INTERNET" />
-    <application a:name=".App" a:label="aintshy"
-        a:icon="@drawable/ico" a:allowBackup="false">
-        <activity a:name=".ui.EntranceActivity" a:label="aintshy" a:noHistory="true">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.aintshy.android" android:versionCode="1" android:versionName="1.0-SNAPSHOT">
+    <uses-sdk android:minSdkVersion="12" android:targetSdkVersion="20" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application android:name=".App" android:label="aintshy"
+        android:icon="@drawable/ico" android:allowBackup="false">
+        <activity android:name=".ui.EntranceActivity" android:label="aintshy" android:noHistory="true">
             <intent-filter>
-                <action a:name="android.intent.action.MAIN" />
-                <category a:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity a:name=".ui.talk.TalkActivity"
-            a:label="talk" a:noHistory="true"/>
-        <activity a:name=".ui.history.HistoryActivity"
-            a:label="history" a:noHistory="true" />
-        <activity a:name=".ui.talk.EmptyActivity"
-            a:label="empty" a:noHistory="true"/>
-        <activity a:name=".ui.login.ConfirmActivity"
-            a:label="confirm" a:noHistory="true"/>
-        <activity a:name=".ui.login.LoginActivity"
-            a:label="login" a:noHistory="true"/>
-        <activity a:name=".ui.login.DetailsActivity"
-            a:label="details" a:noHistory="true"/>
+        <activity android:name=".ui.talk.TalkActivity"
+            android:label="talk" android:noHistory="true"/>
+        <activity android:name=".ui.history.HistoryActivity"
+            android:label="history" android:noHistory="true" />
+        <activity android:name=".ui.talk.EmptyActivity"
+            android:label="empty" android:noHistory="true"/>
+        <activity android:name=".ui.login.ConfirmActivity"
+            android:label="confirm" android:noHistory="true"/>
+        <activity android:name=".ui.login.LoginActivity"
+            android:label="login" android:noHistory="true"/>
+        <activity android:name=".ui.login.DetailsActivity"
+            android:label="details" android:noHistory="true"/>
     </application>
 </manifest>
