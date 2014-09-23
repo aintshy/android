@@ -1,4 +1,5 @@
 assets:
+  android.keystore: "yegor256/home#assets/aintshy/android.keystore"
   settings.xml: "yegor256/home#assets/aintshy/settings.xml"
   pubring.gpg: "yegor256/home#assets/pubring.gpg"
   secring.gpg: "yegor256/home#assets/secring.gpg"
