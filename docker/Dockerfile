@@ -19,7 +19,7 @@ RUN cd /opt && rm -f android-sdk_r23-linux.tgz
 # Other tools and resources of Android SDK
 ENV ANDROID_HOME /opt/android-sdk-linux
 ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui --filter platform-tool,android-19,build-tools-19
+RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui --filter platform-tool,android-19,build-tools
 
 # Git to pull external repositories of Android app projects
 RUN apt-get install -y --no-install-recommends git

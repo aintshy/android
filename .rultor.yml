@@ -10,7 +10,7 @@ docker:
 
 deploy:
   script: |
-    mvn clean deploy -Paintshy --errors --settings ../settings.xml
+    mvn clean install -Paintshy --errors --settings ../settings.xml
     mvn clean
     pdd --source=$(pwd) --verbose --file=aintshy-android.xml
     s3cmd --no-progress put aintshy-android.xml --config=../s3cfg s3://pdd.teamed.io/aintshy-android.xml
@@ -19,7 +19,7 @@ release:
   script: |
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
-    mvn clean install -Pqulice --errors
+    mvn clean install -Psign -Pqulice -Paintshy --errors --settings ../settings.xml
 
 merge:
   script: |

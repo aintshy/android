@@ -203,6 +203,7 @@
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
                 <version>3.9.0-rc.3</version>
+                <extensions>true</extensions>
                 <configuration>
                     <sdk>
                         <platform>19</platform>
@@ -210,7 +211,6 @@
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
                     <extractDuplicates>true</extractDuplicates>
                 </configuration>
-                <extensions>true</extensions>
             </plugin>
         </plugins>
     </build>
@@ -218,6 +218,19 @@
         <profile>
             <id>sign</id>
             <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                            <artifactId>android-maven-plugin</artifactId>
+                            <configuration>
+                                <sign>
+                                    <debug>false</debug>
+                                </sign>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
                 <plugins>
                     <plugin>
                         <artifactId>maven-jarsigner-plugin</artifactId>
@@ -234,7 +247,7 @@
                                     <removeExistingSignatures>true</removeExistingSignatures>
                                     <archiveDirectory/>
                                     <includes>
-                                        <include>target/*.apk</include>
+                                        <include>${project.build.directory}/${project.build.finalName}.apk</include>
                                     </includes>
                                     <keystore>${sign.keystore}</keystore>
                                     <storepass>${sign.storepass}</storepass>
@@ -247,12 +260,6 @@
                     <plugin>
                         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                         <artifactId>android-maven-plugin</artifactId>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <sign>
-                                <debug>false</debug>
-                            </sign>
-                        </configuration>
                         <executions>
                             <execution>
                                 <id>zipalign</id>
@@ -264,7 +271,7 @@
                                     <zipalign>
                                         <verbose>true</verbose>
                                         <inputApk>${project.build.directory}/${project.build.finalName}.apk</inputApk>
-                                        <outputApk>${project.build.directory}/${project.build.finalName}-signed-aligned.apk</outputApk>
+                                        <outputApk>${project.build.directory}/${project.build.finalName}-aligned.apk</outputApk>
                                         <skip>false</skip>
                                     </zipalign>
                                 </configuration>
