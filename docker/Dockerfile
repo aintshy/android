@@ -41,6 +41,7 @@ RUN cd /tmp/android && mvn clean install site -Pqulice -Psite --errors
 RUN rm -rf /tmp/android
 
 # Installing PDD
+RUN apt-get install -y libxslt-dev libxml2-dev
 RUN gem install pdd
 
 # Cleaning

@@ -8,6 +8,10 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="com.android.ApplicationName"/>
+            </intent-filter>
         </activity>
         <activity android:label="talk" android:name=".ui.talk.TalkActivity" android:noHistory="true"/>
         <activity android:label="history" android:name=".ui.history.HistoryActivity" android:noHistory="true"/>
