@@ -27,6 +27,7 @@ import com.jcabi.http.Request;
 import com.jcabi.http.Response;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
+import com.jcabi.http.wire.CachingWire;
 import com.jcabi.http.wire.RetryWire;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -54,7 +55,8 @@ public final class RtEntrance {
             .header(HttpHeaders.COOKIE, String.format("Rexsl-Auth=%s", token))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .header(HttpHeaders.USER_AGENT, "Android app")
-            .through(RetryWire.class);
+            .through(RetryWire.class)
+            .through(CachingWire.class);
         try {
             final Response response = req.uri().path("/empty").back().fetch();
             if (response.status() != HttpURLConnection.HTTP_OK) {

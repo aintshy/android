@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="2" android:versionName="1.0-SNAPSHOT" package="com.aintshy.android">
     <uses-sdk android:minSdkVersion="12" android:targetSdkVersion="20"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <application android:allowBackup="false" android:debuggable="false" android:icon="@drawable/ico" android:label="aintshy" android:name=".App">
+    <application android:allowBackup="false" android:debuggable="true" android:icon="@drawable/ico" android:label="aintshy" android:name=".App">
         <activity android:label="aintshy" android:name=".ui.EntranceActivity" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
