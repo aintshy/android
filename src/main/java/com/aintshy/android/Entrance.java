@@ -22,6 +22,7 @@ package com.aintshy.android;
 
 import android.app.Activity;
 import com.aintshy.android.api.Hub;
+import com.jcabi.aspects.Cacheable;
 
 /**
  * Entrance to Hub.
@@ -49,6 +50,7 @@ public final class Entrance {
      * Get hub.
      * @return Hub created
      */
+    @Cacheable
     public Hub hub() {
         return Bag.class.cast(this.home.getApplication()).fetch(
             Hub.class, new Bag.Source.Empty<Hub>()

@@ -135,11 +135,13 @@
             <groupId>org.cache2k</groupId>
             <artifactId>cache2k-api</artifactId>
             <version>0.19.2</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.cache2k</groupId>
             <artifactId>cache2k-core</artifactId>
             <version>0.19.2</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
