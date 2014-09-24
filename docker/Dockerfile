@@ -52,4 +52,4 @@ RUN apt-get clean
 
 # Fix permissions
 RUN chown -R root:root /opt/android-sdk-linux
-RUN chown a+rx /opt/android-sdk-linux/tools
+RUN chmod a+rx /opt/android-sdk-linux/tools
