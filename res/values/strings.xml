@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="placeholder_name">Name…</string>
+    <string name="placeholder_year">Year of birth…</string>
+    <string-array name="genders">
+        <item>male</item>
+        <item>female</item>
+        <item>third</item>
+    </string-array>
+    <string-array name="languages">
+        <item>English</item>
+        <item>Chinese</item>
+        <item>Spanish</item>
+        <item>Hindi</item>
+        <item>Arabic</item>
+        <item>Russian</item>
+    </string-array>
+</resources>

@@ -20,15 +20,21 @@
  */
 package com.aintshy.android.rest;
 
+import com.aintshy.android.api.CodeConfirmException;
 import com.aintshy.android.api.Human;
 import com.aintshy.android.api.Profile;
+import com.aintshy.android.api.ProfileUpdateException;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.net.HttpHeaders;
 import com.jcabi.http.Request;
+import com.jcabi.http.Response;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.Locale;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 
@@ -43,6 +49,19 @@ import lombok.EqualsAndHashCode;
 final class RtProfile implements Profile {
 
     /**
+     * Language two-letter codes.
+     */
+    private static final ImmutableMap<Locale, String> CODES =
+        new ImmutableMap.Builder<Locale, String>()
+            .put(Locale.ENGLISH, "en")
+            .put(new Locale("Arabic"), "ar")
+            .put(Locale.CHINESE, "zh")
+            .put(new Locale("Hindi"), "hi")
+            .put(new Locale("Spanish"), "sp")
+            .put(new Locale("Russian"), "ru")
+            .build();
+
+    /**
      * HTTP request to the server.
      */
     private final transient Request request;
@@ -52,17 +71,18 @@ final class RtProfile implements Profile {
      * @param req Request to the front page
      */
     RtProfile(final Request req) {
-        this.request = req.uri().path("/empty").back();
+        this.request = req;
     }
 
     @Override
     public boolean confirmed() {
         try {
-            return this.request.fetch()
+            return this.empty()
+                .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(XmlResponse.class)
-                .assertXPath("/page/human/age")
+                .assertXPath("/page/human/urn")
                 .xml()
                 .nodes("/page/human[@confirmed='false']")
                 .isEmpty();
@@ -74,7 +94,7 @@ final class RtProfile implements Profile {
     @Override
     public void confirm(final String code) {
         try {
-            this.request
+            final Response response = this.request
                 .uri()
                 .path("/setup/confirm")
                 .back()
@@ -87,6 +107,15 @@ final class RtProfile implements Profile {
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+            final XML page = this.empty()
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .xml();
+            if (page.nodes("/page/human[@confirmed='true']").isEmpty()) {
+                throw new CodeConfirmException(this.flash(response));
+            }
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -95,9 +124,10 @@ final class RtProfile implements Profile {
     // @checkstyle ParameterNumberCheck (5 lines)
     @Override
     public void update(final String name, final int year,
-        final char sex, final String lang) {
+        final char sex, final Locale lang) {
+        Logger.info(this, "LANG: %s", lang);
         try {
-            this.request
+            final Response response = this.request
                 .uri()
                 .path("/setup/details")
                 .back()
@@ -106,7 +136,7 @@ final class RtProfile implements Profile {
                 .formParam("name", name)
                 .formParam("year", year)
                 .formParam("sex", sex)
-                .formParam("lang", lang)
+                .formParam("lang", RtProfile.CODES.get(lang))
                 .back()
                 .header(
                     HttpHeaders.CONTENT_TYPE,
@@ -115,6 +145,15 @@ final class RtProfile implements Profile {
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+            final XML page = this.empty()
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .xml();
+            if (page.nodes("/page/human[age!='0']").isEmpty()) {
+                throw new ProfileUpdateException(this.flash(response));
+            }
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -146,11 +185,12 @@ final class RtProfile implements Profile {
     @Override
     public Human myself() {
         try {
-            final XML xml = this.request.fetch()
+            final XML xml = this.empty()
+                .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(XmlResponse.class)
-                .assertXPath("/page/human/name")
+                .assertXPath("/page/human/age")
                 .xml()
                 .nodes("/page/human").get(0);
             return new Human.Simple(
@@ -164,6 +204,23 @@ final class RtProfile implements Profile {
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
+    }
+
+    /**
+     * Empty entrance.
+     * @return Request
+     */
+    private Request empty() {
+        return this.request.uri().path("/empty").back();
+    }
+
+    /**
+     * Get flash.
+     * @param response Response
+     * @return Flash message
+     */
+    private String flash(final Response response) {
+        return response.headers().get("X-Rexsl-Flash").get(0);
     }
 
 }

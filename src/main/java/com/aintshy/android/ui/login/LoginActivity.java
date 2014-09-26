@@ -21,19 +21,12 @@
 package com.aintshy.android.ui.login;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import com.aintshy.android.App;
 import com.aintshy.android.R;
 import com.aintshy.android.api.NoAuthException;
-import com.aintshy.android.ui.EntranceActivity;
 
 /**
  * Login activity.
@@ -54,66 +47,33 @@ public final class LoginActivity extends Activity {
         final EditText password = EditText.class.cast(
             this.findViewById(R.id.password)
         );
-        final Button button = Button.class.cast(
-            this.findViewById(R.id.login_button)
-        );
-        button.setOnClickListener(
-            new View.OnClickListener() {
+        new Save(
+            this,
+            new Save.Action() {
                 @Override
-                public void onClick(final View view) {
-                    final InputMethodManager imm =
-                        InputMethodManager.class.cast(
-                            LoginActivity.this.getSystemService(
-                                Context.INPUT_METHOD_SERVICE
-                            )
-                        );
-                    imm.hideSoftInputFromWindow(
-                        password.getWindowToken(),
-                        InputMethodManager.RESULT_UNCHANGED_SHOWN
-                    );
+                public void exec() throws Save.Failure {
                     LoginActivity.this.authenticate(
                         email.getText().toString(),
                         password.getText().toString()
                     );
                 }
             }
-        );
+        ).onClick(Button.class.cast(this.findViewById(R.id.login_button)));
     }
 
     /**
      * Authenticate.
      * @param email Email
      * @param password Password
+     * @throws Save.Failure If fails
      */
-    private void authenticate(final String email, final String password) {
-        Toast.makeText(this, "let's try...", Toast.LENGTH_SHORT).show();
-        // @checkstyle AnonInnerLengthCheck (50 lines)
-        new AsyncTask<Void, Integer, String>() {
-            @Override
-            public String doInBackground(final Void... none) {
-                String error = "";
-                try {
-                    App.class.cast(
-                        LoginActivity.this.getApplication()
-                    ).authenticate(email, password);
-                } catch (final NoAuthException ex) {
-                    error = ex.getLocalizedMessage();
-                }
-                return error;
-            }
-            @Override
-            public void onPostExecute(final String error) {
-                if (error.isEmpty()) {
-                    LoginActivity.this.startActivity(
-                        new Intent(LoginActivity.this, EntranceActivity.class)
-                    );
-                } else {
-                    Toast.makeText(
-                        LoginActivity.this, error, Toast.LENGTH_SHORT
-                    ).show();
-                }
-            }
-        } .execute();
+    private void authenticate(final String email, final String password)
+        throws Save.Failure {
+        try {
+            App.class.cast(this.getApplication()).authenticate(email, password);
+        } catch (final NoAuthException ex) {
+            throw new Save.Failure(ex);
+        }
     }
 
 }

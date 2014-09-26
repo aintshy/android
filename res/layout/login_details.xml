@@ -10,12 +10,12 @@
         a:textAppearance="?android:attr/textAppearanceLarge"
         a:text="This is the last step. We need to know                 a little bit about you, in order to match                 you with others. Please, try to be accurate :)"
         a:id="@+id/textView"
-        a:paddingBottom="30dp"
+        a:gravity="start"
         a:textColor="@color/black"/>
     <EditText
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
-        a:hint="Name..."
+        a:hint="@string/placeholder_name"
         a:inputType="textEmailAddress"
         a:imeOptions="actionNext"
         a:id="@+id/name"
@@ -23,27 +23,19 @@
     <EditText
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
-        a:hint="Year of birth..."
+        a:hint="@string/placeholder_year"
         a:inputType="number"
         a:imeOptions="actionNext"
         a:id="@+id/year"
         a:textColor="@color/black"/>
-    <EditText
+    <Spinner
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
-        a:hint="Sex..."
-        a:id="@+id/sex"
-        a:imeOptions="actionNext"
-        a:inputType="text"
-        a:textColor="@color/black"/>
-    <EditText
+        a:id="@+id/sex"/>
+    <Spinner
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
-        a:hint="Language..."
-        a:id="@+id/language"
-        a:imeOptions="actionGo"
-        a:inputType="text"
-        a:textColor="@color/black"/>
+        a:id="@+id/language"/>
     <Button
         a:layout_width="match_parent"
         a:layout_height="wrap_content"

@@ -22,7 +22,14 @@ package com.aintshy.android.ui.login;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import com.aintshy.android.Entrance;
 import com.aintshy.android.R;
+import com.aintshy.android.api.ProfileUpdateException;
+import java.util.Locale;
 
 /**
  * Details activity.
@@ -37,11 +44,94 @@ public final class DetailsActivity extends Activity {
     public void onCreate(final Bundle state) {
         super.onCreate(state);
         this.setContentView(R.layout.login_details);
+        final EditText name = EditText.class.cast(
+            this.findViewById(R.id.name)
+        );
+        final EditText year = EditText.class.cast(
+            this.findViewById(R.id.year)
+        );
+        final Spinner sex = this.sexSpinner(
+            Spinner.class.cast(this.findViewById(R.id.sex))
+        );
+        final Spinner language = this.langSpinner(
+            Spinner.class.cast(this.findViewById(R.id.language))
+        );
+        new Save(
+            this,
+            new Save.Action() {
+                @Override
+                public void exec() throws Save.Failure {
+                    DetailsActivity.this.update(
+                        name.getText().toString(),
+                        year.getText().toString(),
+                        sex.getSelectedItem().toString(),
+                        language.getSelectedItem().toString()
+                    );
+                }
+            }
+        ).onClick(Button.class.cast(this.findViewById(R.id.register_button)));
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    /**
+     * Configure sex spinner.
+     * @param spinner To configure
+     * @return Ready to use
+     */
+    private Spinner sexSpinner(final Spinner spinner) {
+        final ArrayAdapter<CharSequence> adapter =
+            ArrayAdapter.createFromResource(
+                this,
+                R.array.genders, android.R.layout.simple_spinner_item
+            );
+        adapter.setDropDownViewResource(
+            android.R.layout.simple_spinner_dropdown_item
+        );
+        spinner.setAdapter(adapter);
+        return spinner;
+    }
+
+    /**
+     * Configure lang spinner.
+     * @param spinner To configure
+     * @return Ready to use
+     */
+    private Spinner langSpinner(final Spinner spinner) {
+        final ArrayAdapter<CharSequence> adapter =
+            ArrayAdapter.createFromResource(
+                this,
+                R.array.languages, android.R.layout.simple_spinner_item
+            );
+        adapter.setDropDownViewResource(
+            android.R.layout.simple_spinner_dropdown_item
+        );
+        spinner.setAdapter(adapter);
+        return spinner;
+    }
+
+    /**
+     * Update it.
+     * @param name Name
+     * @param year Year
+     * @param sex Sex
+     * @param lang Language
+     * @throws Save.Failure If fails
+     * @checkstyle ParameterNumberCheck (5 lines)
+     */
+    @SuppressWarnings("PMD.UseObjectForClearerAPI")
+    private void update(final String name, final String year,
+        final String sex, final String lang) throws Save.Failure {
+        if (!year.matches("19[0-9]{2}")) {
+            throw new Save.Failure("year of birth, huh?");
+        }
+        try {
+            new Entrance(this).hub().profile().update(
+                name, Integer.parseInt(year),
+                sex.toUpperCase(Locale.ENGLISH).charAt(0),
+                new Locale(lang)
+            );
+        } catch (final ProfileUpdateException ex) {
+            throw new Save.Failure(ex);
+        }
     }
 
 }

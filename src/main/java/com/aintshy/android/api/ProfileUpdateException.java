@@ -20,49 +20,26 @@
  */
 package com.aintshy.android.api;
 
-import java.util.Locale;
-
 /**
- * Profile.
+ * Profile update failure.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public interface Profile {
+public final class ProfileUpdateException extends RuntimeException {
 
     /**
-     * Me, as a human.
-     * @return Myself
+     * Serialization marker.
      */
-    Human myself();
+    private static final long serialVersionUID = -5357940592332201978L;
 
     /**
-     * Email is confirmed?
-     * @return TRUE if it's confirmed
+     * Ctor.
+     * @param cause Cause of it
      */
-    boolean confirmed();
-
-    /**
-     * Confirm.
-     * @param code Code to use
-     */
-    void confirm(String code);
-
-    /**
-     * Update profile.
-     * @param name Name
-     * @param year Year of birth
-     * @param sex Sex
-     * @param lang Language
-     * @checkstyle ParameterNumberCheck (5 lines)
-     */
-    void update(String name, int year, char sex, Locale lang);
-
-    /**
-     * Upload new photo.
-     * @param photo Photo
-     */
-    void upload(byte[] photo);
+    public ProfileUpdateException(final String cause) {
+        super(cause);
+    }
 
 }

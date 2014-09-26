@@ -22,7 +22,11 @@ package com.aintshy.android.ui.login;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import com.aintshy.android.Entrance;
 import com.aintshy.android.R;
+import com.aintshy.android.api.CodeConfirmException;
 
 /**
  * Confirm activity.
@@ -36,12 +40,34 @@ public final class ConfirmActivity extends Activity {
     @Override
     public void onCreate(final Bundle state) {
         super.onCreate(state);
-        this.setContentView(R.layout.login_main);
+        this.setContentView(R.layout.login_confirm);
+        final EditText code = EditText.class.cast(
+            this.findViewById(R.id.code)
+        );
+        new Save(
+            this,
+            new Save.Action() {
+                @Override
+                public void exec() throws Save.Failure {
+                    ConfirmActivity.this.confirm(
+                        code.getText().toString()
+                    );
+                }
+            }
+        ).onClick(Button.class.cast(this.findViewById(R.id.confirm_button)));
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    /**
+     * Confirm it.
+     * @param code Code
+     * @throws Save.Failure If fails
+     */
+    private void confirm(final String code) throws Save.Failure {
+        try {
+            new Entrance(this).hub().profile().confirm(code);
+        } catch (final CodeConfirmException ex) {
+            throw new Save.Failure(ex);
+        }
     }
 
 }
