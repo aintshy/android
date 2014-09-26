@@ -76,7 +76,7 @@ public final class RtEntrance {
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .header(HttpHeaders.USER_AGENT, "Android app")
             .through(RetryWire.class)
-            .through(CachingWire.class);
+            .through(CachingWire.class, "POST .*|GET /");
         try {
             final Response response = req.uri().path("/empty").back().fetch();
             if (response.status() != HttpURLConnection.HTTP_OK) {

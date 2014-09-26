@@ -50,6 +50,11 @@ public interface Profile {
     void confirm(String code);
 
     /**
+     * Resend it.
+     */
+    void resend();
+
+    /**
      * Update profile.
      * @param name Name
      * @param year Year of birth

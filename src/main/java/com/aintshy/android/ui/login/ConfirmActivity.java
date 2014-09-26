@@ -55,6 +55,15 @@ public final class ConfirmActivity extends Activity {
                 }
             }
         ).onClick(Button.class.cast(this.findViewById(R.id.confirm_button)));
+        new Save(
+            this,
+            new Save.Action() {
+                @Override
+                public void exec() {
+                    new Entrance(ConfirmActivity.this).hub().profile().resend();
+                }
+            }
+        ).onClick(Button.class.cast(this.findViewById(R.id.resend_button)));
     }
 
     /**

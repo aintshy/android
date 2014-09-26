@@ -121,6 +121,25 @@ final class RtProfile implements Profile {
         }
     }
 
+    @Override
+    public void resend() {
+        try {
+            this.request
+                .uri().path("/setup/not-confirmed").back()
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .rel("/page/links/link[@rel='resend']/@href")
+                .method(Request.POST)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
     // @checkstyle ParameterNumberCheck (5 lines)
     @Override
     public void update(final String name, final int year,

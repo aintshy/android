@@ -25,4 +25,9 @@
         a:layout_height="wrap_content"
         a:text="Confirm"
         a:id="@+id/confirm_button"/>
+    <Button
+        a:layout_width="match_parent"
+        a:layout_height="wrap_content"
+        a:text="Resend it by email"
+        a:id="@+id/resend_button"/>
 </LinearLayout>
