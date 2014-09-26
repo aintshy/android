@@ -1,12 +1,8 @@
-<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
+<TextView xmlns:a="http://schemas.android.com/apk/res/android"
+    a:id="@+id/text"
+    a:padding="6dip"
     a:layout_width="match_parent"
-    a:layout_height="match_parent"
-    a:padding="6dip">
-    <TextView
-        a:id="@+id/text"
-        a:layout_width="wrap_content"
-        a:layout_height="wrap_content"
-        a:text="..."
-        a:textSize="24sp"
-        a:textColor="@color/black"/>
-</RelativeLayout>
+    a:layout_height="wrap_content"
+    a:text="..."
+    a:textSize="24sp"
+    a:textColor="@color/black"/>
