@@ -3,7 +3,7 @@
     <uses-sdk android:minSdkVersion="12" android:targetSdkVersion="20"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <application android:allowBackup="false" android:debuggable="true" android:icon="@drawable/ico" android:label="aintshy" android:name=".App">
-        <activity android:label="aintshy" android:name=".ui.EntranceActivity" android:noHistory="true">
+        <activity android:label="aintshy" android:name=".ui.EntranceActivity" android:noHistory="true" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -12,11 +12,11 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
             </intent-filter>
         </activity>
-        <activity android:label="talk" android:name=".ui.talk.TalkActivity" android:noHistory="true"/>
-        <activity android:label="history" android:name=".ui.history.HistoryActivity" android:noHistory="true"/>
-        <activity android:label="empty" android:name=".ui.talk.EmptyActivity" android:noHistory="true"/>
-        <activity android:label="confirm" android:name=".ui.login.ConfirmActivity" android:noHistory="true"/>
-        <activity android:label="login" android:name=".ui.login.LoginActivity" android:noHistory="true"/>
-        <activity android:label="details" android:name=".ui.login.DetailsActivity" android:noHistory="true"/>
+        <activity android:label="talk" android:name=".ui.talk.TalkActivity" android:noHistory="true" android:screenOrientation="portrait"/>
+        <activity android:label="history" android:name=".ui.history.HistoryActivity" android:noHistory="true" android:screenOrientation="portrait"/>
+        <activity android:label="empty" android:name=".ui.talk.EmptyActivity" android:noHistory="true" android:screenOrientation="portrait"/>
+        <activity android:label="confirm" android:name=".ui.login.ConfirmActivity" android:noHistory="true" android:screenOrientation="portrait"/>
+        <activity android:label="login" android:name=".ui.login.LoginActivity" android:noHistory="true" android:screenOrientation="portrait"/>
+        <activity android:label="details" android:name=".ui.login.DetailsActivity" android:noHistory="true" android:screenOrientation="portrait"/>
     </application>
 </manifest>
