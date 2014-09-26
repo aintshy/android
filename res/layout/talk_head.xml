@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
-    a:layout_width="fill_parent"
-    a:layout_height="fill_parent"
+    a:layout_width="match_parent"
+    a:layout_height="match_parent"
     a:padding="6dip">
     <ImageView
         a:layout_width="200dp"
@@ -11,7 +11,7 @@
         a:contentDescription="photo"/>
     <TextView
         a:id="@+id/human"
-        a:layout_width="fill_parent"
+        a:layout_width="match_parent"
         a:layout_height="40dip"
         a:layout_below="@id/photo"
         a:text="..."
@@ -22,7 +22,7 @@
         a:textColor="@color/black"/>
     <EditText
         a:id="@+id/answer"
-        a:layout_width="fill_parent"
+        a:layout_width="match_parent"
         a:layout_height="wrap_content"
         a:layout_below="@id/human"
         a:inputType="text"
