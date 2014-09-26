@@ -18,48 +18,43 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.aintshy.android.ui.history;
+package com.aintshy.android.rest;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import com.aintshy.android.R;
-import com.aintshy.android.ui.Swipe;
-import com.aintshy.android.ui.talk.TalkActivity;
-import com.jcabi.aspects.Tv;
+import com.aintshy.android.api.Hub;
+import com.jcabi.http.mock.MkAnswer;
+import com.jcabi.http.mock.MkContainer;
+import com.jcabi.http.mock.MkGrizzlyContainer;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 /**
- * History activity.
+ * Test case for {@link RtEntrance}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
  */
-public final class HistoryActivity extends Activity implements Swipe.Target {
+@RunWith(RobolectricTestRunner.class)
+public final class RtEntranceTest {
 
-    @Override
-    public void onCreate(final Bundle state) {
-        super.onCreate(state);
-        this.setContentView(R.layout.wait);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        new Swipe(this).attach(this, R.id.main);
-        new UpdateHistory(this, 0, Tv.FIVE).execute();
-    }
-
-    @Override
-    public void onSwipeLeft() {
-        this.startActivity(
-            new Intent(this, TalkActivity.class)
+    /**
+     * RtEntrance can authenticate.
+     * @throws Exception If fails
+     */
+    @Test
+    public void authenticatesUser() throws Exception {
+        final MkContainer container = new MkGrizzlyContainer().next(
+            new MkAnswer.Simple(
+                "<page><human><urn>urn:test:1</urn></human></page>"
+            )
         );
-    }
-
-    @Override
-    public void onSwipeRight() {
-        // nothing to do
+        container.start();
+        final Hub hub = new RtEntrance().auth("a@a.com", "test");
+        MatcherAssert.assertThat(hub, Matchers.notNullValue());
+        container.stop();
     }
 
 }

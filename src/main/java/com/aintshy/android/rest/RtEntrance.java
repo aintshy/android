@@ -44,6 +44,26 @@ import javax.ws.rs.core.MediaType;
 public final class RtEntrance {
 
     /**
+     * Home.
+     */
+    private final transient String home;
+
+    /**
+     * Ctor.
+     */
+    public RtEntrance() {
+        this("http://i.aintshy.com");
+    }
+
+    /**
+     * Ctor.
+     * @param uri Home
+     */
+    public RtEntrance(final String uri) {
+        this.home = uri;
+    }
+
+    /**
      * Authenticate with email and password, and get a token.
      * @param email Email
      * @param password Password
@@ -51,7 +71,7 @@ public final class RtEntrance {
      */
     public Hub auth(final String email, final String password) {
         final String token = this.token(email, password);
-        final Request req = new JdkRequest("http://i.aintshy.com/")
+        final Request req = new JdkRequest(this.home)
             .header(HttpHeaders.COOKIE, String.format("Rexsl-Auth=%s", token))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .header(HttpHeaders.USER_AGENT, "Android app")
@@ -76,7 +96,8 @@ public final class RtEntrance {
      */
     private String token(final String email, final String password) {
         try {
-            final Response page = new JdkRequest("http://i.aintshy.com/enter")
+            final Response page = new JdkRequest(this.home)
+                .uri().path("/enter").back()
                 .body().formParam("email", email)
                 .formParam("password", password).back()
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)

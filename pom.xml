@@ -135,7 +135,7 @@
             <groupId>org.cache2k</groupId>
             <artifactId>cache2k-api</artifactId>
             <version>0.19.2</version>
-            <scope>provided</scope>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.cache2k</groupId>
@@ -214,6 +214,12 @@
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <parallel>none</parallel>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <configuration>

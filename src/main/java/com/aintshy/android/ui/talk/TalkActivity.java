@@ -22,6 +22,7 @@ package com.aintshy.android.ui.talk;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import com.aintshy.android.R;
 import com.aintshy.android.api.Talk;
 import com.aintshy.android.ui.Swipe;
@@ -37,9 +38,14 @@ import com.aintshy.android.ui.history.HistoryActivity;
 public final class TalkActivity extends Activity implements Swipe.Target {
 
     @Override
+    public void onCreate(final Bundle state) {
+        super.onCreate(state);
+        this.setContentView(R.layout.wait);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        this.setContentView(R.layout.wait);
         new Swipe(this).attach(this, R.id.main);
         final int num = this.getIntent().getIntExtra(
             Talk.class.getName(), 0

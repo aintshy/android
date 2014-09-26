@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import com.aintshy.android.Bag;
 import com.aintshy.android.R;
 import com.aintshy.android.api.Hub;
@@ -45,9 +46,14 @@ import com.aintshy.android.ui.talk.TalkActivity;
 public final class EntranceActivity extends Activity {
 
     @Override
+    public void onCreate(final Bundle state) {
+        super.onCreate(state);
+        this.setContentView(R.layout.wait);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        this.setContentView(R.layout.wait);
         new AsyncTask<Void, Integer, Void>() {
             @Override
             public Void doInBackground(final Void... none) {

@@ -23,6 +23,7 @@ package com.aintshy.android.ui.talk;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.widget.TextView;
 import com.aintshy.android.R;
 import com.aintshy.android.ui.Swipe;
@@ -40,9 +41,14 @@ import java.util.concurrent.TimeUnit;
 public final class EmptyActivity extends Activity implements Swipe.Target {
 
     @Override
+    public void onCreate(final Bundle state) {
+        super.onCreate(state);
+        this.setContentView(R.layout.talk_empty);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        this.setContentView(R.layout.talk_empty);
         new Swipe(this).attach(this, R.id.main);
         new Refresh().execute(new Inbox.Locator(this).find());
     }
