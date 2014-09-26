@@ -16,7 +16,6 @@
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
         a:inputType="textEmailAddress"
-        a:ems="10"
         a:hint="Email..."
         a:imeOptions="actionNext"
         a:id="@+id/email"
@@ -26,7 +25,6 @@
         a:layout_height="wrap_content"
         a:hint="Password..."
         a:inputType="textPassword"
-        a:ems="10"
         a:id="@+id/password"
         a:imeOptions="actionGo"
         a:textColor="@color/black"/>

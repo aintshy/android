@@ -16,7 +16,6 @@
         a:layout_width="match_parent"
         a:layout_height="wrap_content"
         a:hint="Code..."
-        a:ems="10"
         a:imeOptions="actionGo"
         a:id="@+id/code"
         a:inputType="number|numberDecimal"

@@ -18,7 +18,6 @@
         a:hint="Name..."
         a:inputType="textEmailAddress"
         a:imeOptions="actionNext"
-        a:ems="10"
         a:id="@+id/name"
         a:textColor="@color/black"/>
     <EditText
@@ -27,7 +26,6 @@
         a:hint="Year of birth..."
         a:inputType="number"
         a:imeOptions="actionNext"
-        a:ems="10"
         a:id="@+id/year"
         a:textColor="@color/black"/>
     <EditText
