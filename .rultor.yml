@@ -1,29 +1,21 @@
-assets:
-  android.keystore: "yegor256/home#assets/aintshy/android.keystore"
-  settings.xml: "yegor256/home#assets/aintshy/settings.xml"
-  pubring.gpg: "yegor256/home#assets/pubring.gpg"
-  secring.gpg: "yegor256/home#assets/secring.gpg"
-  s3cfg: "yegor256/home#assets/s3cfg"
-
-docker:
-  image: yegor256/aintshy-android
-
+assets: {android.keystore: yegor256/home#assets/aintshy/android.keystore, settings.xml: yegor256/home#assets/aintshy/settings.xml,
+  pubring.gpg: yegor256/home#assets/pubring.gpg, secring.gpg: yegor256/home#assets/secring.gpg,
+  s3cfg: yegor256/home#assets/s3cfg}
+docker: {image: yegor256/aintshy-android}
 deploy:
   script: |
     mvn clean install -Paintshy --errors --settings ../settings.xml
     mvn clean
     pdd --source=$(pwd) --verbose --file=aintshy-android.xml
     s3cmd --no-progress put aintshy-android.xml --config=../s3cfg s3://pdd.teamed.io/aintshy-android.xml
-
 release:
   script: |
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
     mvn clean install -Psign -Pqulice -Paintshy --errors --settings ../settings.xml
-
 merge:
-  script: |
+  script: |-
     mvn help:system clean install -Pqulice --errors --settings ../settings.xml
     mvn clean
     pdd --source=$(pwd) --verbose --file=/dev/null
-
+architect: [yegor256, yegor256, karato]
