@@ -12,6 +12,8 @@ deploy:
     mvn clean
     pdd --source=$(pwd) --verbose --file=aintshy-android.xml
     s3cmd --no-progress put aintshy-android.xml --config=../s3cfg s3://pdd.teamed.io/aintshy-android.xml
+  commanders:
+  - yegor256
 release:
   script: |
     mvn versions:set "-DnewVersion=${tag}"
