@@ -19,6 +19,8 @@ release:
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
     mvn clean install -Psign -Pqulice -Paintshy --errors --settings ../settings.xml
+  commanders:
+  - yegor256
 merge:
   script: |-
     mvn help:system clean install -Pqulice --errors --settings ../settings.xml
