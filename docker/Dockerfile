@@ -1,6 +1,6 @@
 FROM ubuntu:12.04
 
-MAINTAINER yegor256 "yegor@teamed.io"
+MAINTAINER yegor256 "yegor256@gmail.com"
 
 RUN apt-get update -qq
 
