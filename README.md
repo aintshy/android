@@ -1,4 +1,4 @@
-[![Made By Teamed.io](http://img.teamed.io/btn.svg)](http://www.teamed.io)
+[![Managed by Zerocracy](http://www.zerocracy.com/badge.svg)](http://www.zerocracy.com)
 [![DevOps By Rultor.com](http://www.rultor.com/b/aintshy/android)](http://www.rultor.com/p/aintshy/android)
 
 [![Build Status](https://travis-ci.org/aintshy/android.svg)](https://travis-ci.org/aintshy/android)
